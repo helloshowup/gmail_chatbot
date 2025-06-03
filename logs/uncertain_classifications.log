@@ -262,3 +262,9 @@ I've completed 3 steps. Should I keep going with more detailed searches about sp
 2025-06-02 13:22:59 | Query: What are my notes on Mariska van Helsdingen? | Scores: catch_up: 0.12, clarify: 0.08, email_search: 0.20, general_chat: 0.13, notebook_lookup: 0.30, preference_update: 0.09, triage: 0.09
 2025-06-03 07:49:35 | Query: what emails did i receive today? | Scores: catch_up: 0.09, email_search: 0.11, triage: 0.00, clarify: 0.02, general_chat: 0.01, notebook_lookup: 0.04
 2025-06-03 07:50:17 | Query: what info do you have about Bryce Hepburn.  | Scores: catch_up: 0.08, email_search: 0.01, triage: 0.00, clarify: 0.12, general_chat: 0.09, notebook_lookup: 0.07
+2025-06-03 08:31:11 | Query: what notes do you have in your notebook? | Scores: catch_up: 0.08, email_search: 0.01, triage: 0.00, clarify: 0.12, general_chat: 0.04, notebook_lookup: 0.21
+2025-06-03 08:35:20 | Query: just give me a summary of the notebook | Scores: catch_up: 0.01, email_search: 0.01, triage: 0.01, clarify: 0.00, general_chat: 0.10, notebook_lookup: 0.06
+2025-06-03 08:35:20 | Query: just give me a summary of the notebook | Scores: catch_up: 0.01, email_search: 0.01, triage: 0.01, clarify: 0.00, general_chat: 0.10, notebook_lookup: 0.06
+2025-06-03 08:35:42 | Query: yes  search my inbox to start building this knowledge base | Scores: catch_up: 0.00, email_search: 0.12, triage: 0.01, clarify: 0.08, general_chat: 0.00, notebook_lookup: 0.03
+2025-06-03 08:36:19 | Query: what did you find? | Scores: catch_up: 0.07, email_search: 0.03, triage: 0.00, clarify: 0.10, general_chat: 0.03, notebook_lookup: 0.05
+2025-06-03 08:36:19 | Query: what did you find? | Scores: catch_up: 0.07, email_search: 0.03, triage: 0.00, clarify: 0.10, general_chat: 0.03, notebook_lookup: 0.05

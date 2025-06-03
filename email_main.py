@@ -608,7 +608,7 @@ class GmailChatbotApp:
         """Handles queries classified as 'notebook_lookup'."""
         logging.info(f"[{request_id}] Handling 'notebook_lookup' query.")
         # Use memory store to search for related notes and preferences
-        search_results = self.memory_actions_handler.query_memory(message, limit=5, request_id=request_id)
+        search_results = self.memory_actions_handler.query_memory(message, request_id=request_id)
         response = "" # Initialize response
 
         if search_results:
@@ -757,7 +757,7 @@ class GmailChatbotApp:
             min_score = THRESHOLDS["VECTOR_SEARCH"]["MIN_RELEVANCE"]
             
             vector_results = self.memory_actions_handler.query_memory(
-                search_query, limit=limit, min_relevance=min_score, request_id=request_id
+                search_query, request_id=request_id
             )
 
             if vector_results:
@@ -811,7 +811,7 @@ class GmailChatbotApp:
         response = ""
         if self.memory_store.vector_search_available:
             vector_results = self.memory_actions_handler.query_memory(
-                message, limit=8, request_id=request_id
+                message, request_id=request_id
             )
             if vector_results:
                 raw_response = self.claude_client.evaluate_vector_match(

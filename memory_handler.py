@@ -233,8 +233,7 @@ class MemoryActionsHandler:
                 response=response,
                 email_ids=email_ids,
                 client=client,
-                tags=tags,
-                # request_id is not a direct param of memory_store.record_interaction
+                    # request_id is not a direct param of memory_store.record_interaction
                 # but useful for logging within this handler method if needed.
             )
             logger.info(f"[{request_id}] Interaction recorded: Query='{query[:50]}...', Client='{client}'")
