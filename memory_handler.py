@@ -5,6 +5,9 @@ import logging
 import re
 from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional, TYPE_CHECKING
+import queue
+import threading
+from collections import deque
 
 from gmail_chatbot.email_config import DEFAULT_SYSTEM_MESSAGE
 from gmail_chatbot.prompt_templates import NOTEBOOK_EMPTY_PROMPT, NOTEBOOK_SUMMARY_PREFIX
@@ -12,7 +15,7 @@ from gmail_chatbot.preference_detector import PreferenceDetector
 
 
 if TYPE_CHECKING:
-    from gmail_chatbot.email_vector_db import EmailVectorMemoryStore
+    from gmail_chatbot.email_memory_vector import EmailVectorMemoryStore # Corrected import path
     from gmail_chatbot.email_gmail_api import GmailAPIClient
     from gmail_chatbot.email_claude_api import ClaudeAPIClient
     from gmail_chatbot.preference_detector import PreferenceDetector
@@ -44,7 +47,9 @@ class MemoryActionsHandler:
         self.claude_client = claude_client
         self.system_message = system_message
         self.preference_detector = preference_detector
-        logger.info("MemoryActionsHandler initialized with PreferenceDetector")
+        self._proactive_summary_queue = queue.Queue() # Thread-safe queue for summaries
+        self._summary_lock = threading.Lock() # Lock for summary generation if needed, though Queue is thread-safe
+        logger.info("MemoryActionsHandler initialized with PreferenceDetector and proactive summary queue")
 
     def get_handler_client_names(self) -> List[str]:
         """Retrieve all client names from the memory store."""
@@ -185,6 +190,50 @@ class MemoryActionsHandler:
             summary = self.memory_store.get_concise_notebook_summary()
             return f"{NOTEBOOK_SUMMARY_PREFIX}{summary}"
 
+    def _create_and_queue_enrichment_summary(self, processed_emails_count: int, new_notes_count: int, client_name: Optional[str] = None, errors_occurred: bool = False) -> None:
+        """Formats and queues a summary of the enrichment process."""
+        summary_parts = ["✨ **Background Update:**"]
+        if client_name:
+            summary_parts.append(f"For client '{client_name}':")
+
+        if processed_emails_count > 0:
+            summary_parts.append(f"Processed {processed_emails_count} email(s).")
+        if new_notes_count > 0:
+            summary_parts.append(f"Created {new_notes_count} note(s).")
+        
+        if not processed_emails_count and not new_notes_count and not errors_occurred:
+            if client_name: # Only add 'no new items' if specific client was targeted
+                summary_parts.append("No new items found or actions taken.")
+            # If no client_name, it implies a general scan, so silence might be better if nothing found globally.
+            # However, for per-client processing, 'no new items' is informative.
+
+        if errors_occurred:
+            summary_parts.append("Some errors occurred during the process.")
+
+        # Only queue a message if there's something meaningful to report or it's a targeted client check
+        if len(summary_parts) > 1: # More than just the header
+            summary_message = " ".join(summary_parts)
+            try:
+                self._proactive_summary_queue.put_nowait(summary_message)
+                logger.info(f"Queued proactive summary: {summary_message}")
+            except queue.Full:
+                logger.warning("Proactive summary queue is full. Discarding summary.")
+        else:
+            logger.info("No significant enrichment activity to summarize proactively.")
+
+    def get_pending_proactive_summaries(self) -> List[str]:
+        """Retrieves all pending proactive summaries from the queue."""
+        summaries = []
+        while not self._proactive_summary_queue.empty():
+            try:
+                summaries.append(self._proactive_summary_queue.get_nowait())
+            except queue.Empty:
+                # Should not happen due to the loop condition, but good for safety
+                break
+        if summaries:
+            logger.info(f"Retrieved {len(summaries)} proactive summaries from queue.")
+        return summaries
+
     def perform_autonomous_memory_enrichment(self, request_id: str) -> None:
         """
         Autonomously fetches and stores recent emails for known clients.
@@ -218,18 +267,38 @@ class MemoryActionsHandler:
                         if "autonomously_fetched" not in email["tags"]:
                              email["tags"].append("autonomously_fetched")
                                 
+                logger.info(f"[{request_id}] Fetched {len(emails_data_list)} emails for {client_name}. Processing...")
+                
+                processed_email_ids = [email['id'] for email in emails_data_list]
+                # Simulate storing/processing these emails. 
+                # In a real scenario, this would involve calls to store_emails_in_memory or similar,
+                # and potentially creating notes if logic dictates.
+                # For this example, we'll assume all fetched emails are 'processed'.
+                num_processed = len(emails_data_list)
+                num_notes_created = 0 # Placeholder - actual note creation logic would be complex
+
+                if num_processed > 0:
+                    # This is where you would call self.store_emails_in_memory if not already done
+                    # For example, if GmailAPIClient.get_recent_emails_for_client doesn't auto-summarize/store:
+                    # self.store_emails_in_memory(recent_emails, query=f"autonomous_client_scan:{client_name}", request_id=request_id)
                     self.store_emails_in_memory(
                         emails=emails_data_list, 
                         query=f"Autonomously fetched for {client_name}", 
                         request_id=request_id
                     )
-                else:
-                    logger.info(f"[{request_id}] No new emails found for client {client_name} with query: {gmail_search_query}")
+
+                # After processing for this client, create and queue a summary
+                self._create_and_queue_enrichment_summary(
+                    processed_emails_count=num_processed, 
+                    new_notes_count=num_notes_created, 
+                    client_name=client_name
+                )
 
             except Exception as e:
-                logger.error(f"[{request_id}] Error during autonomous enrichment for client {client_name}: {e}", exc_info=True)
-        
-        logger.info(f"[{request_id}] Finished autonomous memory enrichment task.")
+                logger.error(f"[{request_id}] Error during autonomous enrichment for client {client_name}: {e}")
+                self._create_and_queue_enrichment_summary(0, 0, client_name=client_name, errors_occurred=True)
+
+        logger.info(f"[{request_id}] Autonomous memory enrichment task completed cycle.")
 
     def record_interaction_in_memory(
         self,

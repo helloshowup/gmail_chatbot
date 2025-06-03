@@ -875,6 +875,18 @@ class GmailChatbotApp:
             f"[{request_id}] Processing message (first 50 chars): '{message[:50]}...' "
         )
 
+        # Get any proactive summaries from background enrichment
+        proactive_updates_list = self.memory_actions_handler.get_pending_proactive_summaries()
+        proactive_response_part = ""
+        if proactive_updates_list:
+            # Format them nicely, e.g., each on a new line if there are multiple
+            # Using a simple join for now, can be enhanced with more markdown.
+            proactive_response_part = "\n\n".join(proactive_updates_list)
+            if proactive_response_part:
+                # Add a general header for all proactive updates if there are any
+                proactive_response_part = f"🔔 **Background Updates:**\n{proactive_response_part}\n\n---\n\n"
+                logging.info(f"[{request_id}] Retrieved proactive updates: {proactive_response_part[:100]}...")
+
         self.chat_history.append({"role": "user", "content": message})
         response = ""  # Initialize response
         uncertainty_message = ""  # Initialize uncertainty message
@@ -898,7 +910,7 @@ class GmailChatbotApp:
                 response = self._handle_email_menu_choice(choice_str, request_id)
                 self.chat_history.append({"role": "assistant", "content": response})
                 # self.pending_email_context is cleared within _handle_email_menu_choice if choice was valid and processed
-                return response
+                return proactive_response_part + response
             else:
                 # Digit, but not a valid option for the current menu. Log and fall through to normal classification.
                 logging.info(
@@ -925,7 +937,7 @@ class GmailChatbotApp:
                 f"[{request_id}] Autonomous task counter reset to 0 due to user cancellation."
             )
             self.chat_history.append({"role": "assistant", "content": response})
-            return response
+            return proactive_response_part + response
 
         # Check for explicit preference memory instructions
         memory_triggers = [
@@ -951,7 +963,7 @@ class GmailChatbotApp:
             response += f"\n\n{feedback}"
 
             self.chat_history.append({"role": "assistant", "content": response})
-            return response
+            return proactive_response_part + response
         elif any(trigger in message_lower for trigger in memory_triggers):
             logging.info(f"[{request_id}] Detected user preference recording request")
 
@@ -1031,7 +1043,7 @@ class GmailChatbotApp:
                 response += "\nYou can rephrase your preference if you'd like me to try saving it again."
 
             self.chat_history.append({"role": "assistant", "content": response})
-            return response
+            return proactive_response_part + response
 
         # Check for autonomous task enrichment triggers
         if (
@@ -1045,7 +1057,7 @@ class GmailChatbotApp:
             self.memory_actions_handler.perform_autonomous_memory_enrichment(request_id=request_id)
             response = "I've initiated a memory enrichment process. You can continue interacting with me."
             self.chat_history.append({"role": "assistant", "content": response})
-            return response
+            return proactive_response_part + response
 
         # Check for TASK_CHAIN marker in Claude's previous response
         if len(self.chat_history) >= 2:
@@ -1066,9 +1078,9 @@ class GmailChatbotApp:
                 self.autonomous_task_counter = 0  # Reset for next batch
                 logging.info(f"[{request_id}] User confirmed TASK_CHAIN. Initiating autonomous memory enrichment.")
                 self.memory_actions_handler.perform_autonomous_memory_enrichment(request_id=request_id)
-                response = "I've initiated a memory enrichment process based on your confirmation. You can continue interacting with me."
+                response = "I've initiated a memory enrichment process based on your confirmation. You can continue interacting."
                 self.chat_history.append({"role": "assistant", "content": response})
-                return response
+                return proactive_response_part + response
 
         # try: # Commenting out the orphaned try from the 'log test' block
             # Special 'log test' command for debugging API calls - Commented out to restore flow
@@ -1100,93 +1112,108 @@ class GmailChatbotApp:
         # #     self.chat_history.append({"role": "assistant", "content": response})
         # #     return response
 
-            # 1. Handle pending email query confirmation
-            if (
-                self.pending_email_context
-            ):  # Check if this attribute exists and has a value
-                confirmed_query_text = self.pending_email_context.get(
-                    "gmail_query", "your previous email search"
-                )
+            # 1. Handle pending actions, especially email query confirmation
+            if self.pending_email_context:  # Check if any pending context exists
                 user_input_lower = message.lower().strip()
+                pending_type = self.pending_email_context.get("type")
 
-                if user_input_lower in [
-                    "yes",
-                    "y",
-                    "sure",
-                    "okay",
-                    "ok",
-                    "go ahead",
-                    "please do",
-                    "search",
-                ]:
-                    logging.info(
-                        f"[{request_id}] User confirmed pending email query: {confirmed_query_text[:50]}..."
-                    )
-                    original_user_message = self.pending_email_context[
-                        "original_message"
-                    ]
-                    gmail_search_string = self.pending_email_context["gmail_query"]
-                    self.pending_email_context = None
+                AFFIRMATIVES = {
+                    "yes", "y", "sure", "okay", "ok", "go ahead", "please do", "search",
+                    "yep", "yeah", "affirmative", "do it", "proceed", "sounds good", "correct"
+                }
+                # Negatives are largely handled by the general 'no' block preceding this logic,
+                # but defining here for clarity if specific negative handling for a type is needed.
+                # NEGATIVES = {"no", "n", "cancel", "stop", "negative", "don't", "nope"}
 
-                    emails, search_response_text = self.gmail_client.search_emails(
-                        gmail_search_string,
-                        original_user_message,
-                        self.system_message,
-                        request_id=request_id,
-                    )
-                    response = search_response_text
-                    
-                    if emails:
+                if pending_type == "gmail_query_confirmation":
+                    gmail_search_string = self.pending_email_context.get("gmail_query", "your previous email search")
+                    original_user_message = self.pending_email_context.get("original_message")
+
+                    # Define ambiguous responses specific to a yes/no confirmation context
+                    AMBIGUOUS_FOR_CONFIRM = {"maybe", "not sure", "hmm", "hm", "possibly", "i'm not sure", "i dont know", "i don't know"}
+
+                    if user_input_lower in AFFIRMATIVES:
                         logging.info(
-                            f"[{request_id}] Found {len(emails)} emails from confirmed search. Delegating to MemoryActionsHandler for storage."
+                            f"[{request_id}] User affirmatively confirmed pending Gmail query: {gmail_search_string[:50]}..."
                         )
-                        self.memory_actions_handler.store_emails_in_memory(
-                            emails=emails, 
-                            query=original_user_message,
-                            request_id=request_id
-                        )
-                        # Record interaction via MemoryActionsHandler.
-                        email_ids = [email.get("id") for email in emails if email.get("id")]
-                        client_for_email = None # Client is intentionally None here; record_interaction_in_memory is designed to handle an optional client.
-                        self.memory_actions_handler.record_interaction_in_memory(
-                            query=original_user_message,
-                            response=response,
+                        self.pending_email_context = None  # Clear context before action
+
+                        acknowledgement = "👍 Starting the search now..."
+                        
+                        emails, search_results_text = self.gmail_client.search_emails(
+                            search_query_override=gmail_search_string, 
+                            user_query=original_user_message, 
+                            system_message=self.system_message,
                             request_id=request_id,
-                            email_ids=email_ids,
-                            client=client_for_email
                         )
-                    else:
+                        
+                        final_response_parts = [acknowledgement]
+
+                        if emails:
+                            logging.info(
+                                f"[{request_id}] Found {len(emails)} emails from confirmed search. Storing."
+                            )
+                            self.memory_actions_handler.store_emails_in_memory(
+                                emails=emails, 
+                                query=original_user_message, 
+                                request_id=request_id
+                            )
+                            email_ids = [email.get("id") for email in emails if email.get("id")]
+                            self.memory_actions_handler.record_interaction_in_memory(
+                                query=original_user_message,
+                                response=search_results_text or f"Found {len(emails)} emails.",
+                                request_id=request_id,
+                                email_ids=email_ids,
+                                client=None 
+                            )
+                            if search_results_text:
+                                final_response_parts.append(search_results_text)
+                            else:
+                                final_response_parts.append(f"I found {len(emails)} email(s) matching your search for `{gmail_search_string}`. They have been processed and stored.")
+                        else:
+                            logging.info(
+                                f"[{request_id}] No emails found for confirmed query: {gmail_search_string[:50]}"
+                            )
+                            if search_results_text: # Claude might explain why no results
+                                final_response_parts.append(search_results_text)
+                            else: # Generic no results
+                                final_response_parts.append(f"I searched for `{gmail_search_string}` but couldn't find any matching emails.")
+                        
+                        response = "\n\n".join(filter(None, final_response_parts))
+
+                        self.chat_history.append({"role": "assistant", "content": response})
+                        return proactive_response_part + response
+                    elif user_input_lower in AMBIGUOUS_FOR_CONFIRM:
                         logging.info(
-                            f"[{request_id}] No emails found for confirmed query: {gmail_search_string[:50]}"
+                            f"[{request_id}] Ambiguous response ('{user_input_lower}') to Gmail query confirmation for '{gmail_search_string}'. Re-prompting."
                         )
-                        if not response:  # If gmail_client didn't provide a response
-                            response = f"I searched for `{gmail_search_string}` but couldn't find any matching emails."
-
-                    self.chat_history.append({"role": "assistant", "content": response})
-                    return response
-
-                elif user_input_lower in ["no", "n", "cancel", "stop"]:
-                    logging.info(
-                        f"[{request_id}] User cancelled pending email query: {confirmed_query_text[:50]}..."
-                    )
-                    response = f"Okay, I've cancelled the search for `{confirmed_query_text}`. The task counter has been reset. What would you like to do instead?"
-                    self.pending_email_context = None
-                    self.counter["autonomous_task_counter"] = (
-                        0  # Reset counter on explicit cancel of a pending query
-                    )
-                    logging.info(
-                        f"[{request_id}] Autonomous task counter reset to 0 due to user cancellation of pending query."
-                    )
-                    self.chat_history.append({"role": "assistant", "content": response})
-                    return response
-                # If neither yes/no, and there was a pending context, assume the new message is a new query.
-                # The pending_email_context will be overwritten or cleared by the new query flow.
+                        response = f"Sorry, I didn't quite catch that. Did you want me to proceed with the search for `{gmail_search_string}`? (yes/no)"
+                        # Do NOT clear self.pending_email_context here, as we are re-prompting.
+                        self.chat_history.append({"role": "assistant", "content": response})
+                        return proactive_response_part + response
+                    else:
+                        # Input is neither affirmative nor specifically ambiguous for this confirmation.
+                        # It's likely a new query. Log this and allow flow to continue.
+                        # The self.pending_email_context will be cleared by the generic handler below if it's still set.
+                        logging.info(
+                            f"[{request_id}] User input '{user_input_lower[:30]}' received during Gmail query confirmation for '{gmail_search_string[:50]}...' "
+                            f"is not affirmative or specifically ambiguous for the confirmation. Will treat as new query."
+                        )
+                        # No 'return response' here, let it fall through to the generic pending context clearing logic that follows
+                        pass
+                
+                # If pending_email_context was for a different type not handled above,
+                # or if the input was not affirmative/ambiguous for gmail_query_confirmation (e.g. a new query),
+                # clear the old context and proceed to classify the current message as a new query.
+                # This path is taken if the input wasn't an explicit 'no' (caught earlier),
+                # wasn't an affirmative to a gmail_query_confirmation, and wasn't ambiguous to it.
                 logging.info(
-                    f"[{request_id}] User provided new input ('{message[:20]}...') while email confirmation was pending. Proceeding with new input."
+                    f"[{request_id}] User provided new input ('{message[:20]}...') while a '{pending_type}' confirmation was pending. "
+                    f"Proceeding with new input, clearing old pending context of type '{pending_type}'."
                 )
-                self.pending_email_context = None  # Clear old pending context
+                self.pending_email_context = None  # Clear old pending context before new classification
 
-            # 2. Classify the new query (or current if no pending was handled)
+            # 2. Classify the new query (or current if no pending context was handled, or if pending context was cleared)
             query_type, confidence, scores = classify_query_type(message, classifier=self.ml_classifier)
             uncertainty_message = get_classification_feedback(query_type, confidence)
             logging.info(
@@ -1238,7 +1265,7 @@ class GmailChatbotApp:
         logging.info(
             f"[{request_id}] Generated response (first 50 chars): {response[:50]}..."
         )
-        return response
+        return proactive_response_part + response
 
     def _handle_unknown_or_fallback_query(self, message: str, query_type_for_logging: str, request_id: str) -> str:
         """Handles queries not caught by specific handlers, or 'unknown' queries.

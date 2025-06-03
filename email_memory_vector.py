@@ -34,10 +34,14 @@ class EmailVectorMemoryStore(EmailMemoryStore):
         # Initialize the base memory store
         super().__init__()
         
-        # Defensive check to ensure memory_entries is initialized
-        if not hasattr(self, 'memory_entries'):
+        # Defensive check to ensure memory_entries and preferences are initialized
+        # These are used by the base class or this class for storing preferences/notes.
+        if not hasattr(self, 'memory_entries'): # memory_entries might be used by base or for other note types
             self.memory_entries = []
-            logger.warning("Initialized missing memory_entries list for preference storage.")
+            logger.warning("Initialized missing memory_entries list.")
+        if not hasattr(self, 'preferences'): # preferences are checked in is_notebook_empty and get_concise_notebook_summary
+            self.preferences = [] # Assuming preferences are stored as a list of dicts or MemoryEntry objects
+            logger.warning("Initialized missing preferences list.")
         
         # Initialize vector DB status
         self.vector_search_available = VECTOR_LIBS_AVAILABLE
@@ -174,28 +178,75 @@ class EmailVectorMemoryStore(EmailMemoryStore):
 
         return no_emails_in_vector_db and no_emails_in_base_memory and no_client_info and no_preferences
 
-    def get_concise_notebook_summary(self) -> str:
-        """Generate a concise summary of the notebook's contents."""
+    def get_concise_notebook_summary(self, max_items_per_category: int = 3) -> str:
+        """Generate a concise, data-driven summary of the notebook's contents using markdown.
+
+        Args:
+            max_items_per_category: Max number of items to list for emails, clients, preferences.
+        """
+        if self.is_notebook_empty():
+            return "- Your notebook is currently empty. Add emails, notes, or client details to get started!"
+
         summary_parts = []
-        num_emails = len(self.vector_indexed_emails) # Primarily count emails in vector store for 'active' notes
-        if not num_emails:
-             num_emails = len(self.email_memory) # Fallback to base memory if vector store is empty
 
-        if num_emails > 0:
-            summary_parts.append(f"- Contains notes from {num_emails} email(s).")
+        # Email Summary
+        # Prioritize emails from email_memory as it might have more structured data like 'summary'
+        # Sort emails by 'last_accessed' or 'date' to get recent ones.
+        # Assuming email_memory stores dicts with 'date' or 'last_accessed' and 'subject'/'summary'.
+        emails_to_summarize = []
+        if self.email_memory:
+            try:
+                # Attempt to sort by date, falling back if date format is inconsistent or missing
+                sorted_email_ids = sorted(
+                    self.email_memory.keys(),
+                    key=lambda eid: self.email_memory[eid].get('last_accessed', self.email_memory[eid].get('date', '1970-01-01T00:00:00Z')),
+                    reverse=True
+                )
+            except Exception as e:
+                logger.warning(f"Could not sort emails for summary due to: {e}. Using unsorted emails.")
+                sorted_email_ids = list(self.email_memory.keys())
+            
+            for email_id in sorted_email_ids[:max_items_per_category]:
+                email_data = self.email_memory[email_id]
+                email_desc = email_data.get('subject', 'Email with no subject')
+                if email_data.get('summary'):
+                    email_desc += f" (Summary: {email_data['summary'][:50]}...)"
+                emails_to_summarize.append(email_desc)
         
-        num_clients = len(self.client_memory)
-        if num_clients > 0:
-            summary_parts.append(f"- Information on {num_clients} client(s).")
-            # Could list client names if few, e.g.,: names = list(self.client_memory.keys()); if len(names) < 4: summary_parts.append(f"  Clients: {', '.join(names)}.")
+        if emails_to_summarize:
+            summary_parts.append("**Recent Email Notes:**")
+            for email_item in emails_to_summarize:
+                summary_parts.append(f"- {email_item}")
+        elif self.vector_indexed_emails or self.email_memory: # If sorted list is empty but emails exist
+            summary_parts.append("- Contains notes from email(s).")
 
-        num_preferences = len(self.preferences)
-        if num_preferences > 0:
-            summary_parts.append(f"- {num_preferences} user preference(s) recorded.")
+        # Client Summary
+        if self.client_memory:
+            summary_parts.append("**Client Information:**")
+            client_names = [data.get('name', key) for key, data in self.client_memory.items()]
+            for i, name in enumerate(client_names[:max_items_per_category]):
+                summary_parts.append(f"- {name}")
+            if len(client_names) > max_items_per_category:
+                summary_parts.append(f"- ...and {len(client_names) - max_items_per_category} more client(s).")
+        
+        # Preferences Summary
+        # Assuming self.preferences is a list of dicts or MemoryEntry-like objects with a 'content' field.
+        if hasattr(self, 'preferences') and self.preferences:
+            summary_parts.append("**User Preferences:**")
+            for i, pref_item in enumerate(self.preferences[:max_items_per_category]):
+                content = ""
+                if isinstance(pref_item, dict):
+                    content = pref_item.get('content', 'Recorded preference')
+                elif hasattr(pref_item, 'content'): # For MemoryEntry objects
+                    content = pref_item.content
+                else:
+                    content = str(pref_item)
+                summary_parts.append(f"- {content[:100]}{'...' if len(content) > 100 else ''}")
+            if len(self.preferences) > max_items_per_category:
+                summary_parts.append(f"- ...and {len(self.preferences) - max_items_per_category} more preference(s).")
 
-        if not summary_parts:
-            # This case should ideally be caught by is_notebook_empty(), but as a fallback:
-            return "- The notebook appears to be empty or contains only default entries."
+        if not summary_parts: # Should not happen if is_notebook_empty() is false
+            return "- The notebook contains some information, but a detailed summary could not be generated."
             
         return "\n".join(summary_parts)
 

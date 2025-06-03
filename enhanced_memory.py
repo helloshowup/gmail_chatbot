@@ -4,6 +4,7 @@
 import json
 import logging
 import time
+import random # Added for jitter in retry logic
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Union
 from datetime import datetime
@@ -171,7 +172,35 @@ class EnhancedMemoryStore:
         # Add to vector store if available (only if vector_db exists and is initialized)
         if self.vector_search_available and vector_db is not None:
             try:
-                vector_db.add_memory(entry, 'email')
+                                # TODO: Ensure all necessary fields for add_email are consistently available in MemoryEntry.meta
+                # Required: email_id, subject, sender, recipient, body, date
+                # Optional: tags, metadata (we'll add 'kind' here)
+                email_id = entry.id
+                subject = entry.meta.get('subject', 'No Subject')
+                sender = entry.meta.get('sender', 'unknown@example.com') # Provide default if missing
+                recipient = entry.meta.get('recipient', 'unknown@example.com') # Provide default if missing
+                body = entry.content # Main content for vectorization
+                # Try to get a structured date, fallback to current timestamp if not available
+                date_str = entry.meta.get('date', entry.timestamp) 
+                if not date_str: # Ensure date is not None or empty
+                    date_str = datetime.utcnow().isoformat()
+                
+                tags = entry.tags or []
+                # Pass 'kind' as part of metadata for potential filtering during search
+                doc_metadata = {'kind': entry.kind.value if isinstance(entry.kind, MemoryKind) else entry.kind}
+                if entry.meta:
+                    doc_metadata.update(entry.meta) # Add other meta fields
+
+                vector_db.add_email(
+                    email_id=email_id,
+                    subject=subject,
+                    sender=sender,
+                    recipient=recipient,
+                    body=body,
+                    date=date_str,
+                    tags=tags,
+                    metadata=doc_metadata # Pass combined metadata
+                )
                 logger.info(f"Added email to vector database: {entry.meta.get('subject', 'Unknown')[:30]}...")
             except Exception as e:
                 logger.warning(f"Failed to add email memory to vector DB: {e}")
@@ -363,7 +392,11 @@ class EnhancedMemoryStore:
         # Add to vector db if available
         if self.vector_search_available and vector_db is not None:
             try:
-                vector_db.add_memory(entry, 'preference')
+                # TODO: EmailVectorDB is specialized for emails. Adding preferences here might not be appropriate
+                # or would require adapting preference data to fit the email schema.
+                # For now, we are not adding preferences to EmailVectorDB.
+                # vector_db.add_memory(entry, 'preference')
+                logger.info(f"Preference '{entry.content[:30]}...' not added to EmailVectorDB (email-specific store). ")
             except Exception as ve:
                 logger.warning(f"Failed to add preference to vector db: {ve}")
                 # Continue without vector DB - it's not critical
@@ -453,7 +486,10 @@ class EnhancedMemoryStore:
         # Add to vector db if available
         if self.vector_search_available and vector_db is not None:
             try:
-                vector_db.add_memory(entry, 'interaction')
+                # TODO: EmailVectorDB is specialized for emails. Adding general interactions here might not be appropriate.
+                # For now, we are not adding interactions to EmailVectorDB.
+                # vector_db.add_memory(entry, 'interaction')
+                logger.info(f"Interaction '{entry.content[:30]}...' not added to EmailVectorDB (email-specific store). ")
             except Exception as ve:
                 logger.warning(f"Failed to add interaction to vector db: {ve}")
                 # Continue without vector DB - it's not critical
@@ -482,29 +518,61 @@ class EnhancedMemoryStore:
                 if kind is not None:
                     kind_str = kind if isinstance(kind, str) else kind.value
                 
-                # Search vector database
-                vector_results = vector_db.search_by_text(
-                    query=query,
-                    metadata_filter={"kind": kind_str} if kind_str else None,
-                    limit=limit
+                # Search vector database using the correct EmailVectorDB method
+                # EmailVectorDB.search returns List[Tuple[str, float, Dict[str, Any]]]: (doc_id, score, metadata)
+                active_metadata_filter = None
+                if kind_str:
+                    active_metadata_filter = {"kind": kind_str}
+                
+                vector_search_results = vector_db.search(
+                    query_text=query,
+                    top_n=limit,
+                    metadata_filter=active_metadata_filter
                 )
                 
                 # Convert results to memory entries
-                for result in vector_results:
-                    entry_id = result.get("id")
-                    if not entry_id:
+                # vector_search_results is a list of (doc_id, score, metadata_dict)
+                for doc_id, score, meta in vector_search_results:
+                    # The 'id' and 'kind' should be in the metadata_dict if stored correctly by add_email
+                    entry_kind = meta.get("kind")
+                    original_id = meta.get("id", doc_id) # Use doc_id as fallback if 'id' not in meta
+
+                    if not original_id:
+                        logger.warning(f"Skipping vector search result with no ID: {meta}")
                         continue
-                        
-                    # Find the original entry
-                    if result.get("kind") == "preference":
-                        for pref in self.preferences:
-                            if pref.id == entry_id:
-                                results.append(pref.to_dict())
+                    
+                    # Reconstruct or find the original entry based on its kind and ID
+                    # This part needs to align with how entries are stored locally (self.preferences, self.email_memory, etc.)
+                    # self.email_memory is a list of dicts, self.preferences is a list of dicts (MemoryEntry.to_dict())
+                    # self.interaction_memory is a list of dicts
+
+                    found_entry = None
+                    if entry_kind == (MemoryKind.PREFERENCE.value if isinstance(MemoryKind.PREFERENCE, MemoryKind) else "preference"):
+                        for pref_dict in self.preferences:
+                            if pref_dict.get('id') == original_id:
+                                found_entry = pref_dict
                                 break
-                    elif result.get("kind") == "email" and entry_id in self.email_memory:
-                        results.append(self.email_memory[entry_id])
-                    elif entry_id in self.interaction_memory:
-                        results.append(self.interaction_memory[entry_id])
+                    elif entry_kind == (MemoryKind.EMAIL.value if isinstance(MemoryKind.EMAIL, MemoryKind) else "email"):
+                        for email_dict in self.email_memory: # email_memory is List[Dict]
+                            if email_dict.get('id') == original_id:
+                                found_entry = email_dict
+                                break
+                    elif entry_kind == (MemoryKind.NOTE.value if isinstance(MemoryKind.NOTE, MemoryKind) else "interaction") or entry_kind == "interaction": # Assuming 'interaction' is stored as kind 'note' or 'interaction'
+                        for interaction_dict in self.interaction_memory:
+                            if interaction_dict.get('id') == original_id:
+                                found_entry = interaction_dict
+                                break
+                    else:
+                        logger.warning(f"Unknown kind '{entry_kind}' from vector search result for ID {original_id}")
+
+                    if found_entry:
+                        # Ensure we don't add duplicates if keyword search also runs
+                        if not any(res.get('id') == original_id for res in results):
+                            results.append(found_entry)
+                        if len(results) >= limit: # Check limit after adding
+                            break # Break from processing vector_search_results
+                if len(results) >= limit: # if limit reached, skip keyword search below
+                    return results
                 
             except Exception as e:
                 logger.warning(f"Vector search failed: {str(e)}. Falling back to keyword search.")
