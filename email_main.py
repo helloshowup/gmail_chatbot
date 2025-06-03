@@ -52,7 +52,10 @@ import uuid
 import threading
 from datetime import datetime, timedelta, date
 from enum import Enum
-import dotenv
+try:
+    import dotenv
+except ImportError:  # pragma: no cover - optional dependency
+    dotenv = None
 from collections import defaultdict
 from gmail_chatbot.query_classifier import classify_query_type, get_classification_feedback, postprocess_claude_response # Added postprocess_claude_response as it's used in this file
 
@@ -187,13 +190,13 @@ class GmailChatbotApp:
         self.claude_client: Optional[ClaudeAPIClient] = None # Initialize here, set later
         self.initialization_diagnostics: List[str] = [] # Store detailed init steps/errors
 
-        # Load environment variables from hard-coded .env file path
+        # Load environment variables from hard-coded .env file path if dotenv is available
         dotenv_path = Path(__file__).resolve().parent / ".env"
-        if dotenv_path.exists():
+        if dotenv and dotenv_path.exists():
             dotenv.load_dotenv(dotenv_path)
         else:
-            logging.warning(f"Environment file not found at {dotenv_path}")
-            print(f"Warning: Environment file not found at {dotenv_path}")
+            logging.warning(f"Environment file not found or dotenv not installed at {dotenv_path}")
+            print(f"Warning: Environment file not found or dotenv not installed at {dotenv_path}")
 
         # Context tracking for pending queries
         self.pending_email_context = None  # Store pending query context (original message + search string) for confirmation
