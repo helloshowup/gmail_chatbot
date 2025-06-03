@@ -37,6 +37,11 @@ from pathlib import Path
 import atexit
 import time
 import uuid
+try:
+    import streamlit as st
+except Exception:
+    st = None
+
 import threading
 from datetime import datetime, timedelta, date
 from enum import Enum
@@ -502,6 +507,8 @@ class GmailChatbotApp:
                     system_message=self.system_message,
                     request_id=request_id,
                 )
+                if search_response_text and "error" in search_response_text.lower() and st:
+                    st.session_state.last_gmail_error = search_response_text
                 response = search_response_text
 
                 if emails:
@@ -1254,6 +1261,8 @@ class GmailChatbotApp:
                             system_message=self.system_message,
                             request_id=request_id,
                         )
+                        if search_results_text and "error" in search_results_text.lower() and st:
+                            st.session_state.last_gmail_error = search_results_text
                         
                         final_response_parts = [acknowledgement]
 
@@ -1448,8 +1457,21 @@ class GmailChatbotApp:
                 else: # Other TASK_CHAIN types, ask for confirmation
                     self.pending_email_context = {"original_message": message, "gmail_query": "TASK_CHAIN"}
                     response_str += "\n\nWould you like me to proceed with this multi-step task?"
-        
         return response_str
+
+        
+    def get_email_by_id(self, email_id: str, user_query: str = "", request_id: str | None = None) -> str:
+        if not self.gmail_client:
+            return "Gmail client not available."
+        email_data, msg = self.gmail_client.get_email_by_id(email_id, user_query)
+        if msg and "error" in msg.lower() and st:
+            st.session_state.last_gmail_error = msg
+        if email_data:
+            try:
+                self.memory_actions_handler.store_emails_in_memory(emails=[email_data], query=user_query or email_id, request_id=request_id or str(uuid.uuid4()))
+            except Exception:
+                pass
+        return msg
 
     def run(self) -> None:
         """Run the Gmail Chatbot application with GUI."""
