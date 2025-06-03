@@ -1,6 +1,7 @@
 import sys
 import types
 import unittest
+import contextlib
 from unittest.mock import MagicMock
 import os
 
@@ -14,6 +15,31 @@ if 'streamlit' not in sys.modules:
     st_stub = types.ModuleType('streamlit')
     st_stub.toast = lambda *args, **kwargs: None
     st_stub.session_state = types.SimpleNamespace()
+    # Minimal UI stubs
+    st_stub.set_page_config = lambda *a, **k: None
+    st_stub.title = lambda *a, **k: None
+    st_stub.progress = lambda *a, **k: types.SimpleNamespace(progress=lambda *a2, **k2: None)
+    st_stub.info = lambda *a, **k: None
+    st_stub.error = lambda *a, **k: None
+    st_stub.success = lambda *a, **k: None
+    st_stub.warning = lambda *a, **k: None
+    st_stub.balloons = lambda *a, **k: None
+    @contextlib.contextmanager
+    def spinner(*args, **kwargs):
+        yield
+    st_stub.spinner = spinner
+    st_stub.sidebar = types.SimpleNamespace(
+        subheader=lambda *a, **k: None,
+        success=lambda *a, **k: None,
+        warning=lambda *a, **k: None,
+        info=lambda *a, **k: None,
+        write=lambda *a, **k: None,
+        markdown=lambda *a, **k: None,
+        expander=lambda *a, **k: contextlib.nullcontext(),
+    )
+    st_stub.json = lambda *a, **k: None
+    st_stub.chat_message = contextlib.nullcontext
+    st_stub.chat_input = lambda *a, **k: None
     sys.modules['streamlit'] = st_stub
 else:
     st_stub = sys.modules['streamlit']
@@ -21,8 +47,36 @@ else:
         st_stub.session_state = types.SimpleNamespace()
     if not hasattr(st_stub, 'toast'):
         st_stub.toast = lambda *args, **kwargs: None
+    if not hasattr(st_stub, 'progress'):
+        st_stub.progress = lambda *a, **k: types.SimpleNamespace(progress=lambda *a2, **k2: None)
+    if not hasattr(st_stub, 'spinner'):
+        @contextlib.contextmanager
+        def spinner(*args, **kwargs):
+            yield
+        st_stub.spinner = spinner
+    if not hasattr(st_stub, 'info'):
+        st_stub.info = lambda *a, **k: None
+    if not hasattr(st_stub, 'error'):
+        st_stub.error = lambda *a, **k: None
+    if not hasattr(st_stub, 'success'):
+        st_stub.success = lambda *a, **k: None
+    if not hasattr(st_stub, 'warning'):
+        st_stub.warning = lambda *a, **k: None
+    if not hasattr(st_stub, 'balloons'):
+        st_stub.balloons = lambda *a, **k: None
+    if not hasattr(st_stub, 'sidebar'):
+        st_stub.sidebar = types.SimpleNamespace(
+            subheader=lambda *a, **k: None,
+            success=lambda *a, **k: None,
+            warning=lambda *a, **k: None,
+            info=lambda *a, **k: None,
+            write=lambda *a, **k: None,
+            markdown=lambda *a, **k: None,
+            expander=lambda *a, **k: contextlib.nullcontext(),
+        )
 
-from agentic_executor import execute_step
+from agentic_executor import execute_step, handle_step_limit_reached
+import agentic_executor
 
 class TestAgenticExecutorFlow(unittest.TestCase):
     def setUp(self):
@@ -111,7 +165,6 @@ class TestAgenticExecutorFlow(unittest.TestCase):
         if pending["action"] == "send_email":
             st_stub.session_state.bot.gmail_client.send_email(**pending["parameters"])
         self.gmail_client.send_email.assert_called_once_with(to="c@d.com", subject="Hello", body="World")
-
 
 if __name__ == "__main__":
     unittest.main()

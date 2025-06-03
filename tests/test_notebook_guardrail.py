@@ -20,20 +20,34 @@ if parent_dir not in sys.path:
 # Import modules to test
 from email_main import GmailChatbotApp
 from prompt_templates import NOTEBOOK_NO_RESULTS_TEMPLATES
+from email_config import CLAUDE_API_KEY_ENV
 
 
 @pytest.fixture
-def mock_deps():
+def mock_deps(monkeypatch):
     """Create mock dependencies for testing."""
+    os.environ[CLAUDE_API_KEY_ENV] = "test-key"
     memory_store = MagicMock()
     gmail_client = MagicMock()
     claude_client = MagicMock()
+
+    monkeypatch.setattr('email_main.GmailAPIClient', lambda *a, **k: gmail_client)
+    monkeypatch.setattr('email_main.ClaudeAPIClient', lambda *a, **k: claude_client)
+    monkeypatch.setattr('email_main.EmailVectorMemoryStore', lambda *a, **k: memory_store)
+    monkeypatch.setattr('email_main.EnhancedMemoryStore', MagicMock(return_value=MagicMock()))
+    monkeypatch.setattr('email_main.PreferenceDetector', MagicMock(return_value=MagicMock()))
+    monkeypatch.setattr('email_main.MemoryActionsHandler', MagicMock(return_value=MagicMock()))
     
-    app = GmailChatbotApp(
-        memory_store=memory_store,
-        gmail_client=gmail_client,
-        claude_client=claude_client
+    app = GmailChatbotApp()
+    app.memory_store = memory_store
+    app.gmail_client = gmail_client
+    app.claude_client = claude_client
+    app.memory_actions_handler = MagicMock()
+    app.memory_actions_handler.query_memory.side_effect = (
+        lambda message, request_id=None: memory_store.search_notebook(message)
     )
+    app.memory_actions_handler.record_interaction_in_memory = MagicMock()
+    app.memory_actions_handler.get_pending_proactive_summaries.return_value = []
     
     return {
         'app': app,

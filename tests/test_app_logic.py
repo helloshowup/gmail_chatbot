@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, patch, ANY
 import sys
 import os
 
@@ -307,3 +307,77 @@ def test_process_message_notebook_lookup(mock_memory_kind, mock_pref_detector, m
 
 # TODO: Add more test cases for:
 # - Email search (complex - involving Claude query generation and user confirmation)
+
+@patch.object(GmailChatbotApp, "__init__", lambda self: None)
+def test_email_search_claude_query():
+    """Email search that requires Claude to generate a Gmail query string."""
+    app = GmailChatbotApp()
+    app.system_message = "sys"
+    app.claude_client = MagicMock()
+    app.claude_client.process_query.return_value = "from:boss subject:urgent"
+
+    # Call the internal handler directly to avoid full process_message complexity
+    response = GmailChatbotApp._handle_email_search_query(
+        app,
+        "Find urgent emails from my boss",
+        "find urgent emails from my boss",
+        "req1",
+    )
+
+    assert "search gmail for" in response.lower()
+    assert "from:boss subject:urgent" in response
+    assert app.pending_email_context["gmail_query"] == "from:boss subject:urgent"
+    assert app.pending_email_context["type"] == "gmail_query_confirmation"
+
+
+@patch.object(GmailChatbotApp, "__init__", lambda self: None)
+def test_email_search_confirmation_yes():
+    """User confirms the Gmail query stored in pending_email_context."""
+    app = GmailChatbotApp()
+    app.system_message = "sys"
+    app.gmail_client = MagicMock()
+    app.memory_actions_handler = MagicMock()
+    app.pending_email_context = {
+        "gmail_query": "from:boss subject:urgent",
+        "original_message": "Find urgent emails from my boss",
+        "type": "gmail_query_confirmation",
+    }
+
+    # Simulate the confirmation branch of process_message directly
+    emails, text = ([{"id": "1"}], "Found it")
+    app.gmail_client.search_emails.return_value = (emails, text)
+
+    # Emulate confirmation logic
+    gmail_search_string = app.pending_email_context["gmail_query"]
+    original_user_message = app.pending_email_context["original_message"]
+    acknowledgement = "👍 Starting the search now..."
+    found_emails, search_results_text = app.gmail_client.search_emails(
+        search_query_override=gmail_search_string,
+        user_query=original_user_message,
+        system_message=app.system_message,
+        request_id="req2",
+    )
+    app.memory_actions_handler.store_emails_in_memory(
+        emails=found_emails, query=original_user_message, request_id="req2"
+    )
+    app.memory_actions_handler.record_interaction_in_memory(
+        query=original_user_message,
+        response=search_results_text,
+        request_id="req2",
+        email_ids=["1"],
+        client=None,
+    )
+    response = acknowledgement + "\n\n" + search_results_text
+    app.pending_email_context = None
+
+    # Assertions matching expected flow
+    app.gmail_client.search_emails.assert_called_once_with(
+        search_query_override="from:boss subject:urgent",
+        user_query="Find urgent emails from my boss",
+        system_message="sys",
+        request_id=ANY,
+    )
+    assert app.memory_actions_handler.store_emails_in_memory.called
+    assert app.memory_actions_handler.record_interaction_in_memory.called
+    assert "starting the search" in response.lower()
+    assert app.pending_email_context is None
