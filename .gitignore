@@ -19,6 +19,9 @@ token.json
 # Logs
 *.log
 
+# Project data / cache
+data/vector_cache/
+
 # Distribution / packaging
 .Python
 build/
