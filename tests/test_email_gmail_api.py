@@ -1,14 +1,81 @@
 import unittest
-from unittest.mock import patch, MagicMock, mock_open, ANY # Restore ANY
-import os # Restore os
-import sys # Restore sys
-import ssl # For ssl.SSLError
-import logging # For disabling/enabling logger in tests
-import json # For creating mock client_secret file
-import pickle # For mocking credential loading/saving
-from pathlib import Path # For type checking in mocks
+from unittest.mock import patch, MagicMock, mock_open, ANY  # Restore ANY
+import os  # Restore os
+import sys  # Restore sys
+import ssl  # For ssl.SSLError
+import logging  # For disabling/enabling logger in tests
+import json  # For creating mock client_secret file
+import pickle  # For mocking credential loading/saving
+from pathlib import Path  # For type checking in mocks
+import types
 
-from google.oauth2.credentials import Credentials # For type hinting and creating mock creds
+try:
+    from google.oauth2.credentials import Credentials  # type: ignore
+    import google.auth.exceptions  # type: ignore
+    import google.auth.transport.requests  # type: ignore
+    import google_auth_oauthlib.flow  # type: ignore
+    import googleapiclient.discovery  # type: ignore
+except ModuleNotFoundError:
+    # Create minimal stub modules so that patch() calls work without the real packages
+    class Credentials:
+        def __init__(self, *args, **kwargs):
+            self.valid = True
+            self.expired = False
+
+        def refresh(self, *args, **kwargs):
+            pass
+
+        @classmethod
+        def from_authorized_user_file(cls, *args, **kwargs):
+            return cls()
+
+    class RefreshError(Exception):
+        pass
+
+    class Request:
+        pass
+
+    google_auth_exceptions = types.SimpleNamespace(RefreshError=RefreshError)
+    google_auth_transport = types.SimpleNamespace(requests=types.SimpleNamespace(Request=Request))
+    google_auth = types.SimpleNamespace(exceptions=google_auth_exceptions, transport=google_auth_transport)
+    google_module = types.SimpleNamespace(auth=google_auth, oauth2=types.SimpleNamespace(credentials=types.SimpleNamespace(Credentials=Credentials)))
+
+    flow_module = types.ModuleType("google_auth_oauthlib.flow")
+    flow_module.InstalledAppFlow = MagicMock()
+    google_auth_oauthlib_module = types.ModuleType("google_auth_oauthlib")
+    google_auth_oauthlib_module.flow = flow_module
+
+    discovery_module = types.ModuleType("googleapiclient.discovery")
+    discovery_module.build = MagicMock()
+
+    errors_module = types.ModuleType("googleapiclient.errors")
+    class HttpError(Exception):
+        pass
+    errors_module.HttpError = HttpError
+
+    googleapiclient_module = types.ModuleType("googleapiclient")
+    googleapiclient_module.discovery = discovery_module
+    googleapiclient_module.errors = errors_module
+
+    anthropic_module = types.ModuleType("anthropic")
+    anthropic_module.Client = MagicMock()
+
+    sys.modules.setdefault("google", google_module)
+    sys.modules.setdefault("google.oauth2", google_module.oauth2)
+    sys.modules.setdefault("google.oauth2.credentials", google_module.oauth2.credentials)
+    sys.modules.setdefault("google.auth", google_module.auth)
+    sys.modules.setdefault("google.auth.exceptions", google_auth_exceptions)
+    sys.modules.setdefault("google.auth.transport", google_auth_transport)
+    sys.modules.setdefault("google.auth.transport.requests", google_auth_transport.requests)
+    sys.modules.setdefault("google_auth_oauthlib", google_auth_oauthlib_module)
+    sys.modules.setdefault("google_auth_oauthlib.flow", flow_module)
+    sys.modules.setdefault("googleapiclient", googleapiclient_module)
+    sys.modules.setdefault("googleapiclient.discovery", discovery_module)
+    sys.modules.setdefault("googleapiclient.errors", errors_module)
+    sys.modules.setdefault("anthropic", anthropic_module)
+
+    # Indicate to application code that tests are running
+    os.environ.setdefault("PYTEST_RUNNING", "1")
 
 # Adjust sys.path to include the project root ('showup-tools')
 project_root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -16,9 +83,6 @@ if project_root_dir not in sys.path:
     sys.path.insert(0, project_root_dir)
 
 from gmail_chatbot.email_gmail_api import GmailAPIClient
-from google.oauth2.credentials import Credentials # For type hinting and creating mock creds
-import google.auth.exceptions # For RefreshError
-import google.auth.transport.requests # For Request class spec
 
 # Define mock paths for constants used by GmailAPIClient constructor
 # These will be created and removed in setUp/tearDown
@@ -167,42 +231,31 @@ class TestGmailAPIClientSSLErrors(unittest.TestCase):
                     break
             self.assertFalse(found_write_call, f"Token file should not have been opened for writing ('wb' mode). Calls: {mock_open_file.call_args_list}")
 
-    # @patch('google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file')
-    # @patch('google.oauth2.credentials.Credentials.from_authorized_user_file')
-    @patch('googleapiclient.discovery.build')
-    @patch('gmail_chatbot.email_gmail_api.GMAIL_TOKEN_FILE', TEST_TOKEN_FILE)
-    @patch('gmail_chatbot.email_gmail_api.GMAIL_CLIENT_SECRET_FILE', TEST_CLIENT_SECRET_FILE)
-    def test_authenticate_ssl_error_on_refresh_then_flow_fails(self, mock_gcsf_const, mock_gtf_const, mock_build, *args, **kwargs):
+    def test_authenticate_ssl_error_on_refresh_then_flow_fails(self):
         """Test SSL on refresh, then flow fails, leading to auth failure."""
-        print(f"ARGS: {args}")
-        print(f"KWARGS: {kwargs}")
-        print(f"mock_gcsf_const: {mock_gcsf_const}")
-        print(f"mock_gtf_const: {mock_gtf_const}")
-        print(f"mock_build: {mock_build}")
-        # print(f"mock_creds_from_file: {mock_creds_from_file}")
-        # print(f"mock_flow_from_secrets: {mock_flow_from_secrets}")
-        mock_credentials = MagicMock(spec=Credentials)
-        mock_credentials.valid = False
-        mock_credentials.expired = True
-        mock_credentials.refresh_token = "fake_refresh_token"
-        mock_credentials.refresh.side_effect = ssl.SSLError("Simulated SSL Error during refresh")
-        mock_creds_from_file.return_value = mock_credentials
+        with patch('gmail_chatbot.email_gmail_api.GMAIL_CLIENT_SECRET_FILE', TEST_CLIENT_SECRET_FILE) as mock_gcsf_const, \
+             patch('gmail_chatbot.email_gmail_api.GMAIL_TOKEN_FILE', TEST_TOKEN_FILE) as mock_gtf_const, \
+             patch('googleapiclient.discovery.build') as mock_build, \
+             patch('google.oauth2.credentials.Credentials.from_authorized_user_file') as mock_creds_from_file, \
+             patch('google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file') as mock_flow_from_secrets:
 
-        mock_flow_instance = mock_flow_from_secrets.return_value
-        mock_flow_instance.run_local_server.side_effect = ValueError("Flow aborted by test during re-auth")
-        
-        # If refresh fails (SSL) and subsequent flow also fails, _authenticate should raise ValueError or return None.
-        # If it returns None, build(..., credentials=None) would likely fail or the service attribute would be None.
-        # The ValueError from _authenticate's "Failed to obtain valid credentials" is ideal.
-        # Let's assume _authenticate raises ValueError if flow fails after refresh error.
-        # Based on current _authenticate, if flow fails, it raises ValueError. If refresh has SSL error, it logs and creds=None, then flow runs.
-        with self.assertRaisesRegex(ValueError, "Flow aborted by test during re-auth") as cm:
-            client = GmailAPIClient(
-                claude_client=self.mock_claude_client, 
-                system_message=self.mock_system_message
-            )
-        # We can also check that build was not called with None credentials if _authenticate raises before build
-        mock_build.assert_not_called() # Or called with specific creds if flow somehow succeeded before this mock
+            mock_credentials = MagicMock(spec=Credentials)
+            mock_credentials.valid = False
+            mock_credentials.expired = True
+            mock_credentials.refresh_token = "fake_refresh_token"
+            mock_credentials.refresh.side_effect = ssl.SSLError("Simulated SSL Error during refresh")
+            mock_creds_from_file.return_value = mock_credentials
+
+            mock_flow_instance = mock_flow_from_secrets.return_value
+            mock_flow_instance.run_local_server.side_effect = ValueError("Flow aborted by test during re-auth")
+
+            with self.assertRaisesRegex(ValueError, "Flow aborted by test during re-auth"):
+                GmailAPIClient(
+                    claude_client=self.mock_claude_client,
+                    system_message=self.mock_system_message
+                )
+
+            mock_build.assert_not_called()
 
 #    @patch('google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file')
 #    @patch('google.oauth2.credentials.Credentials.from_authorized_user_file')
