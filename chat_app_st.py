@@ -88,6 +88,82 @@ if st.session_state.agentic_mode_enabled:
     )
 # --- End Agentic Mode Initialization & Controls ---
 
+
+def run_agentic_plan() -> None:
+    """Execute the current agentic plan sequentially with progress feedback."""
+    plan = st.session_state.get("agentic_plan")
+    if not plan:
+        return
+
+    agentic_state = st.session_state.get("agentic_state", default_agentic_state_values.copy())
+    step_limit = st.session_state.get("agentic_step_limit", 10)
+
+    progress_bar = st.progress(
+        agentic_state.get("current_step_index", 0) / max(len(plan), 1)
+    )
+
+    while (
+        agentic_state.get("current_step_index", 0) < len(plan)
+        and agentic_state.get("executed_call_count", 0) < step_limit
+    ):
+        idx = agentic_state.get("current_step_index", 0)
+        step_details = plan[idx]
+        with st.spinner(f"Executing: {step_details.get('description', 'Working...')}"):
+            try:
+                execution_result = execute_step(step_details, agentic_state)
+            except Exception as e:  # pragma: no cover - defensive
+                st.exception(e)
+                st.error(f"An unexpected error occurred during step execution: {e}")
+                st.session_state.agentic_plan = None
+                st.session_state.agentic_state = default_agentic_state_values.copy()
+                return
+
+        agentic_state = execution_result.get("updated_agentic_state", agentic_state)
+        agentic_state["executed_call_count"] = agentic_state.get("executed_call_count", 0) + 1
+
+        if execution_result.get("status") == "failure":
+            error_msg = (
+                f"Step {idx + 1} ('{step_details.get('step_id', 'Unnamed')}') failed:"
+                f" {execution_result.get('message', 'Unknown error')}"
+            )
+            st.error(error_msg)
+            agentic_state.setdefault("error_messages", []).append(error_msg)
+            summarize_and_log_agentic_results(agentic_state, plan_completed=False)
+            st.session_state.agentic_plan = None
+            st.session_state.agentic_state = default_agentic_state_values.copy()
+            return
+
+        if execution_result.get("requires_user_input", False):
+            st.info(
+                f"Step {idx + 1} requires user input: {execution_result.get('message', '')}"
+            )
+            st.session_state.agentic_state = agentic_state
+            progress_bar.progress((idx + 1) / len(plan))
+            return
+
+        agentic_state["current_step_index"] = idx + 1
+        st.session_state.agentic_state = agentic_state
+        progress_bar.progress(agentic_state["current_step_index"] / len(plan))
+
+    if agentic_state.get("current_step_index", 0) >= len(plan):
+        summarize_and_log_agentic_results(agentic_state, plan_completed=True)
+        st.success("🎉 Agentic plan fully completed!")
+        st.session_state.agentic_plan = None
+        st.session_state.agentic_state = default_agentic_state_values.copy()
+        st.balloons()
+    elif agentic_state.get("executed_call_count", 0) >= step_limit:
+        user_choice = handle_step_limit_reached(agentic_state, step_limit)
+        if user_choice == "continue":
+            st.session_state.agentic_state = agentic_state
+            st.rerun()
+        elif user_choice == "stop":
+            st.session_state.agentic_plan = None
+            st.session_state.agentic_state = default_agentic_state_values.copy()
+            st.rerun()
+        else:
+            st.stop()
+
+
 # Initialize chat history
 
 def initialize_chatbot() -> bool:
@@ -272,6 +348,10 @@ if not st.session_state.get("bot_initialized_successfully", False):
 if "vector_search_ui_warning" in st.session_state and st.session_state.vector_search_ui_warning:
     st.warning(st.session_state.vector_search_ui_warning)
 
+if st.session_state.get("last_gmail_error"):
+    st.error(st.session_state.last_gmail_error)
+    st.session_state.last_gmail_error = ""
+
 # --- Chat History Display ---chat messages from history on app rerun
 if "bot" in st.session_state and hasattr(st.session_state.bot, "chat_history"):
     for message in st.session_state.bot.chat_history: # Use bot's history
@@ -315,75 +395,15 @@ if prompt := st.chat_input("Ask me about your inbox:"):
             executed_call_count = agentic_state.get("executed_call_count", 0)
             step_limit = st.session_state.get("agentic_step_limit", 10)
 
-            st.info(f"🤖 Agentic Mode: Executing Plan ({current_step_idx}/{len(plan)} steps completed, {executed_call_count}/{step_limit} calls made)")
-            if len(plan) > 0:
-                st.progress(current_step_idx / len(plan))
-
-            # Check if call limit reached
-            if executed_call_count >= step_limit:
-                user_choice = handle_step_limit_reached(agentic_state, step_limit)
-                if user_choice == "continue":
-                    st.session_state.agentic_state = agentic_state
-                    st.rerun()
-                elif user_choice == "stop":
-                    st.session_state.agentic_plan = None
-                    st.session_state.agentic_state = default_agentic_state_values.copy()
-                    st.rerun()
-                else:
-                    st.stop()
-            # Check if plan is still active (not cleared by limit or completion)
-            elif st.session_state.get("agentic_plan") and current_step_idx < len(plan):
-                step_details = plan[current_step_idx]
-                st.markdown(f"**Current Task:** {step_details.get('description', 'No description')}")
-
-                if st.button(f"Execute Step {current_step_idx + 1}: {step_details.get('step_id', 'Unnamed')}", key=f"exec_step_{current_step_idx}"):
-                    with st.spinner(f"Executing: {step_details.get('description', 'Working...')}"):
-                        try:
-                            print(f"CHAT_APP_ST [DEBUG]: st.session_state.agentic_state BEFORE execute_step call for step {current_step_idx + 1}: {st.session_state.agentic_state}")
-                            execution_result = execute_step(step_details, st.session_state.agentic_state)
-                            st.toast(f"DEBUG: execute_step returned: {execution_result.get('status')}", icon="📋")
-
-                            st.session_state.agentic_state = execution_result.get("updated_agentic_state", agentic_state)
-                            st.session_state.agentic_state["executed_call_count"] = executed_call_count + 1
-
-                            if execution_result.get("status") == "failure":
-                                error_msg = f"Step {current_step_idx + 1} ('{step_details.get('step_id', 'Unnamed')}') failed: {execution_result.get('message', 'Unknown error')}"
-                                st.error(error_msg)
-                                if "error_messages" not in st.session_state.agentic_state:
-                                    st.session_state.agentic_state["error_messages"] = []
-                                st.session_state.agentic_state["error_messages"].append(error_msg)
-                                summarize_and_log_agentic_results(st.session_state.agentic_state, plan_completed=False)
-                                st.session_state.agentic_plan = None
-                                st.session_state.agentic_state = default_agentic_state_values.copy()
-                                st.rerun()
-                            elif execution_result.get("requires_user_input", False):
-                                st.info(f"Step {current_step_idx + 1} requires user input: {execution_result.get('message', '')}")
-                                st.rerun()
-                            else:
-                                st.toast(f"DEBUG: Step {current_step_idx + 1} success path reached.", icon="✅")
-                                st.session_state.agentic_state["current_step_index"] = current_step_idx + 1
-                                st.success(f"Step {current_step_idx + 1} completed. {execution_result.get('message', '')}")
-                                st.rerun()
-                        except Exception as e:
-                            st.exception(e)
-                            st.error(f"An unexpected error occurred during step execution: {e}")
-                            st.session_state.agentic_plan = None
-                            st.session_state.agentic_state = default_agentic_state_values.copy()
-                            st.rerun()
-            elif st.session_state.get("agentic_plan") and current_step_idx >= len(plan):
-                if not agentic_state.get("completion_logged_flag", False):
-                    summarize_and_log_agentic_results(agentic_state, plan_completed=True)
-                    st.success("🎉 Agentic plan fully completed!")
-                    agentic_state["completion_logged_flag"] = True
-                    st.session_state.agentic_plan = None
-                    st.session_state.agentic_state = default_agentic_state_values.copy()
-                    st.balloons()
-                    st.button("Acknowledge & Clear", on_click=lambda: setattr(st.session_state, 'agentic_plan', None) or st.rerun())
-    else:
-        with st.spinner("Bot is thinking..."):
-            assistant_reply = st.session_state.bot.process_message(prompt)
-        with st.chat_message("assistant"):
-            st.markdown(assistant_reply)
+            st.info(
+                f"🤖 Agentic Mode: Executing Plan ({current_step_idx}/{len(plan)} steps completed, {executed_call_count}/{step_limit} calls made)"
+            )
+            run_agentic_plan()
+        else:
+            with st.spinner("Bot is thinking..."):
+                assistant_reply = st.session_state.bot.process_message(prompt)
+            with st.chat_message("assistant"):
+                st.markdown(assistant_reply)
 
 st.sidebar.title("Controls")
 if "batch_mode" not in st.session_state:
