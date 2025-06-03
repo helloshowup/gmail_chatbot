@@ -172,38 +172,40 @@ class EnhancedMemoryStore:
         # Add to vector store if available (only if vector_db exists and is initialized)
         if self.vector_search_available and vector_db is not None:
             try:
-                                # TODO: Ensure all necessary fields for add_email are consistently available in MemoryEntry.meta
-                # Required: email_id, subject, sender, recipient, body, date
-                # Optional: tags, metadata (we'll add 'kind' here)
-                email_id = entry.id
-                subject = entry.meta.get('subject', 'No Subject')
-                sender = entry.meta.get('sender', 'unknown@example.com') # Provide default if missing
-                recipient = entry.meta.get('recipient', 'unknown@example.com') # Provide default if missing
-                body = entry.content # Main content for vectorization
-                # Try to get a structured date, fallback to current timestamp if not available
-                date_str = entry.meta.get('date', entry.timestamp) 
-                if not date_str: # Ensure date is not None or empty
-                    date_str = datetime.utcnow().isoformat()
-                
-                tags = entry.tags or []
-                # Pass 'kind' as part of metadata for potential filtering during search
-                doc_metadata = {'kind': entry.kind.value if isinstance(entry.kind, MemoryKind) else entry.kind}
-                if entry.meta:
-                    doc_metadata.update(entry.meta) # Add other meta fields
-
-                vector_db.add_email(
-                    email_id=email_id,
-                    subject=subject,
-                    sender=sender,
-                    recipient=recipient,
-                    body=body,
-                    date=date_str,
-                    tags=tags,
-                    metadata=doc_metadata # Pass combined metadata
-                )
-                logger.info(f"Added email to vector database: {entry.meta.get('subject', 'Unknown')[:30]}...")
+                self._append_email_memory(entry)
             except Exception as e:
                 logger.warning(f"Failed to add email memory to vector DB: {e}")
+
+    def _append_email_memory(self, entry: MemoryEntry) -> None:
+        """Validate and add an email entry to the vector database."""
+        required = {
+            'subject': entry.meta.get('subject'),
+            'sender': entry.meta.get('sender'),
+            'recipient': entry.meta.get('recipient'),
+            'body': entry.content,
+            'date': entry.meta.get('date') or (entry.ts.isoformat() if isinstance(entry.ts, datetime) else entry.ts)
+        }
+        missing = [k for k, v in required.items() if not v]
+        if missing:
+            raise ValueError(f"Missing required field(s) for vector DB: {', '.join(missing)}")
+
+        tags = entry.tags or []
+        doc_metadata = {
+            'kind': entry.kind.value if isinstance(entry.kind, MemoryKind) else entry.kind
+        }
+        if entry.meta:
+            doc_metadata.update(entry.meta)
+
+        vector_db.add_email(
+            email_id=entry.id,
+            subject=required['subject'],
+            sender=required['sender'],
+            recipient=required['recipient'],
+            body=required['body'],
+            date=required['date'],
+            tags=tags,
+            metadata=doc_metadata
+        )
     
     def _save_email_memory(self) -> None:
         """Save email memory to file with thread-safe operations."""
