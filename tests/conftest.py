@@ -1,4 +1,9 @@
-import sys, types
+import sys
+import types
+import os
+
+# Mark that tests are running so application modules avoid altering sys.stdout/stderr
+os.environ.setdefault("PYTEST_RUNNING", "1")
 
 # Provide minimal stub modules if not installed
 for mod_name in ['anthropic', 'joblib', 'numpy']:
