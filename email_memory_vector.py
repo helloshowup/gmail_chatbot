@@ -43,12 +43,21 @@ class EmailVectorMemoryStore(EmailMemoryStore):
             self.preferences = [] # Assuming preferences are stored as a list of dicts or MemoryEntry objects
             logger.warning("Initialized missing preferences list.")
         
-        # Initialize vector DB status
-        self.vector_search_available = VECTOR_LIBS_AVAILABLE
+        # Initialize vector DB status from the vector_db instance
+        self.vector_search_available: bool = vector_db.vector_search_available
+        self.vector_search_error_message: Optional[str] = vector_db.initialization_error_message
+
         if self.vector_search_available:
-            logger.info("Vector search is available and enabled")
+            logger.info("Vector search is available and enabled.")
         else:
-            logger.warning("Vector search is not available, falling back to keyword search")
+            log_msg = "Vector search is NOT available."
+            if self.vector_search_error_message:
+                log_msg += f" Reason: {self.vector_search_error_message}"
+            else:
+                # This case might occur if VECTOR_LIBS_AVAILABLE was false but EmailVectorDB init didn't set a message (should be covered now)
+                log_msg += " Reason: Core vector libraries (FAISS, embeddings) might be missing or failed to load."
+            logger.warning(log_msg)
+            logger.info("Falling back to keyword-based search if applicable.")
             
         # Track emails that have been added to the vector DB
         self.vector_indexed_emails = set()
@@ -57,6 +66,10 @@ class EmailVectorMemoryStore(EmailMemoryStore):
         # Load the list of already indexed emails
         self._load_indexed_emails()
     
+    def get_vector_search_error_message(self) -> Optional[str]:
+        """Return the error message related to vector search initialization, if any."""
+        return self.vector_search_error_message
+
     def _load_indexed_emails(self) -> None:
         """Load the list of emails that have been indexed in the vector database."""
         if self.vector_index_file.exists():

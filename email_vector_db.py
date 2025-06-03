@@ -172,14 +172,12 @@ class EmailVectorDB:
                  embedding_model: str = "all-MiniLM-L6-v2",
                  chunk_size: int = 600,
                  chunk_overlap: int = 50):
-        """Initialize the vector database with configurable parameters
-        
-        Args:
-            cache_dir: Directory to store vector indices and chunk data (defaults to DATA_DIR/vector_cache)
-            embedding_model: HuggingFace model name for embeddings
-            chunk_size: Size of text chunks in characters
-            chunk_overlap: Overlap between chunks in characters
-        """
+        """Initialize the vector database with configurable parameters."""
+        self.vector_search_available: bool = False
+        self.initialization_error_message: Optional[str] = None
+        self.embeddings: Optional[HuggingFaceEmbeddings] = None # Ensure HuggingFaceEmbeddings is imported if not already
+        self.embedding_model_name: str = embedding_model
+
         # Set up cache directory
         if cache_dir is None:
             self.cache_dir = os.path.join(DATA_DIR, "vector_cache")
@@ -214,19 +212,36 @@ class EmailVectorDB:
             logger.info("Using SimpleTextSplitter fallback")
         
         # Initialize embeddings model if available
-        self.embedding_model_name = embedding_model
-        self.embeddings = None
-        
         if VECTOR_LIBS_AVAILABLE:
             try:
+                logger.info(f"Attempting to initialize embedding model: {self.embedding_model_name}")
                 self.embeddings = HuggingFaceEmbeddings(
-                    model_name=embedding_model,
+                    model_name=self.embedding_model_name,
                     cache_folder=os.path.join(self.cache_dir, "models")
+                    # Consider adding model_kwargs={'device': 'cpu'} if GPU issues persist despite FAISS CPU mode
                 )
-                logger.info(f"Initialized embedding model: {embedding_model}")
-            except Exception as e:
-                logger.exception(f"Failed to initialize embedding model: {e}")
+                self.vector_search_available = True
+                self.initialization_error_message = None
+                logger.info(f"Successfully initialized embedding model: {self.embedding_model_name}")
+            except OSError as e_os:
                 self.embeddings = None
+                self.vector_search_available = False
+                error_code_info = f" (OS Error Code: {e_os.errno})" if hasattr(e_os, 'errno') else ""
+                self.initialization_error_message = (
+                    f"✗ Embedding model ('{self.embedding_model_name}') failed to load due to an OS error (likely out of memory): {str(e_os)}.{error_code_info} "
+                    f"Try on a machine with more RAM (e.g., 16GB+) or use a lighter model like 'sentence-transformers/all-MiniLM-L6-v2'."
+                )
+                logger.error(f"Failed to initialize embedding model '{self.embedding_model_name}' due to OSError: {e_os}", exc_info=True)
+            except Exception as e:
+                self.embeddings = None
+                self.vector_search_available = False
+                self.initialization_error_message = f"✗ Embedding model ('{self.embedding_model_name}') failed to load due to an unexpected error: {str(e)}."
+                logger.exception(f"Failed to initialize embedding model '{self.embedding_model_name}': {e}")
+        else:
+            self.embeddings = None
+            self.vector_search_available = False
+            self.initialization_error_message = "✗ Vector search libraries (FAISS, HuggingFaceEmbeddings) are not available or failed to import. Vector search disabled."
+            logger.error(self.initialization_error_message)
         
         # Active vector DB and chunks
         self.active_db = None

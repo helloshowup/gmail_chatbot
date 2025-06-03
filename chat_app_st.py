@@ -99,42 +99,51 @@ if st.session_state.agentic_mode_enabled:
 
 def initialize_chatbot() -> bool:
     """Attempts to initialize the chatbot application, returns True on success, False on failure."""
+    st.session_state["initialization_steps"] = [] # Initialize early, done before any potential failure point
+
     # Load .env file before checking for the API key
     dotenv_path = Path(__file__).resolve().parent / ".env"
     if dotenv_path.exists():
         dotenv.load_dotenv(dotenv_path)
-        # print(f"DEBUG: Loaded .env from {dotenv_path}", file=sys.stderr)
-    # else:
-        # print(f"DEBUG: .env file not found at {dotenv_path}", file=sys.stderr)
+        st.session_state["initialization_steps"].append(str(f"✓ .env file loaded from {dotenv_path}"))
+    else:
+        st.session_state["initialization_steps"].append(str(f"⚠️ .env file not found at {dotenv_path}. Some features might not work."))
+        # This might not be critical enough to stop, depending on what's in .env, but API key check below is.
 
     # Check for Anthropic API key before attempting to initialize
     if not os.environ.get(CLAUDE_API_KEY_ENV):
-        st.error(f"Missing {CLAUDE_API_KEY_ENV} environment variable. Please set it in your .env file or environment.")
-        st.warning("The application cannot start without the API key. Please set it and refresh.")
+        error_msg = str(f"✗ Missing {CLAUDE_API_KEY_ENV} environment variable. Please set it in your .env file or environment.")
+        st.session_state["initialization_steps"].append(error_msg)
+        st.error(error_msg)
+        st.warning("The application cannot start without the Anthropic API key. Please set it and refresh.")
         st.session_state["bot_initialized_successfully"] = False
         st.stop() # Critical failure, stop execution
         return False # Should not be reached due to st.stop()
+    else:
+        st.session_state["initialization_steps"].append(str(f"✓ {CLAUDE_API_KEY_ENV} found."))
 
     st.info("Initializing chatbot... This might take a moment on the first run.")
     with st.spinner("Please wait: Setting up AI model and connecting to services..."):
         try:
-            st.session_state["initialization_steps"] = [] # Initialize early
+            st.session_state["bot_initialized_successfully"] = True # Assume success, set to False on any failure
+
             st.session_state["initialization_steps"].append(str("Attempting to import GmailChatbotApp..."))
             print("DEBUG: chat_app_st.py - BEFORE GmailChatbotApp import", file=sys.stderr)
-            print(f"DEBUG: chat_app_st.py - sys.path JUST BEFORE IMPORT: {sys.path}", file=sys.stderr)
             try:
                 from email_main import GmailChatbotApp # Deferred import
                 print("DEBUG: chat_app_st.py - Import statement for GmailChatbotApp COMPLETED.", file=sys.stderr)
                 if not ('GmailChatbotApp' in locals() and isinstance(GmailChatbotApp, type)):
-                    print(f"CRITICAL_DEBUG: chat_app_st.py - GmailChatbotApp import issue. Type: {type(GmailChatbotApp) if 'GmailChatbotApp' in locals() else 'Not in locals'}", file=sys.stderr)
-                    raise RuntimeError("GmailChatbotApp not imported as a class.")
+                    critical_msg = "CRITICAL_DEBUG: chat_app_st.py - GmailChatbotApp import issue. Not a class after import."
+                    print(critical_msg, file=sys.stderr)
+                    raise RuntimeError(critical_msg)
                 st.session_state["initialization_steps"].append(str("✓ GmailChatbotApp imported successfully"))
                 st.session_state["gmail_chatbot_app_imported"] = True
             except ImportError as import_err:
                 print(f"CRITICAL_DEBUG: chat_app_st.py - FAILED to import GmailChatbotApp: {import_err}", file=sys.stderr)
                 traceback.print_exc(file=sys.stderr)
                 st.session_state["initialization_steps"].append(str(f"✗ FAILED to import GmailChatbotApp: {import_err}"))
-                raise
+                st.session_state["bot_initialized_successfully"] = False
+                return False # Critical import failure
             
             autonomous_task_counter_key = "autonomous_task_counter"
             if autonomous_task_counter_key not in st.session_state:
@@ -142,92 +151,89 @@ def initialize_chatbot() -> bool:
             st.session_state["initialization_steps"].append(str("✓ Autonomous task counter initialized"))
 
             st.session_state["initialization_steps"].append(str("Attempting to create GmailChatbotApp instance..."))
-            # Pass st.session_state itself as the mutable mapping for the counter
             st.session_state.bot = GmailChatbotApp(autonomous_counter_ref=st.session_state)
-            st.session_state["initialization_steps"].append("✓ GmailChatbotApp instance created")
+            st.session_state["initialization_steps"].append(str("✓ GmailChatbotApp instance created"))
 
-            st.session_state["initialization_steps"].append(str("Attempting to test Gmail API connection..."))
-            if hasattr(st.session_state.bot, 'test_gmail_api_connection') and callable(getattr(st.session_state.bot, 'test_gmail_api_connection')):
-                gmail_api_ok = st.session_state.bot.test_gmail_api_connection()
-                if gmail_api_ok:
-                    st.session_state["initialization_steps"].append(str("✓ Gmail API connection successful."))
+            # --- Critical Component Checks --- 
+            st.session_state["initialization_steps"].append(str("Verifying critical bot components..."))
+
+            # 1. Gmail Client (Service Object and API Connection)
+            if hasattr(st.session_state.bot, 'gmail_service') and st.session_state.bot.gmail_service is not None:
+                st.session_state["initialization_steps"].append(str("✓ Gmail client object loaded (gmail_service found)."))
+                # Now test the connection (this method should ideally add its own detailed step to initialization_steps)
+                if hasattr(st.session_state.bot, 'test_gmail_api_connection') and callable(getattr(st.session_state.bot, 'test_gmail_api_connection')):
+                    # The test_gmail_api_connection method in email_main.py should append its own status to st.session_state.bot.initialization_diagnostics
+                    # which will then be copied or used here. For now, we assume it returns bool and we add a generic message.
+                    gmail_api_ok, msg = st.session_state.bot.test_gmail_api_connection() # Expecting (bool, str) from modified version
+                    st.session_state["initialization_steps"].append(str(msg)) # Add message from test_gmail_api_connection
+                    if not gmail_api_ok:
+                        st.session_state["bot_initialized_successfully"] = False
                 else:
-                    st.session_state["initialization_steps"].append(str("✗ Gmail API connection FAILED. Check logs and .env credentials."))
-                    # This is a critical failure for many operations, ensure bot_initialized_successfully reflects this.
-                    # We will let the component check below also catch gmail_service if it's None due to this.
+                    st.session_state["initialization_steps"].append(str("⚠️ Gmail API connection test method not found on bot object. Cannot verify connection."))
+                    # Depending on strictness, this could be a failure: st.session_state["bot_initialized_successfully"] = False
             else:
-                st.session_state["initialization_steps"].append(str("⚠️ Gmail API connection test method not found on bot object."))
+                st.session_state["initialization_steps"].append(str("✗ Gmail client (gmail_service) failed to load or is None."))
+                st.session_state["bot_initialized_successfully"] = False
 
-            st.session_state["initialization_steps"].append(str("Verifying bot components..."))
-            
-            required_components = [
-                ("chat_history", "Chat history"), ("claude_client", "Claude API client"),
-                ("gmail_service", "Gmail service"), ("vector_search_available", "Vector search status"),
-                ("email_memory", "Email memory"), ("enhanced_memory_store", "Enhanced memory store"),
-                ("preference_detector", "Preference detector"), ("memory_actions_handler", "Memory actions handler"),
-                ("ml_classifier", "ML classifier")
-            ]
-            missing_components_details = []
-            
-            # Print all attributes of the bot instance for debugging
-            print(f"DEBUG chat_app_st.py: Bot instance before component check loop: {st.session_state.bot}", file=sys.stderr)
-            try:
-                print(f"DEBUG chat_app_st.py: Attributes on bot instance (dir(bot)): {dir(st.session_state.bot)}", file=sys.stderr)
-            except Exception as e_dir:
-                print(f"DEBUG chat_app_st.py: Error calling dir(st.session_state.bot): {e_dir}", file=sys.stderr)
-
-            for attr_name, desc in required_components:
-                print(f"DEBUG chat_app_st.py: Checking component '{desc}' (attribute '{attr_name}')", file=sys.stderr)
-                
-                has_attr = hasattr(st.session_state.bot, attr_name)
-                print(f"DEBUG chat_app_st.py: hasattr(bot, '{attr_name}') -> {has_attr}", file=sys.stderr)
-                
-                attr_value = None # Default to None
-                is_missing = True # Assume missing initially
-
-                if has_attr:
-                    try:
-                        attr_value = getattr(st.session_state.bot, attr_name)
-                        # Check if the attribute value itself implies it's "not set" (e.g., None or False for a boolean flag)
-                        if attr_value is not None: # For most objects, None means not set. For booleans, False can mean not ready.
-                            if isinstance(attr_value, bool):
-                                is_missing = not attr_value # If it's a bool, missing if False
-                            else:
-                                is_missing = False # If it's a non-None object, it's present
-                        else: # attr_value is None
-                            is_missing = True 
-                        print(f"DEBUG chat_app_st.py: getattr(bot, '{attr_name}') -> Value: {attr_value}, Type: {type(attr_value)}, Bool_eval: {bool(attr_value)}, Considered_Missing: {is_missing}", file=sys.stderr)
-                    except Exception as e_getattr:
-                        print(f"DEBUG chat_app_st.py: EXCEPTION during getattr(bot, '{attr_name}'): {e_getattr}", file=sys.stderr)
-                        is_missing = True # Treat as missing if getattr fails
-                else: # hasattr was false
-                    is_missing = True
-                    print(f"DEBUG chat_app_st.py: Attribute '{attr_name}' not found by hasattr.", file=sys.stderr)
-                
-                if is_missing:
-                    missing_components_details.append(desc)
-                    print(f"DEBUG chat_app_st.py: ---> Component '{desc}' (attribute '{attr_name}') marked as MISSING.", file=sys.stderr)
-
-            if missing_components_details:
-                error_message = f"Bot initialized but missing critical components: {', '.join(missing_components_details)}"
-                st.session_state["initialization_steps"].append(f"✗ {error_message}")
-                raise RuntimeError(error_message)
+            # 2. Vector Search (Embedding Model + FAISS)
+            if hasattr(st.session_state.bot, 'vector_search_available'):
+                if st.session_state.bot.vector_search_available:
+                    st.session_state["initialization_steps"].append(str("✓ Vector search loaded and available."))
+                else:
+                    error_detail = "Vector search component reported as unavailable."
+                    if hasattr(st.session_state.bot, 'get_vector_search_error_message') and callable(st.session_state.bot.get_vector_search_error_message):
+                        msg = st.session_state.bot.get_vector_search_error_message()
+                        if msg: error_detail = str(msg) # Ensure string
+                    st.session_state["initialization_steps"].append(str(f"✗ Vector search failed: {error_detail}"))
+                    # Vector search failure is non-critical for degraded mode.
+                    # Store warning for UI display.
+                    st.session_state.vector_search_ui_warning = str(f"⚠️ Vector Search Unavailable: {error_detail}. The chatbot will operate in a degraded mode. Semantic search and some advanced features may be disabled.") 
             else:
-                st.session_state["initialization_steps"].append("✓ All critical bot components verified.")
+                st.session_state["initialization_steps"].append(str("✗ Vector search status unknown (attribute 'vector_search_available' missing on bot object)."))
+                st.session_state["bot_initialized_successfully"] = False
 
-            st.session_state["bot_initialized_successfully"] = True
-            st.session_state["initialization_steps"].append("🎉 Chatbot initialization successful!")
-            print("DEBUG: chat_app_st.py - Bot initialized successfully and marked in session state.", file=sys.stderr)
-            return True
+            # 3. Email Memory Store
+            if hasattr(st.session_state.bot, 'email_memory') and st.session_state.bot.email_memory is not None: 
+                st.session_state["initialization_steps"].append(str("✓ Email memory store available."))
+            else:
+                st.session_state["initialization_steps"].append(str("✗ Email memory store not available or is None."))
+                st.session_state["bot_initialized_successfully"] = False
+            
+            # Check other non-critical components if necessary (original loop can be adapted for this)
+            # For now, focusing on the three specified as critical.
+            # Example: Claude client check (often critical too)
+            if hasattr(st.session_state.bot, 'claude_client') and st.session_state.bot.claude_client is not None:
+                st.session_state["initialization_steps"].append(str("✓ Claude API client loaded."))
+            else:
+                st.session_state["initialization_steps"].append(str("✗ Claude API client failed to load."))
+                st.session_state["bot_initialized_successfully"] = False # Claude is usually critical
+
+            if not st.session_state["bot_initialized_successfully"]:
+                print(f"CRITICAL_DEBUG: chat_app_st.py - Initialization failed. Final steps: {st.session_state['initialization_steps']}", file=sys.stderr)
+                return False # One of the critical checks failed
+
+            st.session_state["initialization_steps"].append(str("✓ All critical bot components verified successfully."))
+
+        except ImportError as import_err: # Handle import errors specifically
+            print(f"CRITICAL_DEBUG: chat_app_st.py - Initialization failed due to ImportError: {import_err}", file=sys.stderr)
+            traceback.print_exc(file=sys.stderr)
+            st.session_state["initialization_steps"].append(str(f"✗ CRITICAL: Failed to import a required module: {import_err}"))
+            st.session_state["bot_initialized_successfully"] = False
+            # No need to return False here if already set, but good for clarity if this was the only error point.
 
         except Exception as e:
+            st.error(f"An unexpected error occurred during chatbot initialization: {e}")
+            print(f"CRITICAL_DEBUG: chat_app_st.py - Unexpected error during initialization: {e}", file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
-            # Ensure the exception itself is added as a step
-            st.session_state["initialization_steps"].append(str(f"✗ EXCEPTION during initialization: {e}"))
-            # Errors will be displayed by the main app flow using the initialization_steps
+            st.session_state["initialization_steps"].append(str(f"✗ UNEXPECTED ERROR during initialization: {e}"))
             st.session_state["bot_initialized_successfully"] = False
-            # No direct st.error/warning here, as it will be handled by the caller based on initialization_steps
-            return False
+            # No need to return False here if already set.
+        
+    # Final return based on the flag, which aggregates all checks
+    if not st.session_state.get("bot_initialized_successfully", False):
+        return False # Return False if any step set it to False
+    
+    return True # All good if we reached here and flag is still True
 
 # --- Main Application Flow ---
 # Attempt initialization if not already successfully initialized.
@@ -259,8 +265,11 @@ if not st.session_state.get("bot_initialized_successfully", False):
 # Optionally, a subtle confirmation or just proceed to chat interface.
 # st.success("Chatbot ready!") # This can be a bit noisy on every interaction.
 
-# Main chat interface
-# Display chat messages from history on app rerun
+# Display vector search warning if set
+if "vector_search_ui_warning" in st.session_state and st.session_state.vector_search_ui_warning:
+    st.warning(st.session_state.vector_search_ui_warning)
+
+# --- Chat History Display ---chat messages from history on app rerun
 if "bot" in st.session_state and hasattr(st.session_state.bot, "chat_history"):
     for message in st.session_state.bot.chat_history: # Use bot's history
         with st.chat_message(message["role"]):

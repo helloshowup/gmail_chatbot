@@ -40,6 +40,7 @@ from typing import (
     MutableMapping,
     Literal,
 )
+import ssl # Added for SSL error handling
 import re
 from pathlib import Path
 import atexit
@@ -175,6 +176,14 @@ class GmailChatbotApp:
     ) -> None:
         print("DEBUG: GmailChatbotApp.__init__ - START") # Added for debugging
         """Initialize the Gmail Chatbot application."""
+        # Initialize attributes for component status - to be checked by chat_app_st.py
+        self.gmail_service: Optional[Any] = None # Will hold the googleapiclient.discovery.Resource object
+        self.vector_search_available: bool = False
+        self.vector_search_error_message: Optional[str] = None
+        self.email_memory: Optional[Any] = None # Will hold the EmailVectorMemoryStore instance
+        self.claude_client: Optional[ClaudeAPIClient] = None # Initialize here, set later
+        self.initialization_diagnostics: List[str] = [] # Store detailed init steps/errors
+
         # Load environment variables from hard-coded .env file path
         dotenv_path = Path(__file__).resolve().parent / ".env"
         if dotenv_path.exists():
@@ -214,17 +223,62 @@ class GmailChatbotApp:
 
         # Initialize components
         self.system_message = DEFAULT_SYSTEM_MESSAGE
-        self.claude_client = ClaudeAPIClient()
-        self.gmail_client = GmailAPIClient(self.claude_client, self.system_message)
+        try:
+            self.claude_client = ClaudeAPIClient()
+            self.initialization_diagnostics.append("✓ Claude API client initialized.")
+        except Exception as e:
+            self.claude_client = None
+            self.initialization_diagnostics.append(f"✗ Failed to initialize Claude API client: {str(e)}")
+            logging.error(f"Failed to initialize Claude API client: {e}", exc_info=True)
+
+        try:
+            self.gmail_client = GmailAPIClient(self.claude_client, self.system_message)
+            if self.gmail_client and hasattr(self.gmail_client, 'service') and self.gmail_client.service:
+                self.gmail_service = self.gmail_client.service
+                self.initialization_diagnostics.append("✓ Gmail API client (and service) initialized.")
+            else:
+                self.gmail_service = None # Explicitly set to None if service is not available
+                self.initialization_diagnostics.append("✗ Gmail API client initialized, but service component is missing or None.")
+                logging.warning("GmailAPIClient initialized, but its 'service' attribute is None or missing.")
+        except Exception as e:
+            self.gmail_client = None
+            self.gmail_service = None
+            error_str = str(e)
+            if "SSL Error" in error_str or "ssl.SSLError" in error_str:
+                diag_msg = f"✗ Failed to initialize Gmail API client due to an SSL-related error: {error_str}. Possible causes: outdated Python/OpenSSL, proxy/firewall, wrong endpoint, or system clock skew."
+            else:
+                diag_msg = f"✗ Failed to initialize Gmail API client: {error_str}"
+            self.initialization_diagnostics.append(diag_msg)
+            logging.error(f"Failed to initialize Gmail API client: {e}", exc_info=True)
 
         print("DEBUG: GmailChatbotApp.__init__ - BEFORE vector_memory (EmailVectorStore) initialization", file=sys.stderr)
         # Initialize vector-based memory store
-        self.memory_store = EmailVectorMemoryStore()
-        logging.info("Vector-based email memory store initialized")
-        logging.info(
-            f"Vector search available: {self.memory_store.vector_search_available}"
-        )
-        print(f"DEBUG: GmailChatbotApp.__init__ - AFTER vector_memory (EmailVectorStore) initialization. vector_memory: {self.memory_store}", file=sys.stderr)
+        try:
+            self.memory_store = EmailVectorMemoryStore() # This needs to set its own error message and availability
+            self.email_memory = self.memory_store # Assign the instance
+            self.vector_search_available = getattr(self.memory_store, 'vector_search_available', False)
+            self.vector_search_error_message = getattr(self.memory_store, 'initialization_error_message', None)
+            if self.vector_search_available:
+                self.initialization_diagnostics.append("✓ Vector-based email memory store (EmailVectorMemoryStore) initialized.")
+                logging.info("Vector-based email memory store initialized and search is available.")
+            else:
+                err_msg = self.vector_search_error_message if self.vector_search_error_message else "Vector search reported as unavailable by EmailVectorMemoryStore."
+                self.initialization_diagnostics.append(f"✗ EmailVectorMemoryStore initialized, but vector search is NOT available: {err_msg}")
+                logging.warning(f"EmailVectorMemoryStore initialized, but vector search is NOT available: {err_msg}")
+        except Exception as e:
+            self.memory_store = None
+            self.email_memory = None
+            self.vector_search_available = False
+            self.vector_search_error_message = f"Failed to initialize EmailVectorMemoryStore: {str(e)}"
+            self.initialization_diagnostics.append(f"✗ CRITICAL: Failed to initialize EmailVectorMemoryStore: {str(e)}")
+            logging.error(f"Failed to initialize EmailVectorMemoryStore: {e}", exc_info=True)
+        
+        # Ensure logging reflects the final state from memory_store attributes if it was created
+        if self.memory_store:
+             logging.info(
+                f"Vector search available (post-init check): {self.vector_search_available}, Error: {self.vector_search_error_message}"
+            )
+        print(f"DEBUG: GmailChatbotApp.__init__ - AFTER vector_memory (EmailVectorStore) attempt. vector_search_available: {self.vector_search_available}, error: {self.vector_search_error_message}", file=sys.stderr)
 
         # Initialize MemoryActionsHandler
         # Initialize EnhancedMemoryStore first as PreferenceDetector depends on it
@@ -292,25 +346,59 @@ class GmailChatbotApp:
         logging.info("Gmail Chatbot application initialized")
         print("DEBUG: GmailChatbotApp.__init__ - END") # Added for debugging
 
-    def test_gmail_api_connection(self) -> bool:
-        """Tests the connection to the Gmail API by fetching the user's profile."""
+    def test_gmail_api_connection(self) -> Tuple[bool, str]:
+        """Tests the connection to the Gmail API by fetching the user's profile.
+        Returns a tuple: (bool: success, str: message).
+        """
         logging.info("Attempting to test Gmail API connection...")
         print("DEBUG: GmailChatbotApp.test_gmail_api_connection - START")
-        if not self.gmail_client or not hasattr(self.gmail_client, 'service'): # Check if gmail_client and its service attribute are initialized
-            logging.error("Gmail service (via gmail_client) not initialized. Cannot test API connection.")
-            print("DEBUG: GmailChatbotApp.test_gmail_api_connection - Gmail service (via gmail_client) not initialized")
-            return False
-        try:
-            # Access the service object through the gmail_client
-            self.gmail_client.service.users().getProfile(userId='me').execute()
-            logging.info("Gmail API connection test successful.")
-            print("DEBUG: GmailChatbotApp.test_gmail_api_connection - SUCCESS")
-            return True
-        except Exception as e:
-            logging.error(f"Gmail API connection test FAILED: {e}", exc_info=True)
-            print(f"DEBUG: GmailChatbotApp.test_gmail_api_connection - FAILED: {e}")
-            return False
+        # Check if the gmail_client itself was initialized, not just the service attribute
+        if not self.gmail_client:
+            msg = "✗ Gmail API client (GmailAPIClient instance) not initialized. Cannot test connection."
+            logging.error(msg)
+            print(f"DEBUG: GmailChatbotApp.test_gmail_api_connection - {msg}")
+            # self.initialization_diagnostics.append(msg) # This might be redundant if init already logged it
+            return False, msg
 
+        # Call the test_connection method of the GmailAPIClient instance
+        result_dict = self.gmail_client.test_connection()
+        
+        success = result_dict.get('success', False)
+        message = result_dict.get('message', 'Unknown error during connection test.')
+        error_type = result_dict.get('error_type')
+
+        if success:
+            msg = f"✓ Gmail API connection test successful: {message}"
+            logging.info(msg)
+            print(f"DEBUG: GmailChatbotApp.test_gmail_api_connection - SUCCESS: {message}")
+            self.initialization_diagnostics.append(msg)
+            return True, msg
+        else:
+            # Construct a detailed message based on error type
+            if error_type == 'ssl_error':
+                # The message from GmailAPIClient.test_connection for ssl_error is already detailed.
+                msg = f"✗ Gmail API SSL Error: {message}"
+            elif error_type == 'auth_refresh_error':
+                msg = f"✗ Gmail API Authentication Error (Token Refresh Failed): {message}. Please try re-authenticating."
+            elif error_type == 'auth_error':
+                msg = f"✗ Gmail API Authentication Error: {message}. Check credentials or re-authenticate."
+            elif error_type == 'api_error':
+                status_code = result_dict.get('status_code')
+                code_info = f" (Status Code: {status_code})" if status_code else ""
+                msg = f"✗ Gmail API Error{code_info}: {message}"
+            else: # unknown_error or other
+                msg = f"✗ Gmail API connection test FAILED: {message}"
+        
+            logging.error(f"Gmail API connection test FAILED ({error_type if error_type else 'Unknown'}): {message}", exc_info=(error_type == 'unknown_error'))
+            print(f"DEBUG: GmailChatbotApp.test_gmail_api_connection - FAILED ({error_type}): {message}")
+            self.initialization_diagnostics.append(msg)
+            return False, msg
+
+    def get_vector_search_error_message(self) -> Optional[str]:
+        """Returns the stored error message from vector search initialization, if any."""
+        return self.vector_search_error_message
+
+{{ ... }}
     def _is_simple_inbox_query(self, message_lower: str) -> bool:
         """Checks if a query is a simple request for inbox contents, suitable for a menu."""
         generic_inbox_phrases = [
