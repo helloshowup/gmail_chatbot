@@ -1,6 +1,6 @@
 # agentic_executor.py
 import streamlit as st
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from memory_writers import store_professional_context
 
 # Define a type for the result of execute_step for clarity
@@ -231,3 +231,25 @@ def summarize_and_log_agentic_results(agentic_state: Dict[str, Any], plan_comple
     print(f"DEBUG: Summarize and Log - Final State: {agentic_state}")
     # The actual "logging to notebook" is now a plan step ("log_to_notebook")
     # This function primarily serves to update the UI with the final status.
+
+
+def handle_step_limit_reached(agentic_state: Dict[str, Any], step_limit: int) -> Optional[str]:
+    """Prompt user when the autonomous call limit is reached.
+
+    Returns "continue" if the user chooses to keep going, "stop" if they opt to
+    halt execution, or ``None`` if no choice was made."""
+    st.warning(
+        f"Agentic execution paused: Call limit of {step_limit} reached."
+    )
+    continue_clicked = st.button("Continue", key="agentic_continue_btn")
+    stop_clicked = st.button("Stop", key="agentic_stop_btn")
+
+    if continue_clicked:
+        agentic_state["executed_call_count"] = 0
+        return "continue"
+    if stop_clicked:
+        summarize_and_log_agentic_results(
+            agentic_state, plan_completed=False, limit_reached=True
+        )
+        return "stop"
+    return None

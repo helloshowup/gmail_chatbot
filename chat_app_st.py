@@ -9,7 +9,11 @@ import json
 from pathlib import Path
 import dotenv
 from agentic_planner import generate_plan
-from agentic_executor import execute_step, summarize_and_log_agentic_results # Added for agentic execution
+from agentic_executor import (
+    execute_step,
+    summarize_and_log_agentic_results,  # Added for agentic execution
+    handle_step_limit_reached,
+)
 
 # --- Global Exception Hook for Debugging ---
 def log_exception_to_file(exc_type, exc_value, exc_traceback):
@@ -317,13 +321,16 @@ if prompt := st.chat_input("Ask me about your inbox:"):
 
             # Check if call limit reached
             if executed_call_count >= step_limit:
-                if not agentic_state.get("limit_reached_flag", False):  # Prevent multiple summaries if stuck
-                    summarize_and_log_agentic_results(agentic_state, plan_completed=False, limit_reached=True)
-                    st.warning(f"Agentic execution stopped: Call limit of {step_limit} reached. Partial results (if any) logged.")
-                    agentic_state["limit_reached_flag"] = True
-                    st.session_state.agentic_plan = None  # Stop further execution
+                user_choice = handle_step_limit_reached(agentic_state, step_limit)
+                if user_choice == "continue":
+                    st.session_state.agentic_state = agentic_state
+                    st.rerun()
+                elif user_choice == "stop":
+                    st.session_state.agentic_plan = None
                     st.session_state.agentic_state = default_agentic_state_values.copy()
-                    st.button("Acknowledge & Clear Plan", on_click=lambda: setattr(st.session_state, 'agentic_plan', None) or st.rerun())
+                    st.rerun()
+                else:
+                    st.stop()
             # Check if plan is still active (not cleared by limit or completion)
             elif st.session_state.get("agentic_plan") and current_step_idx < len(plan):
                 step_details = plan[current_step_idx]
