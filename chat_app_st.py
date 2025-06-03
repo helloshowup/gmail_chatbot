@@ -333,7 +333,12 @@ if prompt := st.chat_input("Ask me about your inbox:"):
                     st.code(st.session_state.pending_confirmation.get("message", ""))
                     col_yes, col_no = st.columns(2)
                     if col_yes.button("Yes", key="confirm_yes"):
-                        st.session_state.agentic_state["current_step_index"] = st.session_state.pending_confirmation.get("next_step_index", current_step_idx + 1)
+                        pending = st.session_state.pending_confirmation
+                        if pending.get("action") == "send_email":
+                            gmail_client = getattr(getattr(st.session_state, "bot", None), "gmail_client", None)
+                            if gmail_client:
+                                gmail_client.send_email(**pending.get("parameters", {}))
+                        st.session_state.agentic_state["current_step_index"] = pending.get("next_step_index", current_step_idx + 1)
                         st.session_state.pending_confirmation = None
                         st.rerun()
                     if col_no.button("No", key="confirm_no"):
@@ -370,6 +375,8 @@ if prompt := st.chat_input("Ask me about your inbox:"):
                                 st.session_state.pending_confirmation = {
                                     "message": execution_result.get("message", ""),
                                     "next_step_index": current_step_idx + 1,
+                                    "action": step_details.get("action_type"),
+                                    "parameters": execution_result.get("data", {}),
                                 }
                                 st.rerun()
                             else:

@@ -82,7 +82,6 @@ class TestAgenticExecutorFlow(unittest.TestCase):
         self.assertEqual(res4["status"], "success")
 
     def test_send_email_handler_preview_and_flag(self):
-        self.gmail_client.send_email.return_value = {"status": "success", "data": {"id": "m1"}}
         state = {}
         step = {
             "action_type": "send_email",
@@ -90,9 +89,28 @@ class TestAgenticExecutorFlow(unittest.TestCase):
             "output_key": "send_result",
         }
         res = execute_step(step, state)
-        self.gmail_client.send_email.assert_called_once_with("a@b.com", "Hi", "Test")
+        self.gmail_client.send_email.assert_not_called()
         self.assertTrue(res["requires_user_input"])
         self.assertIn("To: a@b.com", res["message"])
+        self.assertEqual(res["updated_agentic_state"]["accumulated_results"]["send_result"],
+                         {"to": "a@b.com", "subject": "Hi", "body": "Test"})
+
+    def test_send_email_confirmation_flow(self):
+        state = {}
+        step = {
+            "action_type": "send_email",
+            "parameters": {"to": "c@d.com", "subject": "Hello", "body": "World"},
+            "output_key": "send_result",
+        }
+        res = execute_step(step, state)
+        pending = {
+            "action": "send_email",
+            "parameters": res["updated_agentic_state"]["accumulated_results"]["send_result"],
+            "next_step_index": 1,
+        }
+        if pending["action"] == "send_email":
+            st_stub.session_state.bot.gmail_client.send_email(**pending["parameters"])
+        self.gmail_client.send_email.assert_called_once_with(to="c@d.com", subject="Hello", body="World")
 
 
 if __name__ == "__main__":

@@ -97,23 +97,15 @@ def _execute_log_to_notebook(parameters: Dict[str, Any], agentic_state: Dict[str
         return {"status": "failure", "message": f"Failed to log to notebook: {e}"}
 
 def _execute_send_email(parameters: Dict[str, Any], agentic_state: Dict[str, Any]) -> Dict[str, Any]:
-    """Send an email via the Gmail client and request user confirmation."""
+    """Prepare an email and request user confirmation before sending."""
     to = parameters.get("to")
     subject = parameters.get("subject", "")
     body = parameters.get("body", "")
 
-    gmail_client = getattr(getattr(st.session_state, "bot", None), "gmail_client", None)
-    if gmail_client is None:
-        return {"status": "failure", "message": "Gmail client not available"}
-
-    result = gmail_client.send_email(to, subject, body)
-    if result.get("status") != "success":
-        return {"status": "failure", "message": result.get("error", "Unknown error sending email")}
-
     preview = f"To: {to}\nSubject: {subject}\n\n{body}"
     return {
         "status": "success",
-        "data": result.get("data"),
+        "data": {"to": to, "subject": subject, "body": body},
         "message": preview,
         "requires_user_input": True,
     }
