@@ -272,34 +272,40 @@ if st.session_state.get("initialization_attempted", False):
 
             if st.button(f"Execute Step {current_step_idx + 1}: {step_details.get('step_id', 'Unnamed')}", key=f"exec_step_{current_step_idx}"):
                 with st.spinner(f"Executing: {step_details.get('description', 'Working...')}"):
-                    execution_result = execute_step(step_details, agentic_state.copy()) # Pass a copy to avoid direct mutation issues before update
-                    
-                    # Update agentic_state with the returned state from execute_step
-                    st.session_state.agentic_state = execution_result.get("updated_agentic_state", agentic_state)
-                    st.session_state.agentic_state["executed_call_count"] = executed_call_count + 1
+                    try:
+                        execution_result = execute_step(step_details, agentic_state.copy()) # Pass a copy to avoid direct mutation issues before update
+                        st.toast(f"DEBUG: execute_step returned: {execution_result.get('status')}", icon="📋") # DEBUG
+                        
+                        # Update agentic_state with the returned state from execute_step
+                        st.session_state.agentic_state = execution_result.get("updated_agentic_state", agentic_state)
+                        st.session_state.agentic_state["executed_call_count"] = executed_call_count + 1
 
-                    if execution_result.get("status") == "failure":
-                        error_msg = f"Step {current_step_idx + 1} ('{step_details.get('step_id', 'Unnamed')}') failed: {execution_result.get('message', 'Unknown error')}"
-                        st.error(error_msg)
-                        if "error_messages" not in st.session_state.agentic_state:
-                            st.session_state.agentic_state["error_messages"] = []
-                        st.session_state.agentic_state["error_messages"].append(error_msg)
-                        # Decide on error handling: stop plan, or allow user to retry/skip (future enhancement)
-                        # For now, stop the plan on failure.
-                        summarize_and_log_agentic_results(st.session_state.agentic_state, plan_completed=False)
-                        st.session_state.agentic_plan = None # Stop plan
+                        if execution_result.get("status") == "failure":
+                            error_msg = f"Step {current_step_idx + 1} ('{step_details.get('step_id', 'Unnamed')}') failed: {execution_result.get('message', 'Unknown error')}"
+                            st.error(error_msg)
+                            if "error_messages" not in st.session_state.agentic_state:
+                                st.session_state.agentic_state["error_messages"] = []
+                            st.session_state.agentic_state["error_messages"].append(error_msg)
+                            summarize_and_log_agentic_results(st.session_state.agentic_state, plan_completed=False)
+                            st.session_state.agentic_plan = None # Stop plan
+                            st.session_state.agentic_state = default_agentic_state_values.copy()
+                            st.rerun()
+                        elif execution_result.get("requires_user_input", False):
+                            st.info(f"Step {current_step_idx + 1} requires user input: {execution_result.get('message', '')}")
+                            # UI for user input would go here. For now, just pauses.
+                            st.rerun() # Rerun to show info and wait for next interaction
+                        else: # Success
+                            st.toast(f"DEBUG: Step {current_step_idx + 1} success path reached.", icon="✅") # DEBUG
+                            st.session_state.agentic_state["current_step_index"] = current_step_idx + 1
+                            st.success(f"Step {current_step_idx + 1} completed. {execution_result.get('message', '')}")
+                            st.rerun() # Rerun to process next step or finalize
+                    except Exception as e:
+                        st.exception(e)
+                        st.error(f"An unexpected error occurred during step execution: {e}")
+                        # Clear plan to stop further execution on error
+                        st.session_state.agentic_plan = None 
                         st.session_state.agentic_state = default_agentic_state_values.copy()
-                        st.rerun()
-                    
-                    elif execution_result.get("requires_user_input", False):
-                        st.info(f"Step {current_step_idx + 1} requires user input: {execution_result.get('message', '')}")
-                        # UI for user input would go here. For now, just pauses.
-                        # The plan remains, current_step_idx is not incremented yet.
-                        st.rerun() # Rerun to show info and wait for next interaction
-                    else: # Success
-                        st.session_state.agentic_state["current_step_index"] = current_step_idx + 1
-                        st.success(f"Step {current_step_idx + 1} completed. {execution_result.get('message', '')}")
-                        st.rerun() # Rerun to process next step or finalize
+                        st.rerun() # Rerun to show the error and reflect cleared plan
             # If button not clicked, Streamlit script just ends, preserving state for next interaction.
         
         # Check if plan completed (and not already handled by limit/error)

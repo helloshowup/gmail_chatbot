@@ -619,18 +619,18 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
-      "query:so what is todays inbox looking like?",
       "autonomously_fetched",
-      "query:Autonomously fetched for Excel High School",
       "query:what emails did i receive today?",
-      "client:Further Learner"
+      "query:so what is todays inbox looking like?",
+      "query:Autonomously fetched for Excel High School",
+      "client:Further Learner",
+      "query:Autonomously fetched for Further Learner",
+      "query:Autonomously fetched for Hoorah Digital"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-03T06:49:19.927131",
-    "last_accessed": "2025-06-03T09:44:34.004056",
+    "last_accessed": "2025-06-03T10:05:22.748622",
     "access_count": 1
   },
   "19734093519f16b8": {
@@ -641,18 +641,18 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
-      "query:so what is todays inbox looking like?",
       "autonomously_fetched",
-      "query:Autonomously fetched for Excel High School",
       "query:what emails did i receive today?",
-      "client:Further Learner"
+      "query:so what is todays inbox looking like?",
+      "query:Autonomously fetched for Excel High School",
+      "client:Further Learner",
+      "query:Autonomously fetched for Further Learner",
+      "query:Autonomously fetched for Hoorah Digital"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-03T06:49:20.907834",
-    "last_accessed": "2025-06-03T09:44:34.007100",
+    "last_accessed": "2025-06-03T10:05:22.750623",
     "access_count": 1
   },
   "19733fed2f0d44d0": {
@@ -663,18 +663,18 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
-      "query:so what is todays inbox looking like?",
       "autonomously_fetched",
-      "query:Autonomously fetched for Excel High School",
       "query:what emails did i receive today?",
-      "client:Further Learner"
+      "query:so what is todays inbox looking like?",
+      "query:Autonomously fetched for Excel High School",
+      "client:Further Learner",
+      "query:Autonomously fetched for Further Learner",
+      "query:Autonomously fetched for Hoorah Digital"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-03T06:49:20.997672",
-    "last_accessed": "2025-06-03T09:44:34.010099",
+    "last_accessed": "2025-06-03T10:05:22.754693",
     "access_count": 1
   },
   "19733fdf426d8eee": {
@@ -685,18 +685,18 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
-      "query:so what is todays inbox looking like?",
       "autonomously_fetched",
-      "query:Autonomously fetched for Excel High School",
+      "query:Autonomously fetched for Further Learner",
       "query:what emails did i receive today?",
-      "client:Further Learner"
+      "client:Further Learner",
+      "query:Autonomously fetched for Excel High School",
+      "query:so what is todays inbox looking like?",
+      "query:Autonomously fetched for Hoorah Digital"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-03T06:49:21.056800",
-    "last_accessed": "2025-06-03T09:44:34.013118",
+    "last_accessed": "2025-06-03T09:50:50.843468",
     "access_count": 1
   },
   "19733e0b3d18b2c2": {
@@ -826,18 +826,18 @@
     "summary": "No Summary",
     "client": "Excel High School",
     "tags": [
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
-      "query:so what is todays inbox looking like?",
       "autonomously_fetched",
-      "client:Excel High School",
+      "query:what emails did i receive today?",
+      "query:so what is todays inbox looking like?",
       "query:Autonomously fetched for Excel High School",
-      "query:what emails did i receive today?"
+      "client:Excel High School",
+      "query:Autonomously fetched for Further Learner",
+      "query:Autonomously fetched for Hoorah Digital"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-03T06:49:26.016038",
-    "last_accessed": "2025-06-03T09:44:34.000209",
+    "last_accessed": "2025-06-03T10:05:22.746613",
     "access_count": 1
   },
   "19734200119c8e37": {
@@ -848,18 +848,18 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
-      "query:so what is todays inbox looking like?",
       "autonomously_fetched",
-      "query:Autonomously fetched for Excel High School",
       "query:what emails did i receive today?",
-      "client:Further Learner"
+      "query:so what is todays inbox looking like?",
+      "query:Autonomously fetched for Excel High School",
+      "client:Further Learner",
+      "query:Autonomously fetched for Further Learner",
+      "query:Autonomously fetched for Hoorah Digital"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-03T06:58:33.307951",
-    "last_accessed": "2025-06-03T09:44:33.994194",
+    "last_accessed": "2025-06-03T10:05:22.741108",
     "access_count": 1
   },
   "197341fc897367b4": {
@@ -870,18 +870,18 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
-      "query:so what is todays inbox looking like?",
       "autonomously_fetched",
-      "query:Autonomously fetched for Excel High School",
       "query:what emails did i receive today?",
-      "client:Further Learner"
+      "query:so what is todays inbox looking like?",
+      "query:Autonomously fetched for Excel High School",
+      "client:Further Learner",
+      "query:Autonomously fetched for Further Learner",
+      "query:Autonomously fetched for Hoorah Digital"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-03T06:58:33.389548",
-    "last_accessed": "2025-06-03T09:44:33.996708",
+    "last_accessed": "2025-06-03T10:05:22.743109",
     "access_count": 1
   },
   "19734293b073ae74": {
@@ -892,18 +892,18 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
-      "query:so what is todays inbox looking like?",
       "autonomously_fetched",
-      "query:Autonomously fetched for Excel High School",
       "query:what emails did i receive today?",
-      "client:Further Learner"
+      "query:so what is todays inbox looking like?",
+      "query:Autonomously fetched for Excel High School",
+      "client:Further Learner",
+      "query:Autonomously fetched for Further Learner",
+      "query:Autonomously fetched for Hoorah Digital"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-03T07:01:38.670290",
-    "last_accessed": "2025-06-03T09:44:33.991193",
+    "last_accessed": "2025-06-03T10:05:22.737509",
     "access_count": 1
   },
   "197343578cbbf7fe": {
@@ -914,18 +914,18 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
-      "query:so what is todays inbox looking like?",
       "autonomously_fetched",
-      "query:Autonomously fetched for Excel High School",
       "query:what emails did i receive today?",
-      "client:Further Learner"
+      "query:so what is todays inbox looking like?",
+      "query:Autonomously fetched for Excel High School",
+      "client:Further Learner",
+      "query:Autonomously fetched for Further Learner",
+      "query:Autonomously fetched for Hoorah Digital"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-03T07:48:36.934305",
-    "last_accessed": "2025-06-03T09:44:33.987810",
+    "last_accessed": "2025-06-03T10:05:22.735558",
     "access_count": 1
   },
   "197345a10b2c344e": {
@@ -936,17 +936,37 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
-      "query:so what is todays inbox looking like?",
-      "query:Autonomously fetched for Excel High School",
       "autonomously_fetched",
+      "query:so what is todays inbox looking like?",
+      "query:Autonomously fetched for Further Learner",
+      "query:Autonomously fetched for Excel High School",
+      "query:Autonomously fetched for Hoorah Digital",
       "client:Further Learner"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-03T08:08:27.431615",
-    "last_accessed": "2025-06-03T09:44:33.985224",
+    "last_accessed": "2025-06-03T10:05:22.731982",
+    "access_count": 1
+  },
+  "19734c9aac30bf4e": {
+    "subject": "Refer a friend to DebtBusters and earn R1,500 each",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 03 Jun 2025 07:55:09 +0000 (UTC)",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "query:Autonomously fetched for Excel High School",
+      "query:Autonomously fetched for Hoorah Digital",
+      "client:Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-03T09:55:48.433175",
+    "last_accessed": "2025-06-03T10:05:22.727214",
     "access_count": 1
   }
 }
