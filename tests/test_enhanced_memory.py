@@ -181,6 +181,7 @@ class TestEnhancedMemoryStore(unittest.TestCase):
                 "subject": "Test Email",
                 "sender": "sender@example.com",
                 "recipient": "recipient@example.com",
+                "date": "2024-01-01T00:00:00Z",
                 "client": "Test Client"
             }
         )
@@ -253,6 +254,9 @@ class TestEnhancedMemoryStore(unittest.TestCase):
             meta={
                 "email_id": "school1",
                 "subject": "Excel High School Progress Report",
+                "sender": "teacher@example.com",
+                "recipient": "parent@example.com",
+                "date": "2024-01-02T00:00:00Z",
                 "client": "Excel High School"
             }
         ))
