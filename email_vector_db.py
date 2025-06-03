@@ -93,26 +93,30 @@ try:
     import faiss
     import numpy as np
     from langchain_community.vectorstores import FAISS
-    
+
     # Force FAISS to CPU-only mode as per user request / configuration
     GPU_AVAILABLE = False
-    logger.info("FAISS GPU acceleration explicitly disabled. Running in CPU-only mode.")
-    print("DEBUG: email_vector_db.py - FAISS GPU_AVAILABLE explicitly set to False.", file=sys.stderr)
-    
+    logger.info(
+        "FAISS GPU acceleration explicitly disabled. Running in CPU-only mode."
+    )
+    print(
+        "DEBUG: email_vector_db.py - FAISS GPU_AVAILABLE explicitly set to False.",
+        file=sys.stderr,
+    )
+
     # Ensure 'langchain-huggingface' is installed in your environment
     from langchain_huggingface import HuggingFaceEmbeddings
-    logger.info("Using HuggingFaceEmbeddings from langchain_huggingface package")
-    
+    logger.info(
+        "Using HuggingFaceEmbeddings from langchain_huggingface package"
+    )
+
     VECTOR_LIBS_AVAILABLE = True
-except ModuleNotFoundError as e:
+except ModuleNotFoundError as e:  # pragma: no cover - optional dependency
     logger.error("FAISS import failed (%s). Vector search disabled.", e)
-    if os.getenv("ALLOW_VECTOR_FALLBACK", "0") == "1":
-        VECTOR_LIBS_AVAILABLE = False          # fall back to keyword search
-        logger.warning("FAISS not available – vector search disabled.")
-    else:
-        raise RuntimeError(
-            "FAISS not installed – run `pip install faiss-gpu` or `faiss-cpu`."
-        )
+    VECTOR_LIBS_AVAILABLE = False
+    logger.warning(
+        "Required vector search libraries are not installed. Falling back to keyword search."
+    )
 
 
 class SimpleTextSplitter:

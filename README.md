@@ -48,6 +48,21 @@ Run the `run_email_chatbot.bat` script, which will:
 - Check for required configuration files
 - Start the application
 
+For manual setup or when working on Linux/macOS, you can run the provided
+`setup.sh` script:
+
+```bash
+./setup.sh
+```
+
+This installs all packages listed in `requirements.txt`.  A lighter dependency
+set is available in `requirements-lite.txt` which omits heavy packages such as
+FAISS and PyTorch.  Use this file for CI or limited environments:
+
+```bash
+pip install -r requirements-lite.txt
+```
+
 ## Usage
 
 1. Launch the application using `run_email_chatbot.bat`
@@ -142,6 +157,18 @@ python email_vector_db.py
 ```
 
 The output will display `GPU acceleration: True` if successfully enabled.
+
+### Running Tests
+
+After installing the required dependencies you can run the unit tests with
+`pytest`:
+
+```bash
+pytest -q
+```
+
+If heavy optional dependencies such as FAISS are not available, some tests will
+be skipped automatically.
 
 ## License
 
