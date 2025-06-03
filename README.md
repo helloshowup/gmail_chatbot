@@ -7,9 +7,11 @@ A Claude-powered chatbot that interacts with your Gmail account. This tool allow
 - Natural language Gmail search queries (e.g., "Find emails from John about the project meeting")
 - Email content analysis and summarization
 - Information extraction from email threads
-- User-friendly GUI interface
+- Streamlit-based web interface
 - Secure OAuth2 authentication with Gmail API
 - Claude API integration for intelligent processing
+- Vector-based email memory with optional GPU-accelerated search
+- Machine learning classifier for understanding query intent
 
 ## Prerequisites
 
@@ -23,13 +25,11 @@ A Claude-powered chatbot that interacts with your Gmail account. This tool allow
 ### 1. Claude API Setup
 
 1. Sign up for an Anthropic API key at [https://console.anthropic.com/](https://console.anthropic.com/)
-2. The tool uses the existing `.env` file in the main project directory at `C:\Users\User\Documents\showup-v4\.env` which should contain:
+2. Create a `.env` file in the project root with the following contents:
 
    ```env
    ANTHROPIC_API_KEY=your_anthropic_api_key_here
    ```
-
-   (This key should already be present in your .env file)
 
 ### 2. Google Cloud Setup
 
@@ -41,21 +41,21 @@ A Claude-powered chatbot that interacts with your Gmail account. This tool allow
 
 ### 3. Installation
 
-Run the `run_email_chatbot.bat` script, which will:
+Run the `run_gmail_chatbot.bat` script, which will:
 
 - Create a virtual environment
 - Install required dependencies
 - Check for required configuration files
 - Start the application
 
-For manual setup or when working on Linux/macOS, you can run the provided
-`setup.sh` script:
+For manual setup you can run one of the provided setup scripts:
 
 ```bash
-./setup.sh
+./setup.sh        # Linux/macOS
+setup.bat         # Windows
 ```
 
-This installs all packages listed in `requirements.txt`.  A lighter dependency
+These scripts install all packages listed in `requirements.txt`.  A lighter dependency
 set is available in `requirements-lite.txt` which omits heavy packages such as
 FAISS and PyTorch.  Use this file for CI or limited environments:
 
@@ -65,7 +65,8 @@ pip install -r requirements-lite.txt
 
 ## Usage
 
-1. Launch the application using `run_email_chatbot.bat`
+1. Launch the application using `run_gmail_chatbot.bat`
+   (or run `streamlit run chat_app_st.py` after activating your environment)
 2. First-time users will be prompted to authorize the application to access their Gmail account
 3. Enter natural language queries in the chat interface to interact with your emails
 
