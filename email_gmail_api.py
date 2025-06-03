@@ -139,8 +139,8 @@ class GmailAPIClient:
                 try:
                     creds.refresh(Request())
                 except ssl.SSLError as e_ssl:
-                    logging.error(f"SSL Error during credential refresh: {e_ssl}. Attempting re-authentication.")
-                    creds = None # Force re-authentication by nullifying creds
+                    logging.error(f"SSL Error during credential refresh: {e_ssl}")
+                    raise ValueError(f"SSL Error refreshing credentials: {str(e_ssl)}. Please check your internet connection, firewall, or proxy settings.")
                 except google.auth.exceptions.RefreshError as e:
                     logging.error(f"Error refreshing credentials: {e}. Attempting re-authentication.")
                     creds = None # Force re-authentication by nullifying creds

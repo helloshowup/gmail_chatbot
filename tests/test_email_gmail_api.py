@@ -16,6 +16,7 @@ if project_root_dir not in sys.path:
 from gmail_chatbot.email_gmail_api import GmailAPIClient
 from google.oauth2.credentials import Credentials # For type hinting and creating mock creds
 import google.auth.exceptions # For RefreshError
+import google.auth.transport.requests # For Request class spec
 
 # Define mock paths for constants used by GmailAPIClient constructor
 # These will be created and removed in setUp/tearDown
@@ -57,23 +58,7 @@ class TestGmailAPIClientSSLErrors(unittest.TestCase):
         original_level = google_api_logger.getEffectiveLevel()
         google_api_logger.setLevel(logging.CRITICAL + 1)
 
-        # Create a dummy token file to ensure os.path.exists(token_path) is true
-        # Its content doesn't matter as pickle.load will be mocked.
-        # tearDown will remove this file.
-        # No longer need to create TEST_TOKEN_FILE if we mock os.path.exists and open for it.
-
-        # Path to the expected token file, relative to how email_gmail_api.py constructs it.
-        # Assuming DATA_DIR in email_gmail_api.py resolves correctly during its import.
-        # We'll mock interactions with this path.
-        # This is a bit fragile if DATA_DIR calculation changes, but let's try.
-        # For now, let's assume the test setup for TEST_CLIENT_SECRET_FILE is okay for from_client_secrets_file mock.
-
-        self.addCleanup(google_api_logger.setLevel, original_level) # Ensure restoration
-
-        # Import constants here, inside the test method, but before the patch context
-        # if they are needed for setup outside the patch that might trigger module access.
-        # However, for this specific test, they are primarily used by GmailAPIClient itself or for os.path.exists mock setup.
-        # Let's import them inside the patch context to be safe, or ensure paths are constructed directly.
+        self.addCleanup(google_api_logger.setLevel, original_level) 
 
         with patch('pathlib.Path.mkdir') as mock_mkdir, \
              patch('os.path.exists') as mock_os_path_exists, \
@@ -83,25 +68,14 @@ class TestGmailAPIClientSSLErrors(unittest.TestCase):
              patch('email_gmail_api.build') as mock_build, \
              patch('google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file') as mock_flow_from_secrets:
 
-            # Ensure pathlib.Path.mkdir does nothing to prevent side effects
             mock_mkdir.return_value = None
 
-            # Configure os.path.exists mock to avoid recursion and handle the token file path
             def mock_exists_logic(path_arg):
-                # This check needs to be robust based on how _authenticate forms the path.
-                # It uses DATA_DIR / GMAIL_TOKEN_FILE. GMAIL_TOKEN_FILE is 'test_token.json' (TEST_TOKEN_FILE).
-                # So, we expect path_arg to be a Path object.
-                if isinstance(path_arg, Path) and path_arg.name == 'token.json': # Match actual GMAIL_TOKEN_FILE name
-                    # print(f"DEBUG: mock_os_path_exists returning True for {path_arg}") # Temporary debug
+                if isinstance(path_arg, Path) and path_arg.name == 'token.json': 
                     return True
-                # print(f"DEBUG: mock_os_path_exists returning False for {path_arg}") # Temporary debug
-                return False # Default to False for other paths to avoid unexpected behavior or recursion
+                return False 
             mock_os_path_exists.side_effect = mock_exists_logic
 
-            # mock_open is patched but pickle.load is also patched, so open might not be called directly by test logic for token reading.
-            # If pickle.dump needs it for TEST_TOKEN_FILE, it's covered by new_callable=MagicMock.
-
-            # Simulate successful loading of valid, non-expired credentials from token file
             mock_loaded_credentials = MagicMock(spec=Credentials)
             mock_loaded_credentials.valid = True
             # Let other attributes be default MagicMocks. The path taken should only rely on .valid.
@@ -126,6 +100,71 @@ class TestGmailAPIClientSSLErrors(unittest.TestCase):
                     system_message=self.mock_system_message
                 )
             mock_build.assert_called_once()
+
+    def test_authenticate_ssl_error_on_refresh(self):
+        """Test SSL error during credential refresh in _authenticate."""
+        google_api_logger = logging.getLogger('googleapiclient')
+        original_level = google_api_logger.getEffectiveLevel()
+        google_api_logger.setLevel(logging.CRITICAL + 1)
+        self.addCleanup(google_api_logger.setLevel, original_level)
+
+        with patch('pathlib.Path.mkdir') as mock_mkdir, \
+             patch('os.path.exists') as mock_os_path_exists, \
+             patch('builtins.open', new_callable=MagicMock) as mock_open_file, \
+             patch('google.auth.transport.requests.Request') as mock_google_request, \
+             patch('pickle.load') as mock_pickle_load, \
+             patch('pickle.dump') as mock_pickle_dump, \
+             patch('email_gmail_api.build') as mock_build, \
+             patch('google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file') as mock_flow_from_secrets:
+
+            mock_mkdir.return_value = None
+
+            def mock_exists_logic(path_arg):
+                # Assuming GMAIL_TOKEN_FILE is 'token.json' as in the previous test
+                if isinstance(path_arg, Path) and path_arg.name == 'token.json':
+                    return True
+                return False
+            mock_os_path_exists.side_effect = mock_exists_logic
+
+            # Simulate existing, but expired, credentials that need refresh
+            mock_expired_credentials = MagicMock(spec=Credentials)
+            mock_expired_credentials.valid = False
+            mock_expired_credentials.expired = True
+            mock_expired_credentials.refresh_token = "dummy_refresh_token"
+            # Mock the refresh method to raise an SSLError
+            mock_expired_credentials.refresh.side_effect = ssl.SSLError("Simulated SSL Error during refresh")
+            
+            mock_pickle_load.return_value = mock_expired_credentials
+
+            # Create a specific mock for the Request() instance
+            specific_request_instance = MagicMock(spec=google.auth.transport.requests.Request)
+            mock_google_request.return_value = specific_request_instance # Ensure Request() returns our specific mock
+
+            # Import GmailAPIClient and relevant constants within the patch context
+            from email_gmail_api import GmailAPIClient, DATA_DIR, GMAIL_TOKEN_FILE
+
+            with self.assertRaisesRegex(ValueError, "SSL Error refreshing credentials.*Simulated SSL Error during refresh"):
+                client = GmailAPIClient(
+                    claude_client=self.mock_claude_client,
+                    system_message=self.mock_system_message
+                )
+        
+            mock_expired_credentials.refresh.assert_called_once_with(specific_request_instance)
+            mock_pickle_dump.assert_not_called()
+            mock_build.assert_not_called()
+            
+            # Check that open was called for reading the token
+            expected_token_path = DATA_DIR / GMAIL_TOKEN_FILE
+            mock_open_file.assert_any_call(expected_token_path, 'rb')
+
+            # Ensure open was not called for writing the token
+            found_write_call = False
+            for call_obj in mock_open_file.call_args_list:
+                args = call_obj.args
+                if len(args) > 1 and args[1] == 'wb': 
+                    found_write_call = True
+                    break
+            self.assertFalse(found_write_call, f"Token file should not have been opened for writing ('wb' mode). Calls: {mock_open_file.call_args_list}")
 
     @patch('google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file')
     @patch('google.oauth2.credentials.Credentials.from_authorized_user_file')
