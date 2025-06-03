@@ -1,0 +1,186 @@
+{
+  "chunks": [
+    "Subject: Test Email Subject\n\nFrom: sender@example.com\nTo: recipient@example.com\nDate: 2025-05-31T09:18:11.323201",
+    "This is a test email body with some specific keywords like vector database testing.\nWe want to make sure that search functionality works correctly.",
+    "This should be indexed and retrievable by semantic or keyword search.",
+    "Subject: Test Email Subject\n\nFrom: sender@example.com\nTo: recipient@example.com\nDate: 2025-05-31T09:19:11.718092",
+    "This is a test email body with some specific keywords like vector database testing.\nWe want to make sure that search functionality works correctly.",
+    "This should be indexed and retrievable by semantic or keyword search.",
+    "Subject: Test Email Subject\n\nFrom: sender@example.com\nTo: recipient@example.com\nDate: 2025-05-31T09:28:29.530572",
+    "This is a test email body with some specific keywords like vector database testing.\nWe want to make sure that search functionality works correctly.",
+    "This should be indexed and retrievable by semantic or keyword search.",
+    "Subject: Test Email Subject\n\nFrom: sender@example.com\nTo: recipient@example.com\nDate: 2025-05-31T09:28:54.402613",
+    "This is a test email body with some specific keywords like vector database testing.\nWe want to make sure that search functionality works correctly.",
+    "This should be indexed and retrievable by semantic or keyword search.",
+    "Subject: Test Email Subject\n\nFrom: sender@example.com\nTo: recipient@example.com\nDate: 2025-05-31T09:30:17.796936",
+    "This is a test email body with some specific keywords like vector database testing.\nWe want to make sure that search functionality works correctly.",
+    "This should be indexed and retrievable by semantic or keyword search."
+  ],
+  "metadata": [
+    {
+      "email_id": "test_1748675891",
+      "chunk_index": 0,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:18:11.323201",
+      "tags": [
+        "test",
+        "email"
+      ]
+    },
+    {
+      "email_id": "test_1748675891",
+      "chunk_index": 1,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:18:11.323201",
+      "tags": [
+        "test",
+        "email"
+      ]
+    },
+    {
+      "email_id": "test_1748675891",
+      "chunk_index": 2,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:18:11.323201",
+      "tags": [
+        "test",
+        "email"
+      ]
+    },
+    {
+      "email_id": "test_1748675951",
+      "chunk_index": 0,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:19:11.718092",
+      "tags": [
+        "test",
+        "email"
+      ]
+    },
+    {
+      "email_id": "test_1748675951",
+      "chunk_index": 1,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:19:11.718092",
+      "tags": [
+        "test",
+        "email"
+      ]
+    },
+    {
+      "email_id": "test_1748675951",
+      "chunk_index": 2,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:19:11.718092",
+      "tags": [
+        "test",
+        "email"
+      ]
+    },
+    {
+      "email_id": "test_1748676509",
+      "chunk_index": 0,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:28:29.530572",
+      "tags": [
+        "test",
+        "email"
+      ]
+    },
+    {
+      "email_id": "test_1748676509",
+      "chunk_index": 1,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:28:29.530572",
+      "tags": [
+        "test",
+        "email"
+      ]
+    },
+    {
+      "email_id": "test_1748676509",
+      "chunk_index": 2,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:28:29.530572",
+      "tags": [
+        "test",
+        "email"
+      ]
+    },
+    {
+      "email_id": "test_1748676534",
+      "chunk_index": 0,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:28:54.402613",
+      "tags": [
+        "test",
+        "email"
+      ]
+    },
+    {
+      "email_id": "test_1748676534",
+      "chunk_index": 1,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:28:54.402613",
+      "tags": [
+        "test",
+        "email"
+      ]
+    },
+    {
+      "email_id": "test_1748676534",
+      "chunk_index": 2,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:28:54.402613",
+      "tags": [
+        "test",
+        "email"
+      ]
+    },
+    {
+      "email_id": "test_1748676617",
+      "chunk_index": 0,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:30:17.796936",
+      "tags": [
+        "test",
+        "email"
+      ]
+    },
+    {
+      "email_id": "test_1748676617",
+      "chunk_index": 1,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:30:17.796936",
+      "tags": [
+        "test",
+        "email"
+      ]
+    },
+    {
+      "email_id": "test_1748676617",
+      "chunk_index": 2,
+      "subject": "Test Email Subject",
+      "sender": "sender@example.com",
+      "date": "2025-05-31T09:30:17.796936",
+      "tags": [
+        "test",
+        "email"
+      ]
+    }
+  ]
+}

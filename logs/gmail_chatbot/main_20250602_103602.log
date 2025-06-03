@@ -1,0 +1,13 @@
+[2025-06-02 10:36:02] [INFO] Found ANTHROPIC_API_KEY in environment variables.
+[2025-06-02 10:36:02] [INFO] Initialized Claude API client with model claude-3-7-sonnet-20250219
+[2025-06-02 10:36:02] [DEBUG] Starting new HTTPS connection (1): oauth2.googleapis.com:443
+[2025-06-02 10:36:03] [DEBUG] https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+[2025-06-02 10:36:03] [INFO] file_cache is only supported with oauth2client<4.0.0
+[2025-06-02 10:36:03] [INFO] Successfully authenticated with Gmail API
+[2025-06-02 10:36:03] [INFO] Vector-based email memory store initialized
+[2025-06-02 10:36:03] [INFO] Vector search available: True
+[2025-06-02 10:36:03] [WARNING] [GmailChatbotApp] Initialized with a local autonomous_task_counter. For persistence, provide a MutableMapping reference.
+[2025-06-02 10:36:03] [INFO] Gmail Chatbot application initialized
+[2025-06-02 10:36:03] [DEBUG] URL being requested: GET https://gmail.googleapis.com/gmail/v1/users/me/profile?alt=json
+[2025-06-02 10:36:04] [INFO] Google API connection verified: Connected to Gmail API for hello@showup.courses
+[2025-06-02 10:36:04] [INFO] GmailChatbotApp initialized and stored in session state.

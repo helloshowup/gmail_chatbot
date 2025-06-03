@@ -1,0 +1,32 @@
+# Google API dependencies
+google-auth-oauthlib>=0.4.6
+google-api-python-client>=2.86.0
+
+# Claude API dependencies
+anthropic>=0.5.0
+
+# Utility packages
+python-dotenv>=1.0.0
+pillow>=9.5.0
+requests>=2.31.0
+streamlit>=1.22.0
+
+# Vector search dependencies (for semantic search)
+# NOTE: On Windows, faiss-gpu must be installed manually from a pre-built wheel
+# Download from: https://www.lfd.uci.edu/~gohlke/pythonlibs/#faiss or https://github.com/kyonifer/faiss-wheels/releases
+# For other platforms, install directly:
+faiss-cpu>=1.7.4 ; sys_platform != "win32"
+torch>=2.0.0
+langchain>=0.1.14
+langchain-community>=0.0.10
+langchain-huggingface>=0.0.1
+sentence-transformers>=2.3.1
+
+# ML Classifier dependencies
+scikit-learn>=1.2.2
+pandas>=2.0.0
+numpy>=1.24.3
+joblib>=1.2.0
+
+# File locking
+portalocker>=2.8
