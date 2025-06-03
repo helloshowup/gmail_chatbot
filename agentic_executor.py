@@ -31,6 +31,10 @@ def _execute_search_inbox(parameters: Dict[str, Any], agentic_state: Dict[str, A
     return {"status": "success", "data": simulated_emails, "message": f"{len(simulated_emails)} emails found (simulated)."}
 
 def _execute_extract_entities(parameters: Dict[str, Any], agentic_state: Dict[str, Any]) -> Dict[str, Any]:
+    print(f"EXECUTOR_HANDLER [_execute_extract_entities]: Received agentic_state: {agentic_state}")
+    retrieved_accumulated_results = agentic_state.get("accumulated_results")
+    print(f"EXECUTOR_HANDLER [_execute_extract_entities]: Retrieved accumulated_results from agentic_state: {retrieved_accumulated_results}")
+
     input_data_key = parameters.get("input_data_key")
     extraction_prompt = parameters.get("extraction_prompt", "Extract key info.")
     
@@ -114,17 +118,22 @@ ACTION_HANDLERS = {
 }
 
 def execute_step(step_details: Dict[str, Any], agentic_state: Dict[str, Any]) -> ExecuteStepResult:
+    # --- Original code reinstated (with one toast modification) ---
     action_type = step_details.get("action_type")
     parameters = step_details.get("parameters", {})
     output_key = step_details.get("output_key")
     step_description = step_details.get('description', 'Unnamed step')
+    step_id = step_details.get('step_id', 'N/A') # Get step_id for logging
+    print(f"DEBUG EXECUTOR [START execute_step for {step_id}]: Received agentic_state: {agentic_state}")
 
-    st.toast(f"Executing: {step_description}", icon="⚙️")
-    print(f"DEBUG EXECUTOR: Attempting step: {step_details}")
+    # The following st.toast was suspected of causing issues and remains commented out.
+    # st.toast(f"Executing: {step_description}", icon="⚙️") 
+    print(f"DEBUG EXECUTOR: Attempting step: {step_id} - {step_description}")
+    print(f"DEBUG EXECUTOR: Parameters: {parameters}")
 
     handler = ACTION_HANDLERS.get(action_type)
     if not handler:
-        error_message = f"No handler found for action_type: '{action_type}' in step '{step_description}'"
+        error_message = f"No handler found for action_type: '{action_type}' in step '{step_id} - {step_description}'"
         print(f"ERROR EXECUTOR: {error_message}")
         return {
             "status": "failure",
@@ -136,37 +145,48 @@ def execute_step(step_details: Dict[str, Any], agentic_state: Dict[str, Any]) ->
     try:
         # Pass both parameters from plan and the whole agentic_state to the handler
         # Handlers can choose to use agentic_state to retrieve prior step outputs
-        result = handler(parameters, agentic_state) 
+        state_to_pass_to_handler = agentic_state.copy()
+        print(f"DEBUG EXECUTOR [execute_step for {step_id}]: agentic_state (original) before passing copy to handler: {agentic_state}")
+        print(f"DEBUG EXECUTOR [execute_step for {step_id}]: state_to_pass_to_handler (copy) before handler call: {state_to_pass_to_handler}")
+        result = handler(parameters, state_to_pass_to_handler) 
         
         status = result.get("status", "failure")
         message = result.get("message", "No message from step execution.")
         step_output_data = result.get("data")
-
-        # Update accumulated_results in agentic_state if an output_key is specified and step was successful
-        if output_key and status == "success":
-            if "accumulated_results" not in agentic_state:
-                agentic_state["accumulated_results"] = {}
-            agentic_state["accumulated_results"][output_key] = step_output_data
-            print(f"DEBUG EXECUTOR: Stored output under key '{output_key}' in agentic_state.accumulated_results")
         
-        print(f"DEBUG EXECUTOR: Step '{step_description}' result: {status}. Message: {message}")
+        # The handler should return the modified agentic_state if it changes it.
+        # For safety, we take the updated_agentic_state from the result if provided.
+        updated_agentic_state = result.get("updated_agentic_state", agentic_state)
+
+        # Update accumulated_results in the potentially updated agentic_state
+        if output_key and status == "success":
+            if "accumulated_results" not in updated_agentic_state:
+                updated_agentic_state["accumulated_results"] = {}
+            # Ensure accumulated_results is a dict, not a list as seen in previous logs
+            if not isinstance(updated_agentic_state["accumulated_results"], dict):
+                 updated_agentic_state["accumulated_results"] = {} # Reset if it's not a dict
+            updated_agentic_state["accumulated_results"][output_key] = step_output_data
+            print(f"DEBUG EXECUTOR: Stored output for step {step_id} under key '{output_key}'.")
+        
+        print(f"DEBUG EXECUTOR: Step '{step_id} - {step_description}' result: {status}. Message: {message}")
         return {
             "status": status,
             "message": message,
-            "updated_agentic_state": agentic_state, # Return the (potentially) modified state
-            "requires_user_input": False # For now, no step requires user input
+            "updated_agentic_state": updated_agentic_state, 
+            "requires_user_input": result.get("requires_user_input", False)
         }
     except Exception as e:
-        error_message = f"Exception during execution of step '{step_description}' ({action_type}): {e}"
+        error_message = f"Exception during execution of step '{step_id} - {step_description}' ({action_type}): {e}"
         print(f"ERROR EXECUTOR: {error_message}")
         import traceback
-        traceback.print_exc()
+        traceback.print_exc() # Print full traceback to console
         return {
             "status": "failure",
             "message": error_message,
-            "updated_agentic_state": agentic_state,
+            "updated_agentic_state": agentic_state, # Return original state on exception
             "requires_user_input": False
         }
+    # --- End of original code ---
 
 def summarize_and_log_agentic_results(agentic_state: Dict[str, Any], plan_completed: bool, limit_reached: bool = False) -> None:
     # This function remains largely the same for now, focusing on sidebar display

@@ -273,7 +273,8 @@ if st.session_state.get("initialization_attempted", False):
             if st.button(f"Execute Step {current_step_idx + 1}: {step_details.get('step_id', 'Unnamed')}", key=f"exec_step_{current_step_idx}"):
                 with st.spinner(f"Executing: {step_details.get('description', 'Working...')}"):
                     try:
-                        execution_result = execute_step(step_details, agentic_state.copy()) # Pass a copy to avoid direct mutation issues before update
+                        print(f"CHAT_APP_ST [DEBUG]: st.session_state.agentic_state BEFORE execute_step call for step {current_step_idx + 1}: {st.session_state.agentic_state}")
+                        execution_result = execute_step(step_details, st.session_state.agentic_state) # Pass the session state directly
                         st.toast(f"DEBUG: execute_step returned: {execution_result.get('status')}", icon="📋") # DEBUG
                         
                         # Update agentic_state with the returned state from execute_step
