@@ -373,105 +373,24 @@ if prompt := st.chat_input("Ask me about your inbox:"):
                 st.button("Acknowledge & Clear", on_click=lambda: setattr(st.session_state, 'agentic_plan', None) or st.rerun())
     # --- End Agentic Execution Loop ---
 
-    # Accept user input
-    if prompt := st.chat_input("Ask me about your inbox:"):
-        # Display user message and add to history immediately
-        with st.chat_message("user"):
-            st.markdown(prompt)
-        
-        if st.session_state.get("bot_initialized_successfully") and "bot" in st.session_state:
-            if not hasattr(st.session_state.bot, "chat_history") or not isinstance(st.session_state.bot.chat_history, list):
-                st.session_state.bot.chat_history = [] # Initialize if missing
-            st.session_state.bot.chat_history.append({"role": "user", "content": prompt})
-        else:
-            # If bot not initialized, display error and stop further processing for this input
-            st.error("Chatbot is not initialized. Cannot process messages.")
-            st.stop() # Stop current script run
 
-        # Agentic Mode: Planning Step
-        attempt_agentic_planning = st.session_state.get("agentic_mode_enabled", False)
-        new_plan_generated_and_stored = False
+st.sidebar.title("Controls")
+if "batch_mode" not in st.session_state:
+    st.session_state.batch_mode = False  # Initialize if not present
+st.session_state.batch_mode = st.sidebar.checkbox(
+    "Batch Mode", value=st.session_state.batch_mode, key="batch_mode_checkbox"
+)
 
-        if attempt_agentic_planning:
-            # Reset plan and state before attempting to generate a new one from this prompt
-            st.session_state.agentic_plan = None 
-            st.session_state.agentic_state = default_agentic_state_values.copy() # Assumes default_agentic_state_values is defined
+log_file = st.sidebar.file_uploader(
+    "Upload log file for review", type="txt", key="log_uploader"
+)
+if log_file:
+    st.sidebar.subheader("Log File Content")
+    try:
+        log_content = log_file.read().decode("utf-8")
+        st.sidebar.code(log_content, language="text")
+    except Exception as e:
+        st.sidebar.error(f"Error reading log file: {e}")
 
-            with st.spinner("Planner is thinking about a multi-step approach..."):
-                plan = generate_plan(prompt, st.session_state) # Pass current session state for context
-            
-            if plan:
-                st.session_state.agentic_plan = plan
-                new_plan_generated_and_stored = True
-                st.info("🤖 Agentic plan generated. Preparing for execution.")
-                with st.expander("View Generated Plan", expanded=True):
-                    if st.session_state.agentic_plan:
-                        for i, step_data in enumerate(st.session_state.agentic_plan):
-                            st.markdown(f"**Step {i+1}:** {step_data.get('description', 'No description')}")
-                    else:
-                        st.markdown("No plan details available.")
-                st.rerun() # Rerun to let the (future) execution block pick up the plan
-        
-        # Normal message processing (if not st.rerun()'d due to new agentic plan)
-        # This block executes if: 
-        #   1. Agentic mode is OFF, OR
-        #   2. Agentic mode is ON, but generate_plan(prompt) returned None (no specific plan for this query)
-        if not new_plan_generated_and_stored: # Check if a rerun was already triggered
-            if st.session_state.get("bot_initialized_successfully") and "bot" in st.session_state:
-                with st.spinner("Thinking..."):
-                    try:
-                        response = st.session_state.bot.process_message(prompt)
-                        # Ensure assistant's response is added to history and displayed
-                        if response: # Make sure there's a response to add/display
-                            st.session_state.bot.chat_history.append({"role": "assistant", "content": response})
-                            with st.chat_message("assistant"):
-                                st.markdown(response)
-                        # No explicit st.rerun() here, standard Streamlit flow.
-                    except Exception as e:
-                        st.error(f"Error processing message: {e}")
-                        traceback.print_exc(file=sys.stderr)
-                        error_message_for_chat = f"Sorry, I encountered an error: {e}"
-                        st.session_state.bot.chat_history.append({"role": "assistant", "content": error_message_for_chat})
-                        with st.chat_message("assistant"):
-                            st.markdown(error_message_for_chat)
-            # No need for the 'elif not st.session_state.get("bot_initialized_successfully")' here,
-            # as it's handled at the beginning of the prompt processing.e check the error details below.")
-            
-            # Show initialization diagnostics again if available
-            if "initialization_steps" in st.session_state:
-                with st.expander("Initialization Diagnostic Details", expanded=True):
-                    for step in st.session_state["initialization_steps"]:
-                        if step.startswith("✓"):
-                            st.success(step)
-                        elif step.startswith("⚠️"):
-                            st.warning(step)
-                        else:
-                            st.error(step)
-            
-            # Add a refresh button
-            if st.button("Refresh and Try Again"):
-                st.session_state.clear()  # Clear session state to force complete reinitialization
-                st.rerun()  # Rerun the app to start fresh
-        else: 
-             st.error("Chatbot is not ready. Please try refreshing the page.")
-
-    st.sidebar.title("Controls")
-    if "batch_mode" not in st.session_state:
-        st.session_state.batch_mode = False # Initialize if not present
-    st.session_state.batch_mode = st.sidebar.checkbox(
-        "Batch Mode", value=st.session_state.batch_mode, key="batch_mode_checkbox"
-    )
-
-    log_file = st.sidebar.file_uploader(
-        "Upload log file for review", type="txt", key="log_uploader"
-    )
-    if log_file:
-        st.sidebar.subheader("Log File Content")
-        try:
-            log_content = log_file.read().decode("utf-8")
-            st.sidebar.code(log_content, language="text")
-        except Exception as e:
-            st.sidebar.error(f"Error reading log file: {e}")
-
-    st.sidebar.markdown("---")
-    st.sidebar.caption("Powered by Claude + Gmail API")
+st.sidebar.markdown("---")
+st.sidebar.caption("Powered by Claude + Gmail API")
