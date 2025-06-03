@@ -42,7 +42,7 @@ def run_test():
         # Verify response
         print(f"\nResponse: {response}")
         print(f"Contains 'John': {'John' in response}")
-        print(f"Contains 'don\'t have notes': {'don\'t have notes' in response}")
+        print(f"Contains 'don't have notes': {"don't have notes" in response}")
         print(f"Claude generate_response called: {claude_client.generate_response.called}")
         
         # Test case 2: With notebook results
@@ -54,7 +54,7 @@ def run_test():
         
         response = app.process_message(test_query, request_id)
         print(f"Response: {response}")
-        print(f"Contains 'don\'t have notes': {'don\'t have notes' in response}")
+        print(f"Contains 'don't have notes': {"don't have notes" in response}")
         print(f"Claude generate_response called: {claude_client.generate_response.called}")
         
         # Test case 3: Entity extraction
