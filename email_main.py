@@ -237,6 +237,7 @@ class GmailChatbotApp:
             self.initialization_diagnostics.append(f"✗ Failed to initialize Claude API client: {str(e)}")
             logging.error(f"Failed to initialize Claude API client: {e}", exc_info=True)
 
+        print("DEBUG: GmailChatbotApp.__init__ - BEFORE GmailAPIClient initialization", file=sys.stderr, flush=True)
         try:
             self.gmail_client = GmailAPIClient(self.claude_client, self.system_message)
             if self.gmail_client and hasattr(self.gmail_client, 'service') and self.gmail_client.service:
@@ -256,8 +257,9 @@ class GmailChatbotApp:
                 diag_msg = f"✗ Failed to initialize Gmail API client: {error_str}"
             self.initialization_diagnostics.append(diag_msg)
             logging.error(f"Failed to initialize Gmail API client: {e}", exc_info=True)
+        print(f"DEBUG: GmailChatbotApp.__init__ - AFTER GmailAPIClient initialization. gmail_service: {self.gmail_service}", file=sys.stderr, flush=True)
 
-        print("DEBUG: GmailChatbotApp.__init__ - BEFORE vector_memory (EmailVectorStore) initialization", file=sys.stderr)
+        print("DEBUG: GmailChatbotApp.__init__ - BEFORE vector_memory (EmailVectorStore) initialization", file=sys.stderr, flush=True)
         # Initialize vector-based memory store
         try:
             self.memory_store = EmailVectorMemoryStore() # This needs to set its own error message and availability
@@ -284,18 +286,23 @@ class GmailChatbotApp:
              logging.info(
                 f"Vector search available (post-init check): {self.vector_search_available}, Error: {self.vector_search_error_message}"
             )
-        print(f"DEBUG: GmailChatbotApp.__init__ - AFTER vector_memory (EmailVectorStore) attempt. vector_search_available: {self.vector_search_available}, error: {self.vector_search_error_message}", file=sys.stderr)
+        print(f"DEBUG: GmailChatbotApp.__init__ - AFTER vector_memory (EmailVectorStore) attempt. vector_search_available: {self.vector_search_available}, error: {self.vector_search_error_message}", file=sys.stderr, flush=True)
 
         # Initialize MemoryActionsHandler
         # Initialize EnhancedMemoryStore first as PreferenceDetector depends on it
+        print("DEBUG: GmailChatbotApp.__init__ - BEFORE EnhancedMemoryStore initialization", file=sys.stderr, flush=True)
         self.enhanced_memory_store = EnhancedMemoryStore()
+        print("DEBUG: GmailChatbotApp.__init__ - AFTER EnhancedMemoryStore initialization", file=sys.stderr, flush=True)
         logging.info("Enhanced memory store initialized")
 
         # Initialize PreferenceDetector
+        print("DEBUG: GmailChatbotApp.__init__ - BEFORE PreferenceDetector initialization", file=sys.stderr, flush=True)
         self.preference_detector = PreferenceDetector(memory_store=self.enhanced_memory_store)
+        print("DEBUG: GmailChatbotApp.__init__ - AFTER PreferenceDetector initialization", file=sys.stderr, flush=True)
         logging.info("Preference detector initialized")
 
         # Initialize MemoryActionsHandler
+        print("DEBUG: GmailChatbotApp.__init__ - BEFORE MemoryActionsHandler initialization", file=sys.stderr, flush=True)
         self.memory_actions_handler = MemoryActionsHandler(
             memory_store=self.memory_store,
             gmail_client=self.gmail_client,
@@ -303,7 +310,7 @@ class GmailChatbotApp:
             system_message=self.system_message,
             preference_detector=self.preference_detector, # Added this line
         )
-        print(f"DEBUG: GmailChatbotApp.__init__ - AFTER MemoryActionsHandler initialization. memory_actions_handler: {self.memory_actions_handler}", file=sys.stderr)
+        print(f"DEBUG: GmailChatbotApp.__init__ - AFTER MemoryActionsHandler initialization. memory_actions_handler: {self.memory_actions_handler}", file=sys.stderr, flush=True)
 
         # Add the three main clients to memory if not already present using MemoryActionsHandler
         default_clients = ["Further Learner", "Excel High School", "Hoorah Digital"]

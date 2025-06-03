@@ -128,10 +128,10 @@ def initialize_chatbot() -> bool:
             st.session_state["bot_initialized_successfully"] = True # Assume success, set to False on any failure
 
             st.session_state["initialization_steps"].append(str("Attempting to import GmailChatbotApp..."))
-            print("DEBUG: chat_app_st.py - BEFORE GmailChatbotApp import", file=sys.stderr)
+            print("DEBUG: chat_app_st.py - BEFORE GmailChatbotApp import", file=sys.stderr, flush=True)
             try:
                 from email_main import GmailChatbotApp # Deferred import
-                print("DEBUG: chat_app_st.py - Import statement for GmailChatbotApp COMPLETED.", file=sys.stderr)
+                print("DEBUG: chat_app_st.py - Import statement for GmailChatbotApp COMPLETED.", file=sys.stderr, flush=True)
                 if not ('GmailChatbotApp' in locals() and isinstance(GmailChatbotApp, type)):
                     critical_msg = "CRITICAL_DEBUG: chat_app_st.py - GmailChatbotApp import issue. Not a class after import."
                     print(critical_msg, file=sys.stderr)
@@ -151,12 +151,15 @@ def initialize_chatbot() -> bool:
             st.session_state["initialization_steps"].append(str("✓ Autonomous task counter initialized"))
 
             st.session_state["initialization_steps"].append(str("Attempting to create GmailChatbotApp instance..."))
+            print("DEBUG: chat_app_st.py - BEFORE GmailChatbotApp instantiation", file=sys.stderr, flush=True)
             st.session_state.bot = GmailChatbotApp(autonomous_counter_ref=st.session_state)
+            print("DEBUG: chat_app_st.py - AFTER GmailChatbotApp instantiation", file=sys.stderr, flush=True)
             st.session_state["initialization_steps"].append(str("✓ GmailChatbotApp instance created"))
 
             # --- Critical Component Checks --- 
             st.session_state["initialization_steps"].append(str("Verifying critical bot components..."))
 
+            print("DEBUG: chat_app_st.py - BEFORE Gmail client check", file=sys.stderr, flush=True)
             # 1. Gmail Client (Service Object and API Connection)
             if hasattr(st.session_state.bot, 'gmail_service') and st.session_state.bot.gmail_service is not None:
                 st.session_state["initialization_steps"].append(str("✓ Gmail client object loaded (gmail_service found)."))
@@ -174,7 +177,9 @@ def initialize_chatbot() -> bool:
             else:
                 st.session_state["initialization_steps"].append(str("✗ Gmail client (gmail_service) failed to load or is None."))
                 st.session_state["bot_initialized_successfully"] = False
+            print("DEBUG: chat_app_st.py - AFTER Gmail client check", file=sys.stderr, flush=True)
 
+            print("DEBUG: chat_app_st.py - BEFORE Vector search check", file=sys.stderr, flush=True)
             # 2. Vector Search (Embedding Model + FAISS)
             if hasattr(st.session_state.bot, 'vector_search_available'):
                 if st.session_state.bot.vector_search_available:
@@ -191,14 +196,18 @@ def initialize_chatbot() -> bool:
             else:
                 st.session_state["initialization_steps"].append(str("✗ Vector search status unknown (attribute 'vector_search_available' missing on bot object)."))
                 st.session_state["bot_initialized_successfully"] = False
+            print("DEBUG: chat_app_st.py - AFTER Vector search check", file=sys.stderr, flush=True)
 
+            print("DEBUG: chat_app_st.py - BEFORE Email memory store check", file=sys.stderr, flush=True)
             # 3. Email Memory Store
-            if hasattr(st.session_state.bot, 'email_memory') and st.session_state.bot.email_memory is not None: 
+            if hasattr(st.session_state.bot, 'email_memory') and st.session_state.bot.email_memory is not None:
                 st.session_state["initialization_steps"].append(str("✓ Email memory store available."))
             else:
                 st.session_state["initialization_steps"].append(str("✗ Email memory store not available or is None."))
                 st.session_state["bot_initialized_successfully"] = False
-            
+            print("DEBUG: chat_app_st.py - AFTER Email memory store check", file=sys.stderr, flush=True)
+
+            print("DEBUG: chat_app_st.py - BEFORE Claude client check", file=sys.stderr, flush=True)
             # Check other non-critical components if necessary (original loop can be adapted for this)
             # For now, focusing on the three specified as critical.
             # Example: Claude client check (often critical too)
@@ -207,6 +216,7 @@ def initialize_chatbot() -> bool:
             else:
                 st.session_state["initialization_steps"].append(str("✗ Claude API client failed to load."))
                 st.session_state["bot_initialized_successfully"] = False # Claude is usually critical
+            print("DEBUG: chat_app_st.py - AFTER Claude client check", file=sys.stderr, flush=True)
 
             if not st.session_state["bot_initialized_successfully"]:
                 print(f"CRITICAL_DEBUG: chat_app_st.py - Initialization failed. Final steps: {st.session_state['initialization_steps']}", file=sys.stderr)
