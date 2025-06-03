@@ -10,6 +10,7 @@ import logging
 import ssl
 from typing import List, Dict, Any, Optional, Tuple
 from datetime import datetime
+from email.mime.text import MIMEText
 
 import google.auth.exceptions
 from google.auth.transport.requests import Request
@@ -481,5 +482,39 @@ class GmailAPIClient:
             truncation_percent = int((len(full_body) - MAX_EMAIL_BODY_CHARS) / len(full_body) * 100)
             result['body'] += f"\n\n[...{truncation_percent}% of message truncated to conserve tokens. Full content available on request...]"
             logging.info(f"Truncated email body from {result['full_length']} to {MAX_EMAIL_BODY_CHARS} chars ({truncation_percent}% reduction)")
-        
+
         return result
+
+    def send_email(self, to: str, subject: str, body: str) -> Dict[str, Any]:
+        """Send an email using the Gmail API.
+
+        Args:
+            to: Recipient email address.
+            subject: Email subject line.
+            body: Plain text body of the email.
+
+        Returns:
+            Dictionary with the API response or error details.
+        """
+        message = MIMEText(body)
+        message['to'] = to
+        message['subject'] = subject
+
+        raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode('utf-8')
+
+        try:
+            sent = self.service.users().messages().send(
+                userId=self.user_id,
+                body={'raw': raw_message}
+            ).execute()
+            logging.info(f"Sent email to {to} with subject '{subject}'")
+            return {"status": "success", "data": sent}
+        except ssl.SSLError as e_ssl:
+            logging.error(f"SSL Error sending email: {e_ssl}")
+            return {"status": "failure", "error": f"SSL Error: {e_ssl}"}
+        except HttpError as error:
+            logging.error(f"HTTP error sending email: {error}")
+            return {"status": "failure", "error": f"HTTP Error: {error}"}
+        except Exception as e:
+            logging.error(f"Unexpected error sending email: {e}")
+            return {"status": "failure", "error": str(e)}

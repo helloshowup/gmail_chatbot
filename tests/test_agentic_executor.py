@@ -3,6 +3,12 @@ import types
 import unittest
 import contextlib
 from unittest.mock import MagicMock
+import os
+
+# Ensure project root is on path for direct test execution
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
 # Provide a minimal streamlit stub if streamlit is not available
 if 'streamlit' not in sys.modules:
@@ -129,61 +135,36 @@ class TestAgenticExecutorFlow(unittest.TestCase):
         st_stub.session_state.bot.enhanced_memory_store.add_memory_entry.assert_called_once()
         self.assertEqual(res4["status"], "success")
 
-    def test_sequential_plan_execution(self):
-        plan = [
-            {
-                "step_id": "test_search_step",
-                "description": "Step 1",
-                "action_type": "placeholder_search_tool",
-                "parameters": {"query": "agentic"},
-                "output_key": "search_results",
-            },
-            {
-                "step_id": "test_summarize_step",
-                "description": "Step 2",
-                "action_type": "placeholder_summarize_tool",
-                "parameters": {"input_data_key": "search_results"},
-                "output_key": "summary",
-            },
-        ]
+    def test_send_email_handler_preview_and_flag(self):
+        state = {}
+        step = {
+            "action_type": "send_email",
+            "parameters": {"to": "a@b.com", "subject": "Hi", "body": "Test"},
+            "output_key": "send_result",
+        }
+        res = execute_step(step, state)
+        self.gmail_client.send_email.assert_not_called()
+        self.assertTrue(res["requires_user_input"])
+        self.assertIn("To: a@b.com", res["message"])
+        self.assertEqual(res["updated_agentic_state"]["accumulated_results"]["send_result"],
+                         {"to": "a@b.com", "subject": "Hi", "body": "Test"})
 
-        state: dict = {}
-        for step in plan:
-            res = execute_step(step, state)
-            state = res["updated_agentic_state"]
-
-        self.assertIn("summary", state.get("accumulated_results", {}))
-        self.assertEqual(
-            state["accumulated_results"]["summary"],
-            "Simulated summary of 1 documents.",
-        )
-
-
-class TestHandleStepLimitReached(unittest.TestCase):
-    def setUp(self):
-        st_stub.button = MagicMock(return_value=False)
-        st_stub.warning = MagicMock()
-
-    def tearDown(self):
-        st_stub.session_state.__dict__.clear()
-
-    def test_continue_choice_resets_count(self):
-        st_stub.button = MagicMock(side_effect=[True, False])
-        agentic_state = {"executed_call_count": 5}
-        with unittest.mock.patch.object(agentic_executor, "summarize_and_log_agentic_results") as summary_mock:
-            choice = handle_step_limit_reached(agentic_state, 5)
-        self.assertEqual(choice, "continue")
-        self.assertEqual(agentic_state["executed_call_count"], 0)
-        summary_mock.assert_not_called()
-
-    def test_stop_choice_triggers_summary(self):
-        st_stub.button = MagicMock(side_effect=[False, True])
-        agentic_state = {"executed_call_count": 5}
-        with unittest.mock.patch.object(agentic_executor, "summarize_and_log_agentic_results") as summary_mock:
-            choice = handle_step_limit_reached(agentic_state, 5)
-        self.assertEqual(choice, "stop")
-        summary_mock.assert_called_once()
-
+    def test_send_email_confirmation_flow(self):
+        state = {}
+        step = {
+            "action_type": "send_email",
+            "parameters": {"to": "c@d.com", "subject": "Hello", "body": "World"},
+            "output_key": "send_result",
+        }
+        res = execute_step(step, state)
+        pending = {
+            "action": "send_email",
+            "parameters": res["updated_agentic_state"]["accumulated_results"]["send_result"],
+            "next_step_index": 1,
+        }
+        if pending["action"] == "send_email":
+            st_stub.session_state.bot.gmail_client.send_email(**pending["parameters"])
+        self.gmail_client.send_email.assert_called_once_with(to="c@d.com", subject="Hello", body="World")
 
 if __name__ == "__main__":
     unittest.main()

@@ -59,6 +59,8 @@ if "agentic_plan" not in st.session_state:
     st.session_state.agentic_plan = None
 if "agentic_state" not in st.session_state:
     st.session_state.agentic_state = default_agentic_state_values.copy()
+if "pending_confirmation" not in st.session_state:
+    st.session_state.pending_confirmation = None
 
 # Sidebar controls
 st.sidebar.header("🤖 Agentic Mode Settings")
@@ -395,15 +397,97 @@ if prompt := st.chat_input("Ask me about your inbox:"):
             executed_call_count = agentic_state.get("executed_call_count", 0)
             step_limit = st.session_state.get("agentic_step_limit", 10)
 
-            st.info(
-                f"🤖 Agentic Mode: Executing Plan ({current_step_idx}/{len(plan)} steps completed, {executed_call_count}/{step_limit} calls made)"
-            )
-            run_agentic_plan()
-        else:
-            with st.spinner("Bot is thinking..."):
-                assistant_reply = st.session_state.bot.process_message(prompt)
-            with st.chat_message("assistant"):
-                st.markdown(assistant_reply)
+            st.info(f"🤖 Agentic Mode: Executing Plan ({current_step_idx}/{len(plan)} steps completed, {executed_call_count}/{step_limit} calls made)")
+            if len(plan) > 0:
+                st.progress(current_step_idx / len(plan))
+
+            # Check if call limit reached
+            if executed_call_count >= step_limit:
+                if not agentic_state.get("limit_reached_flag", False):  # Prevent multiple summaries if stuck
+                    summarize_and_log_agentic_results(agentic_state, plan_completed=False, limit_reached=True)
+                    st.warning(f"Agentic execution stopped: Call limit of {step_limit} reached. Partial results (if any) logged.")
+                    agentic_state["limit_reached_flag"] = True
+                    st.session_state.agentic_plan = None  # Stop further execution
+                    st.session_state.agentic_state = default_agentic_state_values.copy()
+                    st.button("Acknowledge & Clear Plan", on_click=lambda: setattr(st.session_state, 'agentic_plan', None) or st.rerun())
+            # Check if plan is still active (not cleared by limit or completion)
+            elif st.session_state.get("agentic_plan") and current_step_idx < len(plan):
+                if st.session_state.pending_confirmation:
+                    st.markdown("**Review Draft Email:**")
+                    st.code(st.session_state.pending_confirmation.get("message", ""))
+                    col_yes, col_no = st.columns(2)
+                    if col_yes.button("Yes", key="confirm_yes"):
+                        pending = st.session_state.pending_confirmation
+                        if pending.get("action") == "send_email":
+                            gmail_client = getattr(getattr(st.session_state, "bot", None), "gmail_client", None)
+                            if gmail_client:
+                                gmail_client.send_email(**pending.get("parameters", {}))
+                        st.session_state.agentic_state["current_step_index"] = pending.get("next_step_index", current_step_idx + 1)
+                        st.session_state.pending_confirmation = None
+                        st.rerun()
+                    if col_no.button("No", key="confirm_no"):
+                        summarize_and_log_agentic_results(st.session_state.agentic_state, plan_completed=False)
+                        st.session_state.agentic_plan = None
+                        st.session_state.agentic_state = default_agentic_state_values.copy()
+                        st.session_state.pending_confirmation = None
+                        st.rerun()
+                    st.stop()
+                step_details = plan[current_step_idx]
+                st.markdown(f"**Current Task:** {step_details.get('description', 'No description')}")
+
+                if st.button(f"Execute Step {current_step_idx + 1}: {step_details.get('step_id', 'Unnamed')}", key=f"exec_step_{current_step_idx}"):
+                    with st.spinner(f"Executing: {step_details.get('description', 'Working...')}"):
+                        try:
+                            print(f"CHAT_APP_ST [DEBUG]: st.session_state.agentic_state BEFORE execute_step call for step {current_step_idx + 1}: {st.session_state.agentic_state}")
+                            execution_result = execute_step(step_details, st.session_state.agentic_state)
+                            st.toast(f"DEBUG: execute_step returned: {execution_result.get('status')}", icon="📋")
+
+                            st.session_state.agentic_state = execution_result.get("updated_agentic_state", agentic_state)
+                            st.session_state.agentic_state["executed_call_count"] = executed_call_count + 1
+
+                            if execution_result.get("status") == "failure":
+                                error_msg = f"Step {current_step_idx + 1} ('{step_details.get('step_id', 'Unnamed')}') failed: {execution_result.get('message', 'Unknown error')}"
+                                st.error(error_msg)
+                                if "error_messages" not in st.session_state.agentic_state:
+                                    st.session_state.agentic_state["error_messages"] = []
+                                st.session_state.agentic_state["error_messages"].append(error_msg)
+                                summarize_and_log_agentic_results(st.session_state.agentic_state, plan_completed=False)
+                                st.session_state.agentic_plan = None
+                                st.session_state.agentic_state = default_agentic_state_values.copy()
+                                st.rerun()
+                            elif execution_result.get("requires_user_input", False):
+                                st.session_state.pending_confirmation = {
+                                    "message": execution_result.get("message", ""),
+                                    "next_step_index": current_step_idx + 1,
+                                    "action": step_details.get("action_type"),
+                                    "parameters": execution_result.get("data", {}),
+                                }
+                                st.rerun()
+                            else:
+                                st.toast(f"DEBUG: Step {current_step_idx + 1} success path reached.", icon="✅")
+                                st.session_state.agentic_state["current_step_index"] = current_step_idx + 1
+                                st.success(f"Step {current_step_idx + 1} completed. {execution_result.get('message', '')}")
+                                st.rerun()
+                        except Exception as e:
+                            st.exception(e)
+                            st.error(f"An unexpected error occurred during step execution: {e}")
+                            st.session_state.agentic_plan = None
+                            st.session_state.agentic_state = default_agentic_state_values.copy()
+                            st.rerun()
+            elif st.session_state.get("agentic_plan") and current_step_idx >= len(plan):
+                if not agentic_state.get("completion_logged_flag", False):
+                    summarize_and_log_agentic_results(agentic_state, plan_completed=True)
+                    st.success("🎉 Agentic plan fully completed!")
+                    agentic_state["completion_logged_flag"] = True
+                    st.session_state.agentic_plan = None
+                    st.session_state.agentic_state = default_agentic_state_values.copy()
+                    st.balloons()
+                    st.button("Acknowledge & Clear", on_click=lambda: setattr(st.session_state, 'agentic_plan', None) or st.rerun())
+    else:
+        with st.spinner("Bot is thinking..."):
+            assistant_reply = st.session_state.bot.process_message(prompt)
+        with st.chat_message("assistant"):
+            st.markdown(assistant_reply)
 
 st.sidebar.title("Controls")
 if "batch_mode" not in st.session_state:
