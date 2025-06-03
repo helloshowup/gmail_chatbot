@@ -2,16 +2,6 @@
 
 import sys
 from pathlib import Path
-
-# Add the parent directory of 'gmail_chatbot' (i.e., 'showup-tools') to sys.path
-# This allows relative imports within the 'gmail_chatbot' package to work correctly
-# when 'email_main.py' is run directly by Streamlit.
-# Path(__file__).resolve().parent.parent is the 'showup-tools' directory.
-sys_path_to_add = str(Path(__file__).resolve().parent.parent)
-if sys_path_to_add not in sys.path:
-    sys.path.insert(0, sys_path_to_add)
-
-print("DEBUG: email_main.py - TOP OF FILE (sys.path modified)")
 # -*- coding: utf-8 -*-
 
 # Fix for Streamlit × PyTorch file-watcher clash
@@ -26,8 +16,6 @@ import faulthandler
 if not os.environ.get("PYTEST_RUNNING"):
     faulthandler.enable()
 
-import os
-import sys
 import io
 import argparse
 import logging

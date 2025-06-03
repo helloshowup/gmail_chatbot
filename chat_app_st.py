@@ -3,18 +3,6 @@ import sys
 import os
 import traceback
 
-# --- Add package parent to sys.path ---
-# __file__ is c:\Users\User\Documents\showup-v4\showup-tools\gmail_chatbot\chat_app_st.py
-# package_parent_dir (containing 'gmail_chatbot' package) should be c:\Users\User\Documents\showup-v4\showup-tools
-package_parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-if package_parent_dir not in sys.path:
-    sys.path.insert(0, package_parent_dir)
-    print(f"DEBUG: chat_app_st.py - Added package parent dir to sys.path: {package_parent_dir}", file=sys.stderr)
-else:
-    print(f"DEBUG: chat_app_st.py - Package parent dir already in sys.path: {package_parent_dir}", file=sys.stderr)
-# print(f"DEBUG: chat_app_st.py - Current sys.path: {sys.path}", file=sys.stderr) # Optional: very verbose
-# --- End sys.path modification ---
-
 import io
 import time
 from pathlib import Path
