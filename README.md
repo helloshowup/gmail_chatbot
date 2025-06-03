@@ -55,6 +55,12 @@ For manual setup you can run one of the provided setup scripts:
 setup.bat         # Windows
 ```
 
+Alternatively install the package in editable mode so `gmail_chatbot` can be imported from anywhere:
+
+```bash
+pip install -e .
+```
+
 These scripts install all packages listed in `requirements.txt`.  A lighter dependency
 set is available in `requirements-lite.txt` which omits heavy packages such as
 FAISS and PyTorch.  Use this file for CI or limited environments:
