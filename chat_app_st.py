@@ -9,7 +9,12 @@ import json
 from pathlib import Path
 import dotenv
 from agentic_planner import generate_plan
-from agentic_executor import execute_step, summarize_and_log_agentic_results  # Added for agentic execution
+from agentic_executor import (
+    execute_step,
+    summarize_and_log_agentic_results,  # Added for agentic execution
+    handle_step_limit_reached,
+)
+
 
 # --- Global Exception Hook for Debugging ---
 def log_exception_to_file(exc_type, exc_value, exc_traceback):
@@ -148,17 +153,16 @@ def run_agentic_plan() -> None:
         st.session_state.agentic_state = default_agentic_state_values.copy()
         st.balloons()
     elif agentic_state.get("executed_call_count", 0) >= step_limit:
-        if not agentic_state.get("limit_reached_flag", False):
-            summarize_and_log_agentic_results(
-                agentic_state, plan_completed=False, limit_reached=True
-            )
-            agentic_state["limit_reached_flag"] = True
-        st.warning(
-            f"Agentic execution stopped: Call limit of {step_limit} reached. Partial results (if any) logged."
-        )
-        st.session_state.agentic_plan = None
-        st.session_state.agentic_state = default_agentic_state_values.copy()
-
+        user_choice = handle_step_limit_reached(agentic_state, step_limit)
+        if user_choice == "continue":
+            st.session_state.agentic_state = agentic_state
+            st.rerun()
+        elif user_choice == "stop":
+            st.session_state.agentic_plan = None
+            st.session_state.agentic_state = default_agentic_state_values.copy()
+            st.rerun()
+        else:
+            st.stop()
 
 # Initialize chat history
 

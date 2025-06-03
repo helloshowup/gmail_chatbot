@@ -69,7 +69,8 @@ else:
             expander=lambda *a, **k: contextlib.nullcontext(),
         )
 
-from agentic_executor import execute_step
+from agentic_executor import execute_step, handle_step_limit_reached
+import agentic_executor
 
 class TestAgenticExecutorFlow(unittest.TestCase):
     def setUp(self):
@@ -156,6 +157,32 @@ class TestAgenticExecutorFlow(unittest.TestCase):
             state["accumulated_results"]["summary"],
             "Simulated summary of 1 documents.",
         )
+
+
+class TestHandleStepLimitReached(unittest.TestCase):
+    def setUp(self):
+        st_stub.button = MagicMock(return_value=False)
+        st_stub.warning = MagicMock()
+
+    def tearDown(self):
+        st_stub.session_state.__dict__.clear()
+
+    def test_continue_choice_resets_count(self):
+        st_stub.button = MagicMock(side_effect=[True, False])
+        agentic_state = {"executed_call_count": 5}
+        with unittest.mock.patch.object(agentic_executor, "summarize_and_log_agentic_results") as summary_mock:
+            choice = handle_step_limit_reached(agentic_state, 5)
+        self.assertEqual(choice, "continue")
+        self.assertEqual(agentic_state["executed_call_count"], 0)
+        summary_mock.assert_not_called()
+
+    def test_stop_choice_triggers_summary(self):
+        st_stub.button = MagicMock(side_effect=[False, True])
+        agentic_state = {"executed_call_count": 5}
+        with unittest.mock.patch.object(agentic_executor, "summarize_and_log_agentic_results") as summary_mock:
+            choice = handle_step_limit_reached(agentic_state, 5)
+        self.assertEqual(choice, "stop")
+        summary_mock.assert_called_once()
 
 
 if __name__ == "__main__":
