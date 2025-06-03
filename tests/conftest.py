@@ -44,6 +44,7 @@ if 'google' not in sys.modules:
     sys.modules['google_auth_oauthlib'] = google_auth_oauthlib
     sys.modules['google_auth_oauthlib.flow'] = flow_module
 
+
     discovery_module = types.ModuleType('googleapiclient.discovery')
     discovery_module.build = MagicMock()
     errors_module = types.ModuleType('googleapiclient.errors')
@@ -54,6 +55,21 @@ if 'google' not in sys.modules:
     sys.modules['googleapiclient'] = googleapiclient
     sys.modules['googleapiclient.discovery'] = discovery_module
     sys.modules['googleapiclient.errors'] = errors_module
+
+    googleapiclient_module = types.ModuleType('googleapiclient')
+    googleapiclient_module.discovery = discovery_module
+    googleapiclient_module.errors = errors_module
+    sys.modules['google_auth_oauthlib'] = google_auth_oauthlib_module
+    sys.modules['google_auth_oauthlib.flow'] = flow_module
+    sys.modules['googleapiclient'] = googleapiclient_module
+    sys.modules['googleapiclient.discovery'] = discovery_module
+    sys.modules['googleapiclient.errors'] = errors_module
+
+# Minimal numpy stub for email_vector_db import
+if 'numpy' not in sys.modules:
+    numpy_module = types.ModuleType('numpy')
+    numpy_module.array = lambda *a, **k: []
+    sys.modules['numpy'] = numpy_module
 
 # Ensure constants exist on email_vector_db for tests
 try:

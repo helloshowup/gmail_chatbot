@@ -353,5 +353,31 @@ class TestGmailAPIClientSSLErrors(unittest.TestCase):
 #        self.assertIsNotNone(error_msg)
 #        self.assertIn("SSL error fetching email (ID: test_id): SSL get_by_id error", error_msg)
 
-if __name__ == '__main__':
+
+class TestLastGmailErrorFlag(unittest.TestCase):
+    def setUp(self):
+        import sys, types
+        if 'streamlit' not in sys.modules:
+            st_stub = types.ModuleType('streamlit')
+            st_stub.session_state = {}
+            sys.modules['streamlit'] = st_stub
+        else:
+            st_stub = sys.modules['streamlit']
+            st_stub.session_state = {}
+        self.st = st_stub
+
+    def test_flag_set_on_failure(self):
+        from gmail_chatbot.email_main import GmailChatbotApp
+        app = GmailChatbotApp.__new__(GmailChatbotApp)
+        app.gmail_client = MagicMock()
+        app.memory_actions_handler = MagicMock()
+        error_msg = "SSL Error retrieving email"
+        app.gmail_client.get_email_by_id.return_value = (None, error_msg)
+        app.get_email_by_id = GmailChatbotApp.get_email_by_id.__get__(app)
+        result = app.get_email_by_id("1")
+        self.assertEqual(self.st.session_state.get('last_gmail_error'), error_msg)
+        self.assertEqual(result, error_msg)
+
+
+if __name__ == "__main__":
     unittest.main()

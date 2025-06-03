@@ -3,24 +3,18 @@ import sys
 import os
 import traceback
 
-# --- Add package parent to sys.path ---
-# __file__ is c:\Users\User\Documents\showup-v4\showup-tools\gmail_chatbot\chat_app_st.py
-# package_parent_dir (containing 'gmail_chatbot' package) should be c:\Users\User\Documents\showup-v4\showup-tools
-package_parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-if package_parent_dir not in sys.path:
-    sys.path.insert(0, package_parent_dir)
-    print(f"DEBUG: chat_app_st.py - Added package parent dir to sys.path: {package_parent_dir}", file=sys.stderr)
-else:
-    print(f"DEBUG: chat_app_st.py - Package parent dir already in sys.path: {package_parent_dir}", file=sys.stderr)
-# print(f"DEBUG: chat_app_st.py - Current sys.path: {sys.path}", file=sys.stderr) # Optional: very verbose
-# --- End sys.path modification ---
-
 import io
 import time
+import json
 from pathlib import Path
 import dotenv
 from agentic_planner import generate_plan
-from agentic_executor import execute_step, summarize_and_log_agentic_results # Added for agentic execution
+from agentic_executor import (
+    execute_step,
+    summarize_and_log_agentic_results,  # Added for agentic execution
+    handle_step_limit_reached,
+)
+
 
 # --- Global Exception Hook for Debugging ---
 def log_exception_to_file(exc_type, exc_value, exc_traceback):
@@ -95,6 +89,81 @@ if st.session_state.agentic_mode_enabled:
     )
 # --- End Agentic Mode Initialization & Controls ---
 
+
+def run_agentic_plan() -> None:
+    """Execute the current agentic plan sequentially with progress feedback."""
+    plan = st.session_state.get("agentic_plan")
+    if not plan:
+        return
+
+    agentic_state = st.session_state.get("agentic_state", default_agentic_state_values.copy())
+    step_limit = st.session_state.get("agentic_step_limit", 10)
+
+    progress_bar = st.progress(
+        agentic_state.get("current_step_index", 0) / max(len(plan), 1)
+    )
+
+    while (
+        agentic_state.get("current_step_index", 0) < len(plan)
+        and agentic_state.get("executed_call_count", 0) < step_limit
+    ):
+        idx = agentic_state.get("current_step_index", 0)
+        step_details = plan[idx]
+        with st.spinner(f"Executing: {step_details.get('description', 'Working...')}"):
+            try:
+                execution_result = execute_step(step_details, agentic_state)
+            except Exception as e:  # pragma: no cover - defensive
+                st.exception(e)
+                st.error(f"An unexpected error occurred during step execution: {e}")
+                st.session_state.agentic_plan = None
+                st.session_state.agentic_state = default_agentic_state_values.copy()
+                return
+
+        agentic_state = execution_result.get("updated_agentic_state", agentic_state)
+        agentic_state["executed_call_count"] = agentic_state.get("executed_call_count", 0) + 1
+
+        if execution_result.get("status") == "failure":
+            error_msg = (
+                f"Step {idx + 1} ('{step_details.get('step_id', 'Unnamed')}') failed:"
+                f" {execution_result.get('message', 'Unknown error')}"
+            )
+            st.error(error_msg)
+            agentic_state.setdefault("error_messages", []).append(error_msg)
+            summarize_and_log_agentic_results(agentic_state, plan_completed=False)
+            st.session_state.agentic_plan = None
+            st.session_state.agentic_state = default_agentic_state_values.copy()
+            return
+
+        if execution_result.get("requires_user_input", False):
+            st.info(
+                f"Step {idx + 1} requires user input: {execution_result.get('message', '')}"
+            )
+            st.session_state.agentic_state = agentic_state
+            progress_bar.progress((idx + 1) / len(plan))
+            return
+
+        agentic_state["current_step_index"] = idx + 1
+        st.session_state.agentic_state = agentic_state
+        progress_bar.progress(agentic_state["current_step_index"] / len(plan))
+
+    if agentic_state.get("current_step_index", 0) >= len(plan):
+        summarize_and_log_agentic_results(agentic_state, plan_completed=True)
+        st.success("🎉 Agentic plan fully completed!")
+        st.session_state.agentic_plan = None
+        st.session_state.agentic_state = default_agentic_state_values.copy()
+        st.balloons()
+    elif agentic_state.get("executed_call_count", 0) >= step_limit:
+        user_choice = handle_step_limit_reached(agentic_state, step_limit)
+        if user_choice == "continue":
+            st.session_state.agentic_state = agentic_state
+            st.rerun()
+        elif user_choice == "stop":
+            st.session_state.agentic_plan = None
+            st.session_state.agentic_state = default_agentic_state_values.copy()
+            st.rerun()
+        else:
+            st.stop()
+
 # Initialize chat history
 
 def initialize_chatbot() -> bool:
@@ -128,10 +197,10 @@ def initialize_chatbot() -> bool:
             st.session_state["bot_initialized_successfully"] = True # Assume success, set to False on any failure
 
             st.session_state["initialization_steps"].append(str("Attempting to import GmailChatbotApp..."))
-            print("DEBUG: chat_app_st.py - BEFORE GmailChatbotApp import", file=sys.stderr)
+            print("DEBUG: chat_app_st.py - BEFORE GmailChatbotApp import", file=sys.stderr, flush=True)
             try:
                 from email_main import GmailChatbotApp # Deferred import
-                print("DEBUG: chat_app_st.py - Import statement for GmailChatbotApp COMPLETED.", file=sys.stderr)
+                print("DEBUG: chat_app_st.py - Import statement for GmailChatbotApp COMPLETED.", file=sys.stderr, flush=True)
                 if not ('GmailChatbotApp' in locals() and isinstance(GmailChatbotApp, type)):
                     critical_msg = "CRITICAL_DEBUG: chat_app_st.py - GmailChatbotApp import issue. Not a class after import."
                     print(critical_msg, file=sys.stderr)
@@ -151,12 +220,15 @@ def initialize_chatbot() -> bool:
             st.session_state["initialization_steps"].append(str("✓ Autonomous task counter initialized"))
 
             st.session_state["initialization_steps"].append(str("Attempting to create GmailChatbotApp instance..."))
+            print("DEBUG: chat_app_st.py - BEFORE GmailChatbotApp instantiation", file=sys.stderr, flush=True)
             st.session_state.bot = GmailChatbotApp(autonomous_counter_ref=st.session_state)
+            print("DEBUG: chat_app_st.py - AFTER GmailChatbotApp instantiation", file=sys.stderr, flush=True)
             st.session_state["initialization_steps"].append(str("✓ GmailChatbotApp instance created"))
 
             # --- Critical Component Checks --- 
             st.session_state["initialization_steps"].append(str("Verifying critical bot components..."))
 
+            print("DEBUG: chat_app_st.py - BEFORE Gmail client check", file=sys.stderr, flush=True)
             # 1. Gmail Client (Service Object and API Connection)
             if hasattr(st.session_state.bot, 'gmail_service') and st.session_state.bot.gmail_service is not None:
                 st.session_state["initialization_steps"].append(str("✓ Gmail client object loaded (gmail_service found)."))
@@ -174,7 +246,9 @@ def initialize_chatbot() -> bool:
             else:
                 st.session_state["initialization_steps"].append(str("✗ Gmail client (gmail_service) failed to load or is None."))
                 st.session_state["bot_initialized_successfully"] = False
+            print("DEBUG: chat_app_st.py - AFTER Gmail client check", file=sys.stderr, flush=True)
 
+            print("DEBUG: chat_app_st.py - BEFORE Vector search check", file=sys.stderr, flush=True)
             # 2. Vector Search (Embedding Model + FAISS)
             if hasattr(st.session_state.bot, 'vector_search_available'):
                 if st.session_state.bot.vector_search_available:
@@ -191,14 +265,18 @@ def initialize_chatbot() -> bool:
             else:
                 st.session_state["initialization_steps"].append(str("✗ Vector search status unknown (attribute 'vector_search_available' missing on bot object)."))
                 st.session_state["bot_initialized_successfully"] = False
+            print("DEBUG: chat_app_st.py - AFTER Vector search check", file=sys.stderr, flush=True)
 
+            print("DEBUG: chat_app_st.py - BEFORE Email memory store check", file=sys.stderr, flush=True)
             # 3. Email Memory Store
-            if hasattr(st.session_state.bot, 'email_memory') and st.session_state.bot.email_memory is not None: 
+            if hasattr(st.session_state.bot, 'email_memory') and st.session_state.bot.email_memory is not None:
                 st.session_state["initialization_steps"].append(str("✓ Email memory store available."))
             else:
                 st.session_state["initialization_steps"].append(str("✗ Email memory store not available or is None."))
                 st.session_state["bot_initialized_successfully"] = False
-            
+            print("DEBUG: chat_app_st.py - AFTER Email memory store check", file=sys.stderr, flush=True)
+
+            print("DEBUG: chat_app_st.py - BEFORE Claude client check", file=sys.stderr, flush=True)
             # Check other non-critical components if necessary (original loop can be adapted for this)
             # For now, focusing on the three specified as critical.
             # Example: Claude client check (often critical too)
@@ -207,6 +285,7 @@ def initialize_chatbot() -> bool:
             else:
                 st.session_state["initialization_steps"].append(str("✗ Claude API client failed to load."))
                 st.session_state["bot_initialized_successfully"] = False # Claude is usually critical
+            print("DEBUG: chat_app_st.py - AFTER Claude client check", file=sys.stderr, flush=True)
 
             if not st.session_state["bot_initialized_successfully"]:
                 print(f"CRITICAL_DEBUG: chat_app_st.py - Initialization failed. Final steps: {st.session_state['initialization_steps']}", file=sys.stderr)
@@ -269,6 +348,10 @@ if not st.session_state.get("bot_initialized_successfully", False):
 if "vector_search_ui_warning" in st.session_state and st.session_state.vector_search_ui_warning:
     st.warning(st.session_state.vector_search_ui_warning)
 
+if st.session_state.get("last_gmail_error"):
+    st.error(st.session_state.last_gmail_error)
+    st.session_state.last_gmail_error = ""
+
 # --- Chat History Display ---chat messages from history on app rerun
 if "bot" in st.session_state and hasattr(st.session_state.bot, "chat_history"):
     for message in st.session_state.bot.chat_history: # Use bot's history
@@ -290,89 +373,37 @@ if prompt := st.chat_input("Ask me about your inbox:"):
         st.error("Chatbot is not initialized. Cannot process messages.")
         st.stop() # Stop current script run
 
-    # --- Agentic Execution Loop ---
-    if st.session_state.get("agentic_mode_enabled") and st.session_state.get("agentic_plan"):
-        plan = st.session_state.agentic_plan
-        agentic_state = st.session_state.agentic_state # This is a dict
-        
-        current_step_idx = agentic_state.get("current_step_index", 0)
-        executed_call_count = agentic_state.get("executed_call_count", 0)
-        step_limit = st.session_state.get("agentic_step_limit", 10)
 
-        st.info(f"🤖 Agentic Mode: Executing Plan ({current_step_idx}/{len(plan)} steps completed, {executed_call_count}/{step_limit} calls made)")
-        if len(plan) > 0:
-            st.progress(current_step_idx / len(plan))
-
-        # Check if call limit reached
-        if executed_call_count >= step_limit:
-            if not agentic_state.get("limit_reached_flag", False): # Prevent multiple summaries if stuck
-                summarize_and_log_agentic_results(agentic_state, plan_completed=False, limit_reached=True)
-                st.warning(f"Agentic execution stopped: Call limit of {step_limit} reached. Partial results (if any) logged.")
-                agentic_state["limit_reached_flag"] = True
-                st.session_state.agentic_plan = None # Stop further execution
+    # Determine how to handle the prompt based on agentic mode
+    if st.session_state.get("agentic_mode_enabled"):
+        if not st.session_state.get("agentic_plan"):
+            with st.spinner("Bot is thinking..."):
+                plan = generate_plan(prompt, st.session_state)
+            if plan:
+                st.session_state.agentic_plan = plan
                 st.session_state.agentic_state = default_agentic_state_values.copy()
-                st.button("Acknowledge & Clear Plan", on_click=lambda: setattr(st.session_state, 'agentic_plan', None) or st.rerun())
-            # No 'Next Step' button if limit is reached and plan is cleared.
+                plan_str = json.dumps(plan, indent=2)
+                with st.chat_message("assistant"):
+                    st.markdown("**Generated Plan:**")
+                    st.json(plan)
+                st.session_state.bot.chat_history.append({"role": "assistant", "content": f"Generated Plan:\n{plan_str}"})
+        if st.session_state.get("agentic_plan"):
+            plan = st.session_state.agentic_plan
+            agentic_state = st.session_state.agentic_state  # This is a dict
 
-        # Check if plan is still active (not cleared by limit or completion)
-        elif st.session_state.get("agentic_plan") and current_step_idx < len(plan):
-            step_details = plan[current_step_idx]
-            st.markdown(f"**Current Task:** {step_details.get('description', 'No description')}")
+            current_step_idx = agentic_state.get("current_step_index", 0)
+            executed_call_count = agentic_state.get("executed_call_count", 0)
+            step_limit = st.session_state.get("agentic_step_limit", 10)
 
-            # Placeholder for "Pause/Resume/Abort" later
-            # For now, execution proceeds with "Next Step" button
-
-            if st.button(f"Execute Step {current_step_idx + 1}: {step_details.get('step_id', 'Unnamed')}", key=f"exec_step_{current_step_idx}"):
-                with st.spinner(f"Executing: {step_details.get('description', 'Working...')}"):
-                    try:
-                        print(f"CHAT_APP_ST [DEBUG]: st.session_state.agentic_state BEFORE execute_step call for step {current_step_idx + 1}: {st.session_state.agentic_state}")
-                        execution_result = execute_step(step_details, st.session_state.agentic_state) # Pass the session state directly
-                        st.toast(f"DEBUG: execute_step returned: {execution_result.get('status')}", icon="📋") # DEBUG
-                        
-                        # Update agentic_state with the returned state from execute_step
-                        st.session_state.agentic_state = execution_result.get("updated_agentic_state", agentic_state)
-                        st.session_state.agentic_state["executed_call_count"] = executed_call_count + 1
-
-                        if execution_result.get("status") == "failure":
-                            error_msg = f"Step {current_step_idx + 1} ('{step_details.get('step_id', 'Unnamed')}') failed: {execution_result.get('message', 'Unknown error')}"
-                            st.error(error_msg)
-                            if "error_messages" not in st.session_state.agentic_state:
-                                st.session_state.agentic_state["error_messages"] = []
-                            st.session_state.agentic_state["error_messages"].append(error_msg)
-                            summarize_and_log_agentic_results(st.session_state.agentic_state, plan_completed=False)
-                            st.session_state.agentic_plan = None # Stop plan
-                            st.session_state.agentic_state = default_agentic_state_values.copy()
-                            st.rerun()
-                        elif execution_result.get("requires_user_input", False):
-                            st.info(f"Step {current_step_idx + 1} requires user input: {execution_result.get('message', '')}")
-                            # UI for user input would go here. For now, just pauses.
-                            st.rerun() # Rerun to show info and wait for next interaction
-                        else: # Success
-                            st.toast(f"DEBUG: Step {current_step_idx + 1} success path reached.", icon="✅") # DEBUG
-                            st.session_state.agentic_state["current_step_index"] = current_step_idx + 1
-                            st.success(f"Step {current_step_idx + 1} completed. {execution_result.get('message', '')}")
-                            st.rerun() # Rerun to process next step or finalize
-                    except Exception as e:
-                        st.exception(e)
-                        st.error(f"An unexpected error occurred during step execution: {e}")
-                        # Clear plan to stop further execution on error
-                        st.session_state.agentic_plan = None 
-                        st.session_state.agentic_state = default_agentic_state_values.copy()
-                        st.rerun() # Rerun to show the error and reflect cleared plan
-            # If button not clicked, Streamlit script just ends, preserving state for next interaction.
-        
-        # Check if plan completed (and not already handled by limit/error)
-        elif st.session_state.get("agentic_plan") and current_step_idx >= len(plan):
-            if not agentic_state.get("completion_logged_flag", False): # Prevent multiple summaries
-                summarize_and_log_agentic_results(agentic_state, plan_completed=True)
-                st.success("🎉 Agentic plan fully completed!")
-                agentic_state["completion_logged_flag"] = True # Mark as logged
-                st.session_state.agentic_plan = None # Clear the completed plan
-                st.session_state.agentic_state = default_agentic_state_values.copy() # Reset state
-                st.balloons()
-                st.button("Acknowledge & Clear", on_click=lambda: setattr(st.session_state, 'agentic_plan', None) or st.rerun())
-    # --- End Agentic Execution Loop ---
-
+            st.info(
+                f"🤖 Agentic Mode: Executing Plan ({current_step_idx}/{len(plan)} steps completed, {executed_call_count}/{step_limit} calls made)"
+            )
+            run_agentic_plan()
+        else:
+            with st.spinner("Bot is thinking..."):
+                assistant_reply = st.session_state.bot.process_message(prompt)
+            with st.chat_message("assistant"):
+                st.markdown(assistant_reply)
 
 st.sidebar.title("Controls")
 if "batch_mode" not in st.session_state:

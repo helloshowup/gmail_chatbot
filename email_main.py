@@ -2,16 +2,6 @@
 
 import sys
 from pathlib import Path
-
-# Add the parent directory of 'gmail_chatbot' (i.e., 'showup-tools') to sys.path
-# This allows relative imports within the 'gmail_chatbot' package to work correctly
-# when 'email_main.py' is run directly by Streamlit.
-# Path(__file__).resolve().parent.parent is the 'showup-tools' directory.
-sys_path_to_add = str(Path(__file__).resolve().parent.parent)
-if sys_path_to_add not in sys.path:
-    sys.path.insert(0, sys_path_to_add)
-
-print("DEBUG: email_main.py - TOP OF FILE (sys.path modified)")
 # -*- coding: utf-8 -*-
 
 # Fix for Streamlit × PyTorch file-watcher clash
@@ -26,8 +16,6 @@ import faulthandler
 if not os.environ.get("PYTEST_RUNNING"):
     faulthandler.enable()
 
-import os
-import sys
 import io
 import argparse
 import logging
@@ -49,6 +37,11 @@ from pathlib import Path
 import atexit
 import time
 import uuid
+try:
+    import streamlit as st
+except Exception:
+    st = None
+
 import threading
 from datetime import datetime, timedelta, date
 from enum import Enum
@@ -237,6 +230,7 @@ class GmailChatbotApp:
             self.initialization_diagnostics.append(f"✗ Failed to initialize Claude API client: {str(e)}")
             logging.error(f"Failed to initialize Claude API client: {e}", exc_info=True)
 
+        print("DEBUG: GmailChatbotApp.__init__ - BEFORE GmailAPIClient initialization", file=sys.stderr, flush=True)
         try:
             self.gmail_client = GmailAPIClient(self.claude_client, self.system_message)
             if self.gmail_client and hasattr(self.gmail_client, 'service') and self.gmail_client.service:
@@ -256,8 +250,9 @@ class GmailChatbotApp:
                 diag_msg = f"✗ Failed to initialize Gmail API client: {error_str}"
             self.initialization_diagnostics.append(diag_msg)
             logging.error(f"Failed to initialize Gmail API client: {e}", exc_info=True)
+        print(f"DEBUG: GmailChatbotApp.__init__ - AFTER GmailAPIClient initialization. gmail_service: {self.gmail_service}", file=sys.stderr, flush=True)
 
-        print("DEBUG: GmailChatbotApp.__init__ - BEFORE vector_memory (EmailVectorStore) initialization", file=sys.stderr)
+        print("DEBUG: GmailChatbotApp.__init__ - BEFORE vector_memory (EmailVectorStore) initialization", file=sys.stderr, flush=True)
         # Initialize vector-based memory store
         try:
             self.memory_store = EmailVectorMemoryStore() # This needs to set its own error message and availability
@@ -284,18 +279,23 @@ class GmailChatbotApp:
              logging.info(
                 f"Vector search available (post-init check): {self.vector_search_available}, Error: {self.vector_search_error_message}"
             )
-        print(f"DEBUG: GmailChatbotApp.__init__ - AFTER vector_memory (EmailVectorStore) attempt. vector_search_available: {self.vector_search_available}, error: {self.vector_search_error_message}", file=sys.stderr)
+        print(f"DEBUG: GmailChatbotApp.__init__ - AFTER vector_memory (EmailVectorStore) attempt. vector_search_available: {self.vector_search_available}, error: {self.vector_search_error_message}", file=sys.stderr, flush=True)
 
         # Initialize MemoryActionsHandler
         # Initialize EnhancedMemoryStore first as PreferenceDetector depends on it
+        print("DEBUG: GmailChatbotApp.__init__ - BEFORE EnhancedMemoryStore initialization", file=sys.stderr, flush=True)
         self.enhanced_memory_store = EnhancedMemoryStore()
+        print("DEBUG: GmailChatbotApp.__init__ - AFTER EnhancedMemoryStore initialization", file=sys.stderr, flush=True)
         logging.info("Enhanced memory store initialized")
 
         # Initialize PreferenceDetector
+        print("DEBUG: GmailChatbotApp.__init__ - BEFORE PreferenceDetector initialization", file=sys.stderr, flush=True)
         self.preference_detector = PreferenceDetector(memory_store=self.enhanced_memory_store)
+        print("DEBUG: GmailChatbotApp.__init__ - AFTER PreferenceDetector initialization", file=sys.stderr, flush=True)
         logging.info("Preference detector initialized")
 
         # Initialize MemoryActionsHandler
+        print("DEBUG: GmailChatbotApp.__init__ - BEFORE MemoryActionsHandler initialization", file=sys.stderr, flush=True)
         self.memory_actions_handler = MemoryActionsHandler(
             memory_store=self.memory_store,
             gmail_client=self.gmail_client,
@@ -303,7 +303,7 @@ class GmailChatbotApp:
             system_message=self.system_message,
             preference_detector=self.preference_detector, # Added this line
         )
-        print(f"DEBUG: GmailChatbotApp.__init__ - AFTER MemoryActionsHandler initialization. memory_actions_handler: {self.memory_actions_handler}", file=sys.stderr)
+        print(f"DEBUG: GmailChatbotApp.__init__ - AFTER MemoryActionsHandler initialization. memory_actions_handler: {self.memory_actions_handler}", file=sys.stderr, flush=True)
 
         # Add the three main clients to memory if not already present using MemoryActionsHandler
         default_clients = ["Further Learner", "Excel High School", "Hoorah Digital"]
@@ -507,6 +507,8 @@ class GmailChatbotApp:
                     system_message=self.system_message,
                     request_id=request_id,
                 )
+                if search_response_text and "error" in search_response_text.lower() and st:
+                    st.session_state.last_gmail_error = search_response_text
                 response = search_response_text
 
                 if emails:
@@ -1259,6 +1261,8 @@ class GmailChatbotApp:
                             system_message=self.system_message,
                             request_id=request_id,
                         )
+                        if search_results_text and "error" in search_results_text.lower() and st:
+                            st.session_state.last_gmail_error = search_results_text
                         
                         final_response_parts = [acknowledgement]
 
@@ -1453,8 +1457,21 @@ class GmailChatbotApp:
                 else: # Other TASK_CHAIN types, ask for confirmation
                     self.pending_email_context = {"original_message": message, "gmail_query": "TASK_CHAIN"}
                     response_str += "\n\nWould you like me to proceed with this multi-step task?"
-        
         return response_str
+
+        
+    def get_email_by_id(self, email_id: str, user_query: str = "", request_id: str | None = None) -> str:
+        if not self.gmail_client:
+            return "Gmail client not available."
+        email_data, msg = self.gmail_client.get_email_by_id(email_id, user_query)
+        if msg and "error" in msg.lower() and st:
+            st.session_state.last_gmail_error = msg
+        if email_data:
+            try:
+                self.memory_actions_handler.store_emails_in_memory(emails=[email_data], query=user_query or email_id, request_id=request_id or str(uuid.uuid4()))
+            except Exception:
+                pass
+        return msg
 
     def run(self) -> None:
         """Run the Gmail Chatbot application with GUI."""

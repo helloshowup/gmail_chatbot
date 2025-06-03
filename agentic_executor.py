@@ -1,6 +1,7 @@
 # agentic_executor.py
 import streamlit as st
-from typing import Dict, Any
+from typing import Dict, Any, Optional
+from memory_writers import store_professional_context
 
 # Define a type for the result of execute_step for clarity
 ExecuteStepResult = Dict[str, Any]
@@ -8,89 +9,92 @@ ExecuteStepResult = Dict[str, Any]
 # --- Tool/Action Implementations (Placeholders for now, to be made real) ---
 
 def _execute_search_inbox(parameters: Dict[str, Any], agentic_state: Dict[str, Any]) -> Dict[str, Any]:
+    """Search the user's Gmail inbox using the app's Gmail client."""
     query = parameters.get("query", "")
     max_results = parameters.get("max_results", 5)
-    # TODO: Integrate with actual Gmail search client (from st.session_state.bot.gmail_client)
-    # For now, simulate
-    st.toast(f"Simulating Gmail search for: '{query}' (max {max_results})", icon="🔍")
-    print(f"EXECUTOR: Simulating Gmail search for: '{query}', max_results: {max_results}")
-    
-    # Simulate finding some emails
-    simulated_emails = []
-    if "bryce hepburn" in query.lower(): # Specific simulation for testing
-        simulated_emails = [
-            {"id": "email1", "subject": "Project Update - Bryce", "snippet": "Bryce Hepburn mentioned the Q3 targets..."},
-            {"id": "email2", "subject": "Meeting with Bryce Hepburn", "snippet": "Scheduled a meeting with Bryce for next week."},
-            {"id": "email3", "subject": "Re: Your question", "from": "bryce.hepburn@example.com", "snippet": "Regarding your inquiry..."}
-        ]
-    elif "agentic ai" in query.lower():
-         simulated_emails = [
-            {"id": "email_ai1", "subject": "New Agentic AI paper", "snippet": "Check out this research on agentic systems..."},
-         ]
 
-    return {"status": "success", "data": simulated_emails, "message": f"{len(simulated_emails)} emails found (simulated)."}
+    gmail_client = getattr(getattr(st.session_state, "bot", None), "gmail_client", None)
+    system_message = getattr(getattr(st.session_state, "bot", None), "system_message", "")
+    if gmail_client is None:
+        return {"status": "failure", "message": "Gmail client not available"}
+
+    try:
+        emails, response_text = gmail_client.search_emails(
+            query,
+            original_user_query=query,
+            system_message=system_message,
+            request_id=None,
+        )
+        if isinstance(emails, list) and max_results:
+            emails = emails[:max_results]
+        return {"status": "success", "data": emails, "message": response_text}
+    except Exception as e:  # pragma: no cover - defensive
+        return {"status": "failure", "message": f"Gmail search failed: {e}"}
 
 def _execute_extract_entities(parameters: Dict[str, Any], agentic_state: Dict[str, Any]) -> Dict[str, Any]:
-    print(f"EXECUTOR_HANDLER [_execute_extract_entities]: Received agentic_state: {agentic_state}")
-    retrieved_accumulated_results = agentic_state.get("accumulated_results")
-    print(f"EXECUTOR_HANDLER [_execute_extract_entities]: Retrieved accumulated_results from agentic_state: {retrieved_accumulated_results}")
-
+    """Use Claude to extract structured entities from prior step output."""
     input_data_key = parameters.get("input_data_key")
     extraction_prompt = parameters.get("extraction_prompt", "Extract key info.")
-    
+
     input_data = agentic_state.get("accumulated_results", {}).get(input_data_key)
-    if not input_data:
+    if input_data is None:
         return {"status": "failure", "message": f"Input data key '{input_data_key}' not found in accumulated results."}
 
-    # TODO: Integrate with an NLP model/service for entity extraction (e.g., Claude)
-    st.toast(f"Simulating entity extraction: {extraction_prompt}", icon="🧩")
-    print(f"EXECUTOR: Simulating entity extraction on data from '{input_data_key}'. Prompt: '{extraction_prompt}'")
-    
-    # Simulate extraction
-    simulated_entities = []
-    if isinstance(input_data, list) and input_data: # Assuming list of email dicts
-        for item_idx, item in enumerate(input_data):
-            if isinstance(item, dict) and "snippet" in item:
-                 simulated_entities.append(f"Extracted entity from item {item_idx+1}: '{item['snippet'][:30]}...' (simulated)")
-            else:
-                simulated_entities.append(f"Could not process item {item_idx+1} for entity extraction (simulated)")
+    claude_client = getattr(getattr(st.session_state, "bot", None), "claude_client", None)
+    system_message = getattr(getattr(st.session_state, "bot", None), "system_message", "")
+    if claude_client is None:
+        return {"status": "failure", "message": "Claude client not available"}
 
-    return {"status": "success", "data": simulated_entities, "message": f"{len(simulated_entities)} entities extracted (simulated)."}
+    try:
+        entities = claude_client.process_email_content(input_data, extraction_prompt, system_message)
+        return {"status": "success", "data": entities, "message": "Entities extracted"}
+    except Exception as e:  # pragma: no cover - defensive
+        return {"status": "failure", "message": f"Entity extraction failed: {e}"}
 
 def _execute_summarize_text(parameters: Dict[str, Any], agentic_state: Dict[str, Any]) -> Dict[str, Any]:
+    """Summarize prior step output using Claude."""
     input_data_key = parameters.get("input_data_key")
-    # summary_length = parameters.get("summary_length", "medium") # Parameter for future use
-    
+
     input_data = agentic_state.get("accumulated_results", {}).get(input_data_key)
-    if not input_data:
+    if input_data is None:
         return {"status": "failure", "message": f"Input data key '{input_data_key}' not found for summarization."}
 
-    # TODO: Integrate with an NLP model for summarization (e.g., Claude)
-    st.toast(f"Simulating text summarization...", icon="📄")
-    print(f"EXECUTOR: Simulating summarization on data from '{input_data_key}'.")
-    
-    # Simulate summarization
-    text_to_summarize = str(input_data) # Crude conversion for simulation
-    simulated_summary = f"This is a simulated summary of: '{text_to_summarize[:100]}...'"
-    return {"status": "success", "data": simulated_summary, "message": "Text summarized (simulated)."}
+    claude_client = getattr(getattr(st.session_state, "bot", None), "claude_client", None)
+    system_message = getattr(getattr(st.session_state, "bot", None), "system_message", "")
+    if claude_client is None:
+        return {"status": "failure", "message": "Claude client not available"}
+
+    try:
+        prompt = f"Please provide a concise summary of the following information:\n{input_data}"
+        summary = claude_client.chat(prompt, [], system_message)
+        return {"status": "success", "data": summary, "message": "Text summarized"}
+    except Exception as e:  # pragma: no cover - defensive
+        return {"status": "failure", "message": f"Summarization failed: {e}"}
 
 def _execute_log_to_notebook(parameters: Dict[str, Any], agentic_state: Dict[str, Any]) -> Dict[str, Any]:
+    """Persist step output to the notebook using memory_writers utilities."""
     input_data_key = parameters.get("input_data_key")
     notebook_id = parameters.get("notebook_id", "default_notebook")
     section_title = parameters.get("section_title", "Agentic Log")
 
     input_data = agentic_state.get("accumulated_results", {}).get(input_data_key)
-    if input_data is None: # Allow logging even if data is explicitly None (e.g. logging a failure)
+    if input_data is None:
         input_data = "No specific data provided for logging."
 
+    memory_store = getattr(getattr(st.session_state, "bot", None), "enhanced_memory_store", None)
+    if memory_store is None:
+        memory_store = getattr(getattr(st.session_state, "bot", None), "memory_store", None)
+    if memory_store is None:
+        return {"status": "failure", "message": "No memory store available for logging."}
 
-    # TODO: Implement actual logging to a persistent store/notebook file
-    st.toast(f"Simulating logging to notebook: '{notebook_id}'", icon="📝")
-    print(f"EXECUTOR: Simulating logging to notebook '{notebook_id}', title '{section_title}'. Data from '{input_data_key}'.")
-    print(f"LOGGED CONTENT (simulated):\n---\n{input_data}\n---")
-    
-    confirmation_message = f"Content from '{input_data_key}' logged to notebook '{notebook_id}' under section '{section_title}' (simulated)."
-    return {"status": "success", "data": confirmation_message, "message": confirmation_message}
+    try:
+        store_professional_context(memory_store, section_title, str(input_data))
+        confirmation_message = (
+            f"Content from '{input_data_key}' logged to notebook '{notebook_id}' under section '{section_title}'."
+        )
+        return {"status": "success", "data": confirmation_message, "message": confirmation_message}
+    except Exception as e:  # pragma: no cover - defensive
+        return {"status": "failure", "message": f"Failed to log to notebook: {e}"}
 
 # --- Placeholder Tool Handlers (from previous version, for testing simple plans) ---
 def _execute_placeholder_search(parameters: Dict[str, Any], agentic_state: Dict[str, Any]) -> Dict[str, Any]:
@@ -227,3 +231,25 @@ def summarize_and_log_agentic_results(agentic_state: Dict[str, Any], plan_comple
     print(f"DEBUG: Summarize and Log - Final State: {agentic_state}")
     # The actual "logging to notebook" is now a plan step ("log_to_notebook")
     # This function primarily serves to update the UI with the final status.
+
+
+def handle_step_limit_reached(agentic_state: Dict[str, Any], step_limit: int) -> Optional[str]:
+    """Prompt user when the autonomous call limit is reached.
+
+    Returns "continue" if the user chooses to keep going, "stop" if they opt to
+    halt execution, or ``None`` if no choice was made."""
+    st.warning(
+        f"Agentic execution paused: Call limit of {step_limit} reached."
+    )
+    continue_clicked = st.button("Continue", key="agentic_continue_btn")
+    stop_clicked = st.button("Stop", key="agentic_stop_btn")
+
+    if continue_clicked:
+        agentic_state["executed_call_count"] = 0
+        return "continue"
+    if stop_clicked:
+        summarize_and_log_agentic_results(
+            agentic_state, plan_completed=False, limit_reached=True
+        )
+        return "stop"
+    return None

@@ -18,7 +18,7 @@ A Claude-powered chatbot that interacts with your Gmail account. This tool allow
 - Python 3.8 or higher
 - Claude API key
 - Google Cloud Platform project with Gmail API enabled
-- OAuth 2.0 client credentials (client_secret.json)
+- OAuth 2.0 client credentials saved as `data/client_secret.json`
 
 ## Setup Instructions
 
@@ -37,7 +37,7 @@ A Claude-powered chatbot that interacts with your Gmail account. This tool allow
 2. Enable the Gmail API for your project
 3. Configure the OAuth consent screen
 4. Create OAuth 2.0 credentials and download the `client_secret.json` file
-5. Place the `client_secret.json` file in the `data` directory
+5. Place your downloaded credentials at `data/client_secret.json`
 
 ### 3. Installation
 
@@ -53,6 +53,12 @@ For manual setup you can run one of the provided setup scripts:
 ```bash
 ./setup.sh        # Linux/macOS
 setup.bat         # Windows
+```
+
+Alternatively install the package in editable mode so `gmail_chatbot` can be imported from anywhere:
+
+```bash
+pip install -e .
 ```
 
 These scripts install all packages listed in `requirements.txt`.  A lighter dependency
