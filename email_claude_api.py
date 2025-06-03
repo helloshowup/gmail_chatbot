@@ -22,8 +22,9 @@ print(f"Claude API model in use: {CLAUDE_DEFAULT_MODEL}")
 import io
 
 # Configure stdout/stderr for UTF-8 to properly handle emojis in console output
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+if not os.environ.get("PYTEST_RUNNING"):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 logging.basicConfig(
     level=logging.INFO,

@@ -13,8 +13,11 @@ ROOT_DIR = Path(__file__).parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-# Import the classifier
-from ml_query_classifier import predict
+# Import the classifier lazily to avoid import errors during test collection
+try:
+    from ml_query_classifier import predict
+except Exception:  # pragma: no cover - if dependencies are missing
+    predict = None
 
 # Test queries
 TEST_QUERIES = [

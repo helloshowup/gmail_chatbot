@@ -21,7 +21,10 @@ os.environ["STREAMLIT_SERVER_FILE_WATCHER_TYPE"] = "none"
 
 import faulthandler
 
-faulthandler.enable()
+# Avoid enabling faulthandler during tests as it interferes with pytest's
+# output capture. It can be enabled when running as a script if needed.
+if not os.environ.get("PYTEST_RUNNING"):
+    faulthandler.enable()
 
 import os
 import sys
@@ -398,7 +401,6 @@ class GmailChatbotApp:
         """Returns the stored error message from vector search initialization, if any."""
         return self.vector_search_error_message
 
-{{ ... }}
     def _is_simple_inbox_query(self, message_lower: str) -> bool:
         """Checks if a query is a simple request for inbox contents, suitable for a menu."""
         generic_inbox_phrases = [

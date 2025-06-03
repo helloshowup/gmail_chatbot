@@ -36,35 +36,40 @@ from datetime import datetime
 from typing import List, Dict, Any, Optional
 
 # Apply hot-patch for PyTorch before importing it
-import torch
-torch.classes.__path__ = []  # Hot-patch to prevent Streamlit watcher issues
-warnings.filterwarnings(
-    "ignore",
-    message=r".*Tried to instantiate class '__path__._path'.*",
-    category=UserWarning,
-    module="torch"
-)
+try:  # pragma: no cover - torch is optional in the test environment
+    import torch  # type: ignore
+    torch.classes.__path__ = []  # Hot-patch to prevent Streamlit watcher issues
+    warnings.filterwarnings(
+        "ignore",
+        message=r".*Tried to instantiate class '__path__._path'.*",
+        category=UserWarning,
+        module="torch"
+    )
 
-# Also suppress other common torch warnings
-warnings.filterwarnings(
-    "ignore",
-    message=r".*Examining the path of torch\.classes raised.*",
-    category=UserWarning
-)
+    # Also suppress other common torch warnings
+    warnings.filterwarnings(
+        "ignore",
+        message=r".*Examining the path of torch\.classes raised.*",
+        category=UserWarning
+    )
 
-# Force disable torch warnings completely
-logging.getLogger("pytorch_pretrained_bert").setLevel(logging.ERROR)
-logging.getLogger("pytorch").setLevel(logging.ERROR)
-logging.getLogger("transformers").setLevel(logging.ERROR)
+    # Force disable torch warnings completely
+    logging.getLogger("pytorch_pretrained_bert").setLevel(logging.ERROR)
+    logging.getLogger("pytorch").setLevel(logging.ERROR)
+    logging.getLogger("transformers").setLevel(logging.ERROR)
 
-# Last resort: filter all torch-related warnings
-old_showwarning = warnings.showwarning
-def custom_showwarning(message, *args, **kwargs):
-    msg_str = str(message)
-    if 'torch' in msg_str or 'Tried to instantiate class' in msg_str or '__path__._path' in msg_str:
-        return  # Suppress the warning
-    old_showwarning(message, *args, **kwargs)  # Show other warnings
-warnings.showwarning = custom_showwarning
+    # Last resort: filter all torch-related warnings
+    old_showwarning = warnings.showwarning
+
+    def custom_showwarning(message, *args, **kwargs):
+        msg_str = str(message)
+        if 'torch' in msg_str or 'Tried to instantiate class' in msg_str or '__path__._path' in msg_str:
+            return  # Suppress the warning
+        old_showwarning(message, *args, **kwargs)  # Show other warnings
+
+    warnings.showwarning = custom_showwarning
+except Exception:
+    torch = None
 
 # Import environment configuration
 from gmail_chatbot.email_config import DATA_DIR
