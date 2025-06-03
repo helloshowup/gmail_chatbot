@@ -1028,5 +1028,205 @@
     "first_seen": "2025-06-03T13:06:51.942769",
     "last_accessed": "2025-06-03T13:07:52.010205",
     "access_count": 1
+  },
+  "19736294586cf2e0": {
+    "subject": "McDonald's Deal Drop has landed!",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 3 Jun 2025 14:19:23 +0000",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Excel High School",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-03T16:43:36.806651",
+    "last_accessed": "2025-06-03T16:43:47.053535",
+    "access_count": 1
+  },
+  "1973618f0284ab80": {
+    "subject": "Fwd: I have some beautiful news to share!",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 3 Jun 2025 09:57:49 -0400",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Excel High School",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-03T16:43:37.148685",
+    "last_accessed": "2025-06-03T16:43:47.057473",
+    "access_count": 1
+  },
+  "1973610592a79d1f": {
+    "subject": "I have some beautiful news to share!",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 03 Jun 2025 13:51:57 +0000 (UTC)",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Excel High School",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-03T16:43:37.196609",
+    "last_accessed": "2025-06-03T16:43:47.060586",
+    "access_count": 1
+  },
+  "19736102f2330196": {
+    "subject": "I have some beautiful news to share!",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 03 Jun 2025 13:51:57 +0000 (UTC)",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Excel High School",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-03T16:43:37.374402",
+    "last_accessed": "2025-06-03T16:43:47.063530",
+    "access_count": 1
+  },
+  "19736102ac5ea545": {
+    "subject": "I have some beautiful news to share!",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 03 Jun 2025 13:51:57 +0000 (UTC)",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Excel High School",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-03T16:43:37.523937",
+    "last_accessed": "2025-06-03T16:43:47.066387",
+    "access_count": 1
+  },
+  "19736102892eb6bc": {
+    "subject": "I have some beautiful news to share!",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 03 Jun 2025 13:51:57 +0000 (UTC)",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Excel High School",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-03T16:43:37.681629",
+    "last_accessed": "2025-06-03T16:43:47.069311",
+    "access_count": 1
+  },
+  "19735d16763faa32": {
+    "subject": "Your Health Assessment Results and Recommendations",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 03 Jun 2025 12:43:25 +0000",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Excel High School",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-03T16:43:37.838173",
+    "last_accessed": "2025-06-03T16:43:47.072298",
+    "access_count": 1
+  },
+  "19735cb597afaed4": {
+    "subject": "Your Health Assessment Results and Recommendations",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 03 Jun 2025 12:36:48 +0000",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Excel High School",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-03T16:43:37.982328",
+    "last_accessed": "2025-06-03T16:43:47.075470",
+    "access_count": 1
+  },
+  "19735c9dfd9f6d01": {
+    "subject": "Your Health Assessment Results and Recommendations",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 03 Jun 2025 12:35:11 +0000",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Excel High School",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-03T16:43:38.054790",
+    "last_accessed": "2025-06-03T16:43:47.078538",
+    "access_count": 1
+  },
+  "19735c9830168e6d": {
+    "subject": "Invitation to respond to the form \"Comprehensive Health Assessment Quiz \"",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 03 Jun 2025 12:34:48 +0000",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Excel High School",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-03T16:43:38.211820",
+    "last_accessed": "2025-06-03T16:43:47.081889",
+    "access_count": 1
   }
 }
