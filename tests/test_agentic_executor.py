@@ -2,6 +2,12 @@ import sys
 import types
 import unittest
 from unittest.mock import MagicMock
+import os
+
+# Ensure project root is on path for direct test execution
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
 # Provide a minimal streamlit stub if streamlit is not available
 if 'streamlit' not in sys.modules:
@@ -74,6 +80,19 @@ class TestAgenticExecutorFlow(unittest.TestCase):
         res4 = execute_step(step4, res3["updated_agentic_state"])
         st_stub.session_state.bot.enhanced_memory_store.add_memory_entry.assert_called_once()
         self.assertEqual(res4["status"], "success")
+
+    def test_send_email_handler_preview_and_flag(self):
+        self.gmail_client.send_email.return_value = {"status": "success", "data": {"id": "m1"}}
+        state = {}
+        step = {
+            "action_type": "send_email",
+            "parameters": {"to": "a@b.com", "subject": "Hi", "body": "Test"},
+            "output_key": "send_result",
+        }
+        res = execute_step(step, state)
+        self.gmail_client.send_email.assert_called_once_with("a@b.com", "Hi", "Test")
+        self.assertTrue(res["requires_user_input"])
+        self.assertIn("To: a@b.com", res["message"])
 
 
 if __name__ == "__main__":

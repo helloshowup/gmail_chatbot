@@ -54,6 +54,8 @@ if "agentic_plan" not in st.session_state:
     st.session_state.agentic_plan = None
 if "agentic_state" not in st.session_state:
     st.session_state.agentic_state = default_agentic_state_values.copy()
+if "pending_confirmation" not in st.session_state:
+    st.session_state.pending_confirmation = None
 
 # Sidebar controls
 st.sidebar.header("🤖 Agentic Mode Settings")
@@ -326,6 +328,21 @@ if prompt := st.chat_input("Ask me about your inbox:"):
                     st.button("Acknowledge & Clear Plan", on_click=lambda: setattr(st.session_state, 'agentic_plan', None) or st.rerun())
             # Check if plan is still active (not cleared by limit or completion)
             elif st.session_state.get("agentic_plan") and current_step_idx < len(plan):
+                if st.session_state.pending_confirmation:
+                    st.markdown("**Review Draft Email:**")
+                    st.code(st.session_state.pending_confirmation.get("message", ""))
+                    col_yes, col_no = st.columns(2)
+                    if col_yes.button("Yes", key="confirm_yes"):
+                        st.session_state.agentic_state["current_step_index"] = st.session_state.pending_confirmation.get("next_step_index", current_step_idx + 1)
+                        st.session_state.pending_confirmation = None
+                        st.rerun()
+                    if col_no.button("No", key="confirm_no"):
+                        summarize_and_log_agentic_results(st.session_state.agentic_state, plan_completed=False)
+                        st.session_state.agentic_plan = None
+                        st.session_state.agentic_state = default_agentic_state_values.copy()
+                        st.session_state.pending_confirmation = None
+                        st.rerun()
+                    st.stop()
                 step_details = plan[current_step_idx]
                 st.markdown(f"**Current Task:** {step_details.get('description', 'No description')}")
 
@@ -350,7 +367,10 @@ if prompt := st.chat_input("Ask me about your inbox:"):
                                 st.session_state.agentic_state = default_agentic_state_values.copy()
                                 st.rerun()
                             elif execution_result.get("requires_user_input", False):
-                                st.info(f"Step {current_step_idx + 1} requires user input: {execution_result.get('message', '')}")
+                                st.session_state.pending_confirmation = {
+                                    "message": execution_result.get("message", ""),
+                                    "next_step_index": current_step_idx + 1,
+                                }
                                 st.rerun()
                             else:
                                 st.toast(f"DEBUG: Step {current_step_idx + 1} success path reached.", icon="✅")

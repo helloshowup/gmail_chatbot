@@ -96,6 +96,28 @@ def _execute_log_to_notebook(parameters: Dict[str, Any], agentic_state: Dict[str
     except Exception as e:  # pragma: no cover - defensive
         return {"status": "failure", "message": f"Failed to log to notebook: {e}"}
 
+def _execute_send_email(parameters: Dict[str, Any], agentic_state: Dict[str, Any]) -> Dict[str, Any]:
+    """Send an email via the Gmail client and request user confirmation."""
+    to = parameters.get("to")
+    subject = parameters.get("subject", "")
+    body = parameters.get("body", "")
+
+    gmail_client = getattr(getattr(st.session_state, "bot", None), "gmail_client", None)
+    if gmail_client is None:
+        return {"status": "failure", "message": "Gmail client not available"}
+
+    result = gmail_client.send_email(to, subject, body)
+    if result.get("status") != "success":
+        return {"status": "failure", "message": result.get("error", "Unknown error sending email")}
+
+    preview = f"To: {to}\nSubject: {subject}\n\n{body}"
+    return {
+        "status": "success",
+        "data": result.get("data"),
+        "message": preview,
+        "requires_user_input": True,
+    }
+
 # --- Placeholder Tool Handlers (from previous version, for testing simple plans) ---
 def _execute_placeholder_search(parameters: Dict[str, Any], agentic_state: Dict[str, Any]) -> Dict[str, Any]:
     query = parameters.get("query", "default_query")
@@ -116,6 +138,7 @@ ACTION_HANDLERS = {
     "extract_entities": _execute_extract_entities,
     "summarize_text": _execute_summarize_text,
     "log_to_notebook": _execute_log_to_notebook,
+    "send_email": _execute_send_email,
     "placeholder_search_tool": _execute_placeholder_search, # Kept for existing test plan
     "placeholder_summarize_tool": _execute_placeholder_summarize, # Kept for existing test plan
     # Add more real action handlers here
