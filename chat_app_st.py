@@ -268,6 +268,10 @@ if not st.session_state.get("bot_initialized_successfully", False):
 if "vector_search_ui_warning" in st.session_state and st.session_state.vector_search_ui_warning:
     st.warning(st.session_state.vector_search_ui_warning)
 
+if st.session_state.get("last_gmail_error"):
+    st.error(st.session_state.last_gmail_error)
+    st.session_state.last_gmail_error = ""
+
 # --- Chat History Display ---chat messages from history on app rerun
 if "bot" in st.session_state and hasattr(st.session_state.bot, "chat_history"):
     for message in st.session_state.bot.chat_history: # Use bot's history
