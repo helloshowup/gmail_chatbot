@@ -307,3 +307,68 @@ def test_process_message_notebook_lookup(mock_memory_kind, mock_pref_detector, m
 
 # TODO: Add more test cases for:
 # - Email search (complex - involving Claude query generation and user confirmation)
+
+@patch.object(GmailChatbotApp, "__init__", lambda self: None)
+@patch("email_main.classify_query_type")
+def test_email_search_claude_query(mock_classify):
+    """Email search that requires Claude to generate a Gmail query string."""
+    app = GmailChatbotApp()
+    # Minimal attribute setup
+    app.chat_history = []
+    app.pending_email_context = None
+    app.preference_detector = MagicMock()
+    app.preference_detector.process_message.return_value = (False, None)
+    app.system_message = "sys"
+    app.claude_client = MagicMock()
+    app.gmail_client = MagicMock()
+    app.memory_actions_handler = MagicMock()
+    app.memory_actions_handler.get_pending_proactive_summaries.return_value = []
+    app.memory_store = MagicMock()
+    app.ml_classifier = None
+    app._is_simple_inbox_query = lambda *_: False
+
+    mock_classify.return_value = ("email_search", 0.95, {})
+    app.claude_client.process_query.return_value = "from:boss subject:urgent"
+
+    response = app.process_message("Find urgent emails from my boss")
+
+    assert "search gmail for" in response.lower()
+    assert "from:boss subject:urgent" in response
+    assert app.pending_email_context["gmail_query"] == "from:boss subject:urgent"
+    assert app.pending_email_context["type"] == "gmail_query_confirmation"
+
+
+@patch.object(GmailChatbotApp, "__init__", lambda self: None)
+def test_email_search_confirmation_yes():
+    """User confirms the Gmail query stored in pending_email_context."""
+    app = GmailChatbotApp()
+    app.chat_history = []
+    app.system_message = "sys"
+    app.preference_detector = MagicMock()
+    app.preference_detector.process_message.return_value = (False, None)
+    app.claude_client = MagicMock()
+    app.gmail_client = MagicMock()
+    app.memory_actions_handler = MagicMock()
+    app.memory_actions_handler.get_pending_proactive_summaries.return_value = []
+    app.memory_store = MagicMock()
+    app.ml_classifier = None
+    app.pending_email_context = {
+        "gmail_query": "from:boss subject:urgent",
+        "original_message": "Find urgent emails from my boss",
+        "type": "gmail_query_confirmation",
+    }
+
+    app.gmail_client.search_emails.return_value = ([{"id": "1"}], "Found it")
+
+    response = app.process_message("yes")
+
+    app.gmail_client.search_emails.assert_called_once_with(
+        search_query_override="from:boss subject:urgent",
+        user_query="Find urgent emails from my boss",
+        system_message="sys",
+        request_id=pytest.ANY,
+    )
+    assert app.memory_actions_handler.store_emails_in_memory.called
+    assert app.memory_actions_handler.record_interaction_in_memory.called
+    assert "starting the search" in response.lower()
+    assert app.pending_email_context is None

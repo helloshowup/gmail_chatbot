@@ -74,6 +74,10 @@ except Exception:
 # Import environment configuration
 from gmail_chatbot.email_config import DATA_DIR
 
+# Provide simple constants for tests that import them
+EMBEDDING_MODEL_NAME = "test-embeddings"
+DEFAULT_CACHE_DIR = os.path.join(DATA_DIR, "vector_cache")
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
