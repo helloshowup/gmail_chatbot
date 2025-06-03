@@ -15,6 +15,16 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
+# --- sys.path modification ---
+# Add the parent directory of 'gmail_chatbot' (i.e., 'showup-tools') to sys.path
+# This allows modules within 'showup-tools' to be found if query_classifier.py
+# or its dependents are run in a context where 'showup-tools' isn't already on the path.
+sys_path_to_add = str(Path(__file__).resolve().parent.parent)
+if sys_path_to_add not in sys.path:
+    sys.path.insert(0, sys_path_to_add)
+    # Optional: print(f"DEBUG: query_classifier.py - Added to sys.path: {sys_path_to_add}", file=sys.stderr)
+# --- End sys.path modification ---
+
 # Configure module logger
 logger = logging.getLogger(__name__)
 

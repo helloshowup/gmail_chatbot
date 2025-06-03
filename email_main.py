@@ -290,6 +290,26 @@ class GmailChatbotApp:
         enrichment_thread.start()
 
         logging.info("Gmail Chatbot application initialized")
+        print("DEBUG: GmailChatbotApp.__init__ - END") # Added for debugging
+
+    def test_gmail_api_connection(self) -> bool:
+        """Tests the connection to the Gmail API by fetching the user's profile."""
+        logging.info("Attempting to test Gmail API connection...")
+        print("DEBUG: GmailChatbotApp.test_gmail_api_connection - START")
+        if not self.gmail_client or not hasattr(self.gmail_client, 'service'): # Check if gmail_client and its service attribute are initialized
+            logging.error("Gmail service (via gmail_client) not initialized. Cannot test API connection.")
+            print("DEBUG: GmailChatbotApp.test_gmail_api_connection - Gmail service (via gmail_client) not initialized")
+            return False
+        try:
+            # Access the service object through the gmail_client
+            self.gmail_client.service.users().getProfile(userId='me').execute()
+            logging.info("Gmail API connection test successful.")
+            print("DEBUG: GmailChatbotApp.test_gmail_api_connection - SUCCESS")
+            return True
+        except Exception as e:
+            logging.error(f"Gmail API connection test FAILED: {e}", exc_info=True)
+            print(f"DEBUG: GmailChatbotApp.test_gmail_api_connection - FAILED: {e}")
+            return False
 
     def _is_simple_inbox_query(self, message_lower: str) -> bool:
         """Checks if a query is a simple request for inbox contents, suitable for a menu."""
@@ -414,7 +434,7 @@ class GmailChatbotApp:
                     if (
                         not response
                     ):  # If gmail_client didn't provide a no-results response
-                        response = "I couldn't find any specific action items or urgent tasks based on your message."
+                        response = f"I couldn't find any emails matching your selection for '{query_text}'."
 
             # Add more elif action_type == "..." blocks here for other menu actions
             else:
