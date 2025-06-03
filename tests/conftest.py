@@ -1,46 +1,61 @@
 import sys
-import os
 import types
-from unittest.mock import MagicMock
+import os
 
-# Indicate that tests are running
+# Mark that tests are running so application modules avoid altering sys.stdout/stderr
 os.environ.setdefault("PYTEST_RUNNING", "1")
 
-# Provide stub modules for external dependencies not available in the test env
-if 'anthropic' not in sys.modules:
-    anthropic_module = types.ModuleType('anthropic')
-    anthropic_module.Anthropic = MagicMock()
-    anthropic_module.Client = MagicMock()
-    sys.modules['anthropic'] = anthropic_module
+# Provide minimal stub modules if not installed
+for mod_name in ['anthropic', 'joblib', 'numpy']:
+    if mod_name not in sys.modules:
+        stub = types.ModuleType(mod_name)
+        if mod_name == 'joblib':
+            stub.load = lambda *a, **k: {}
+            stub.dump = lambda *a, **k: None
+        if mod_name == 'numpy':
+            def argmax(seq):
+                return max(range(len(seq)), key=lambda i: seq[i])
+            stub.argmax = argmax
+            stub.array = lambda *a, **k: []
+            stub.__version__ = '0.0'
+        sys.modules[mod_name] = stub
+from unittest.mock import MagicMock
 
-if 'joblib' not in sys.modules:
-    joblib_module = types.ModuleType('joblib')
-    joblib_module.load = MagicMock()
-    joblib_module.dump = MagicMock()
-    sys.modules['joblib'] = joblib_module
-
-# Stub google modules used by Gmail API client if missing
+# Minimal stubs for Google API modules
 if 'google' not in sys.modules:
-    google_auth_exceptions = types.SimpleNamespace(RefreshError=Exception)
-    google_auth_transport = types.SimpleNamespace(requests=types.SimpleNamespace(Request=object))
-    google_auth = types.SimpleNamespace(exceptions=google_auth_exceptions, transport=google_auth_transport)
-    google_module = types.SimpleNamespace(auth=google_auth, oauth2=types.SimpleNamespace(credentials=types.SimpleNamespace(Credentials=object)))
-    sys.modules['google'] = google_module
-    sys.modules['google.oauth2'] = google_module.oauth2
-    sys.modules['google.oauth2.credentials'] = google_module.oauth2.credentials
-    sys.modules['google.auth'] = google_auth
-    sys.modules['google.auth.exceptions'] = google_auth_exceptions
-    sys.modules['google.auth.transport'] = google_auth_transport
-    sys.modules['google.auth.transport.requests'] = google_auth_transport.requests
+    google = types.ModuleType('google')
+    google.auth = types.SimpleNamespace(
+        exceptions=types.SimpleNamespace(RefreshError=Exception),
+        transport=types.SimpleNamespace(requests=types.SimpleNamespace(Request=MagicMock()))
+    )
+    google.oauth2 = types.SimpleNamespace(credentials=types.SimpleNamespace(Credentials=MagicMock()))
+    sys.modules['google'] = google
+    sys.modules['google.auth'] = google.auth
+    sys.modules['google.auth.exceptions'] = google.auth.exceptions
+    sys.modules['google.auth.transport'] = google.auth.transport
+    sys.modules['google.auth.transport.requests'] = google.auth.transport.requests
+    sys.modules['google.oauth2'] = google.oauth2
+    sys.modules['google.oauth2.credentials'] = google.oauth2.credentials
 
     flow_module = types.ModuleType('google_auth_oauthlib.flow')
     flow_module.InstalledAppFlow = MagicMock()
-    google_auth_oauthlib_module = types.ModuleType('google_auth_oauthlib')
-    google_auth_oauthlib_module.flow = flow_module
+    google_auth_oauthlib = types.ModuleType('google_auth_oauthlib')
+    google_auth_oauthlib.flow = flow_module
+    sys.modules['google_auth_oauthlib'] = google_auth_oauthlib
+    sys.modules['google_auth_oauthlib.flow'] = flow_module
+
+
     discovery_module = types.ModuleType('googleapiclient.discovery')
     discovery_module.build = MagicMock()
     errors_module = types.ModuleType('googleapiclient.errors')
     errors_module.HttpError = Exception
+    googleapiclient = types.ModuleType('googleapiclient')
+    googleapiclient.discovery = discovery_module
+    googleapiclient.errors = errors_module
+    sys.modules['googleapiclient'] = googleapiclient
+    sys.modules['googleapiclient.discovery'] = discovery_module
+    sys.modules['googleapiclient.errors'] = errors_module
+
     googleapiclient_module = types.ModuleType('googleapiclient')
     googleapiclient_module.discovery = discovery_module
     googleapiclient_module.errors = errors_module
