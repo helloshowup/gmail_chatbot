@@ -158,6 +158,47 @@ class EmailVectorMemoryStore(EmailMemoryStore):
     
 
     
+    def is_notebook_empty(self) -> bool:
+        """Check if the notebook (emails, clients, preferences) is empty."""
+        # Check emails in vector DB (via vector_indexed_emails for speed) and base email_memory
+        # Check client_info and preferences from the base class (EmailMemoryStore)
+        # A notebook is empty if no emails are stored, no client info (beyond default), and no preferences (beyond default).
+        # self.preferences is initialized in EmailMemoryStore, self.client_memory also.
+        # self.email_memory is also from EmailMemoryStore.
+        # self.vector_indexed_emails tracks emails in the vector DB part.
+
+        no_emails_in_vector_db = not self.vector_indexed_emails
+        no_emails_in_base_memory = not self.email_memory
+        no_client_info = not self.client_memory # client_memory is loaded from file in EmailMemoryStore
+        no_preferences = not self.preferences # preferences is loaded from file in EmailMemoryStore
+
+        return no_emails_in_vector_db and no_emails_in_base_memory and no_client_info and no_preferences
+
+    def get_concise_notebook_summary(self) -> str:
+        """Generate a concise summary of the notebook's contents."""
+        summary_parts = []
+        num_emails = len(self.vector_indexed_emails) # Primarily count emails in vector store for 'active' notes
+        if not num_emails:
+             num_emails = len(self.email_memory) # Fallback to base memory if vector store is empty
+
+        if num_emails > 0:
+            summary_parts.append(f"- Contains notes from {num_emails} email(s).")
+        
+        num_clients = len(self.client_memory)
+        if num_clients > 0:
+            summary_parts.append(f"- Information on {num_clients} client(s).")
+            # Could list client names if few, e.g.,: names = list(self.client_memory.keys()); if len(names) < 4: summary_parts.append(f"  Clients: {', '.join(names)}.")
+
+        num_preferences = len(self.preferences)
+        if num_preferences > 0:
+            summary_parts.append(f"- {num_preferences} user preference(s) recorded.")
+
+        if not summary_parts:
+            # This case should ideally be caught by is_notebook_empty(), but as a fallback:
+            return "- The notebook appears to be empty or contains only default entries."
+            
+        return "\n".join(summary_parts)
+
     def get_vector_status(self) -> Dict[str, Any]:
         """Get status information about the vector database.
         

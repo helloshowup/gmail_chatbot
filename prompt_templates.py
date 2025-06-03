@@ -9,6 +9,12 @@ Contains clearly divided prompts for improving Claude's consistency and effectiv
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional
 
+# Template for when the notebook is empty
+NOTEBOOK_EMPTY_PROMPT = "📓 I haven’t collected any notes yet, but I can start building your notebook by searching your inbox. Would you like me to do that now?"
+
+# Template for prefixing a notebook summary
+NOTEBOOK_SUMMARY_PREFIX = "📓 Based on my current notes:\n"
+
 # Templates for notebook search with no results found
 NOTEBOOK_NO_RESULTS_TEMPLATES = {
     # When entity is detected in the query

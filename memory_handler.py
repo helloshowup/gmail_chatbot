@@ -6,7 +6,8 @@ import re
 from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional, TYPE_CHECKING
 
-from gmail_chatbot.email_config import DEFAULT_SYSTEM_MESSAGE # Assuming this might be needed or similar config
+from gmail_chatbot.email_config import DEFAULT_SYSTEM_MESSAGE
+from gmail_chatbot.prompt_templates import NOTEBOOK_EMPTY_PROMPT, NOTEBOOK_SUMMARY_PREFIX
 from gmail_chatbot.preference_detector import PreferenceDetector
 
 
@@ -42,8 +43,8 @@ class MemoryActionsHandler:
         self.gmail_client = gmail_client
         self.claude_client = claude_client
         self.system_message = system_message
-        self.preference_detector = preference_detector # Added
-        logger.info("MemoryActionsHandler initialized with PreferenceDetector") # Updated log
+        self.preference_detector = preference_detector
+        logger.info("MemoryActionsHandler initialized with PreferenceDetector")
 
     def get_handler_client_names(self) -> List[str]:
         """Retrieve all client names from the memory store."""
@@ -107,6 +108,18 @@ class MemoryActionsHandler:
         response = None
         logger.info(f"[{request_id}] Attempting to handle user memory query: {message[:50]}...")
 
+        # Handle notebook overview/status queries first
+        notebook_overview_triggers = [
+            "notebook status", "memory status", "what's in my notebook",
+            "notebook summary", "show notebook", "tell me about my notebook",
+            # Retaining some of the old db_status_triggers if they imply a general overview
+            "status", "memory size", "database stats", "vector status", "db status"
+        ]
+        if any(term in query_lower for term in notebook_overview_triggers):
+            logger.info(f"[{request_id}] Identified as notebook overview query.")
+            response = self.get_notebook_overview(request_id)
+            if response: return response
+
         # Check for preference queries
         preference_triggers = [
             "preference", "preferences", "what i like", "what i dislike",
@@ -117,15 +130,14 @@ class MemoryActionsHandler:
             response = self.manage_preferences(message, request_id)
             if response: return response
 
-        # Display vector DB status if requested
-        db_status_triggers = [
-            "vector status", "db status", "memory status", "status",
-            "memory size", "database", "vector", "stats",
-            "database stats", # Added from original _handle_memory_query
+        # Display detailed/technical vector DB status if specifically requested (e.g., for debugging)
+        # This is now separate from the general 'notebook status' which is handled above.
+        technical_db_status_triggers = [
+            "technical db status", "vector details", "show vector stats"
         ]
-        if any(term in query_lower for term in db_status_triggers):
-            logger.info(f"[{request_id}] Identified as DB status query.")
-            response = self.get_db_status()
+        if any(term in query_lower for term in technical_db_status_triggers):
+            logger.info(f"[{request_id}] Identified as technical DB status query.")
+            response = self.get_db_status() # self.get_db_status() still exists for this more technical view
             if response: return response
 
         # Check for client-specific queries
@@ -161,6 +173,17 @@ class MemoryActionsHandler:
             logger.info(f"[{request_id}] User memory query '{message[:50]}' did not match any specific handlers in MemoryActionsHandler.")
 
         return response
+
+    def get_notebook_overview(self, request_id: str) -> str:
+        """Provide an overview of the notebook's contents or state if it's empty."""
+        logger.info(f"[{request_id}] Generating notebook overview.")
+        if self.memory_store.is_notebook_empty():
+            logger.info(f"[{request_id}] Notebook is empty.")
+            return NOTEBOOK_EMPTY_PROMPT
+        else:
+            logger.info(f"[{request_id}] Notebook has content, generating summary.")
+            summary = self.memory_store.get_concise_notebook_summary()
+            return f"{NOTEBOOK_SUMMARY_PREFIX}{summary}"
 
     def perform_autonomous_memory_enrichment(self, request_id: str) -> None:
         """

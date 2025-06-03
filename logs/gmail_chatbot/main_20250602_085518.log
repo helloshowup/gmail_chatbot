@@ -1,9 +1,0 @@
-[2025-06-02 08:55:18] [INFO] Found ANTHROPIC_API_KEY in environment variables.
-[2025-06-02 08:55:19] [INFO] Initialized Claude API client with model claude-3-7-sonnet-20250219
-[2025-06-02 08:55:19] [INFO] file_cache is only supported with oauth2client<4.0.0
-[2025-06-02 08:55:19] [INFO] Successfully authenticated with Gmail API
-[2025-06-02 08:55:19] [INFO] Vector-based email memory store initialized
-[2025-06-02 08:55:19] [INFO] Vector search available: False
-[2025-06-02 08:55:19] [WARNING] [GmailChatbotApp] Initialized with a local autonomous_task_counter. For persistence, provide a MutableMapping reference.
-[2025-06-02 08:55:19] [INFO] Gmail Chatbot application initialized
-[2025-06-02 08:55:19] [INFO] GmailChatbotApp initialized and stored in session state.
