@@ -1,0 +1,642 @@
+{
+  "test_integration_1748675802": {
+    "subject": "Test Email for Vector Search Integration",
+    "sender": "test@example.com",
+    "recipient": "recipient@example.com",
+    "date": "2025-05-31T09:16:42.126160",
+    "content_hash": "c12bc21ffe07ab83487bebd33c00dd3d",
+    "tags": [
+      "test",
+      "vector",
+      "integration"
+    ],
+    "indexed_at": "2025-06-02T10:44:21.958394",
+    "chunk_count": 1
+  },
+  "test_integration_1748675891": {
+    "subject": "Test Email for Vector Search Integration",
+    "sender": "test@example.com",
+    "recipient": "recipient@example.com",
+    "date": "2025-05-31T09:18:11.430881",
+    "content_hash": "4fd51430dab4be61a95568e4cb1bb20b",
+    "tags": [
+      "test",
+      "vector",
+      "integration"
+    ],
+    "indexed_at": "2025-06-02T10:44:21.988814",
+    "chunk_count": 1
+  },
+  "test_integration_1748675951": {
+    "subject": "Test Email for Vector Search Integration",
+    "sender": "test@example.com",
+    "recipient": "recipient@example.com",
+    "date": "2025-05-31T09:19:11.855305",
+    "content_hash": "20ee33bf82bfb6a8fc82c4d0fb7136f2",
+    "tags": [
+      "test",
+      "vector",
+      "integration"
+    ],
+    "indexed_at": "2025-06-02T10:44:22.015390",
+    "chunk_count": 1
+  },
+  "test_integration_1748676509": {
+    "subject": "Test Email for Vector Search Integration",
+    "sender": "test@example.com",
+    "recipient": "recipient@example.com",
+    "date": "2025-05-31T09:28:29.636300",
+    "content_hash": "a0016fbe286192eee2dcb1d2599cd950",
+    "tags": [
+      "test",
+      "vector",
+      "integration"
+    ],
+    "indexed_at": "2025-06-02T10:44:22.043678",
+    "chunk_count": 1
+  },
+  "test_integration_1748676534": {
+    "subject": "Test Email for Vector Search Integration",
+    "sender": "test@example.com",
+    "recipient": "recipient@example.com",
+    "date": "2025-05-31T09:28:54.493869",
+    "content_hash": "b10d14469aa96d1bfa3d49622f25694e",
+    "tags": [
+      "test",
+      "vector",
+      "integration"
+    ],
+    "indexed_at": "2025-06-02T10:44:22.069682",
+    "chunk_count": 1
+  },
+  "test_integration_1748676617": {
+    "subject": "Test Email for Vector Search Integration",
+    "sender": "test@example.com",
+    "recipient": "recipient@example.com",
+    "date": "2025-05-31T09:30:17.887589",
+    "content_hash": "33dcf70c2877002772a0d65f50d4913d",
+    "tags": [
+      "test",
+      "vector",
+      "integration"
+    ],
+    "indexed_at": "2025-06-02T10:44:22.097993",
+    "chunk_count": 1
+  },
+  "1972fa9df1cd603d": {
+    "subject": "Idea merchants",
+    "sender": "Johan Fourie <johanfourie@substack.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Mon, 2 Jun 2025 08:02:13 +0000",
+    "content_hash": "be4ff0354206e4f849a19e5daff68093",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.972799",
+    "chunk_count": 1
+  },
+  "1972f92221f6a29a": {
+    "subject": "Thank you for signing your Mandate Renewal",
+    "sender": "mandates@bidvestbank.co.za",
+    "recipient": "hello@showup.courses",
+    "date": "Mon, 02 Jun 2025 07:36:34 +0000",
+    "content_hash": "ddc865d1f8a38d44ccfa60f18d6770db",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:23.004938",
+    "chunk_count": 1
+  },
+  "1972f8c53dbb212d": {
+    "subject": "You need to report your transfer (#1564710073)",
+    "sender": "Wise <noreply@wise.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Mon, 2 Jun 2025 07:30:14 +0000",
+    "content_hash": "333a44f39c9bca1c0ae8f0c981401d45",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.163001",
+    "chunk_count": 1
+  },
+  "1972f7330c58bc5e": {
+    "subject": "Transform your garden with experts from Kaapstad \ud83c\udfe1",
+    "sender": "Team Bark <team@cmail.bark.com>",
+    "recipient": "Bryce <hello@showup.courses>",
+    "date": "Mon, 02 Jun 2025 07:02:46 +0000",
+    "content_hash": "e68dfcb4518ad2c69110e1ebe2f1fc9a",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.125790",
+    "chunk_count": 1
+  },
+  "1972f63495858c7f": {
+    "subject": "\"hey Bryce check out Heather for respond to heather's message on basecamp. it should only take 30 minutes to do",
+    "sender": "\"Automations via monday.com\" <notifications@monday.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Mon, 02 Jun 2025 06:45:23 +0000 (UTC)",
+    "content_hash": "a3045bf4ced1d5eeb140a5f358fa1c4a",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.194880",
+    "chunk_count": 1
+  },
+  "1972f6342304ebf9": {
+    "subject": "\"hey Bryce check out Ask Anton for 2day loan while cash clears for Ask Anton for 2day loan while cash clears",
+    "sender": "\"Automations via monday.com\" <notifications@monday.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Mon, 02 Jun 2025 06:45:22 +0000 (UTC)",
+    "content_hash": "5e15e03cd0c8b9db79d36c940fba05c8",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.238118",
+    "chunk_count": 1
+  },
+  "1972f634212cf621": {
+    "subject": "\"hey Bryce check out Bryte AI for Ping with Alicia Loe + Bryce Hepburn + Charlie Buehler-Hoard  You\u2019ve got a new Ping\u2026 Alicia Loe\t\t 8:05pm Okay! Bryce, you can use this account to log in and use BRYTE.  Log in Page Username: standarddemo@excelhighschool.com Password: Standarddemo123!  This video will give you a quick overview of how to navigate the learn stage student portal and jump to courses. There have been some updates to the student portal since it was created, so there will be a few small differences, but it should show you the basic flow.",
+    "sender": "\"Automations via monday.com\" <notifications@monday.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Mon, 02 Jun 2025 06:45:21 +0000 (UTC)",
+    "content_hash": "df2696b59e81bf85d86cf60953dfda65",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.278278",
+    "chunk_count": 4
+  },
+  "1972f5f21ffab6d6": {
+    "subject": "Time to sign your Mandate",
+    "sender": "mandates@bidvestbank.co.za",
+    "recipient": "hello@showup.courses",
+    "date": "Mon, 02 Jun 2025 06:40:51 +0000",
+    "content_hash": "b2ad7a196e3b6645b986bcedad715304",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.395463",
+    "chunk_count": 1
+  },
+  "1972f02d3e65258d": {
+    "subject": "Morning Brief | June 02, 2025",
+    "sender": "Cora Briefs <briefs@cora.computer>",
+    "recipient": "hello@showup.courses",
+    "date": "Mon, 2 Jun 2025 05:00:03 +0000",
+    "content_hash": "4e0494a16929e14458480cf4b416e74b",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.423394",
+    "chunk_count": 1
+  },
+  "1972ed060c911c16": {
+    "subject": "Basecamp (Excel Education Systems, Inc.): Here are your assignments",
+    "sender": "\"Basecamp (Excel Education Systems, Inc.)\" <notifications@3.basecamp.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Mon, 02 Jun 2025 04:04:57 +0000",
+    "content_hash": "d37eb4cea0f7c72af3096a7886b5a65f",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.456456",
+    "chunk_count": 1
+  },
+  "197251540e8f3a9d": {
+    "subject": "[Action Advised] Protect your applications and enhance your security",
+    "sender": "Google Developers <GoogleDevelopers-noreply@google.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Fri, 30 May 2025 23:43:58 -0700",
+    "content_hash": "520e5c94398dc999e1e2c978e91782ff",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:20.722923",
+    "chunk_count": 1
+  },
+  "1972509213335216": {
+    "subject": "Gain key insights from more advanced capabilities!",
+    "sender": "\"monday.com\" <team@learn.mail.monday.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Sat, 31 May 2025 06:30:43 +0000",
+    "content_hash": "cbcf9ce0661d99de9da42b88a3b925d5",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:21.564655",
+    "chunk_count": 1
+  },
+  "19724b6236f9ac9a": {
+    "subject": "Morning Brief | May 31, 2025",
+    "sender": "Cora Briefs <briefs@cora.computer>",
+    "recipient": "hello@showup.courses",
+    "date": "Sat, 31 May 2025 05:00:05 +0000",
+    "content_hash": "5c92c8906d3d9902e64ee32441a53a0c",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:21.613618",
+    "chunk_count": 1
+  },
+  "197231341f0dcd4a": {
+    "subject": "10 years of Google Photos",
+    "sender": "News from Google <thekeyword-noreply@google.com>",
+    "recipient": "bryce@brycehepburn.co.za",
+    "date": "Fri, 30 May 2025 14:22:20 -0700",
+    "content_hash": "a97b64394a99ad201647e93bbc1422e5",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:21.651672",
+    "chunk_count": 1
+  },
+  "19722c474456af48": {
+    "subject": "Cleaning Up After Elon Musk",
+    "sender": "The New Yorker Daily <newyorker@newsletter.newyorker.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Fri, 30 May 2025 15:56:29 -0400 (EDT)",
+    "content_hash": "074116c2d01e6836b7df603319dde14b",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:21.687375",
+    "chunk_count": 1
+  },
+  "19722b8457dfc243": {
+    "subject": "\ud83d\udcc2 New Tutorial: Mouse Interaction with Hana",
+    "sender": "Spline Tutorials <hello@mail.spline.design>",
+    "recipient": "hello@showup.courses",
+    "date": "Fri, 30 May 2025 19:43:10 +0000",
+    "content_hash": "70d2c2dd31bf6e51add41b1cc7b636e5",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:21.737262",
+    "chunk_count": 1
+  },
+  "1972283f6ba1f1f7": {
+    "subject": "How to create a magnetic community offering",
+    "sender": "Tom Ross <tom@tomross.co>",
+    "recipient": "Bryce <hello@showup.courses>",
+    "date": "Fri, 30 May 2025 18:46:02 +0000 (UTC)",
+    "content_hash": "98685db08e01d39fcd3406f1244aaa8b",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:21.782640",
+    "chunk_count": 1
+  },
+  "1972267e031cc5fb": {
+    "subject": "You have unread messages about the job Weight Loss Course Buildout",
+    "sender": "\"Chelsea A. via Upwork\" <room_10265045109435532182816177569242@upwork.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Fri, 30 May 2025 18:15:21 +0000",
+    "content_hash": "f3dae3f766653a8a6229b53e48939455",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:21.822211",
+    "chunk_count": 1
+  },
+  "197222c699131245": {
+    "subject": "Alicia sent you a Ping\u2026",
+    "sender": "\"Alicia Loe (Basecamp)\" <notifications@3.basecamp.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Fri, 30 May 2025 17:10:24 +0000",
+    "content_hash": "4554fc06754fffdc7580cedad377e6c9",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:21.878016",
+    "chunk_count": 1
+  },
+  "197222618c99ddf7": {
+    "subject": "Fresh finds on Marketplace",
+    "sender": "Elgato <elgato@news.elgato.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Fri, 30 May 2025 17:03:29 +0000",
+    "content_hash": "cca5373959bd32f22dbce8d2f92de58f",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:21.927926",
+    "chunk_count": 1
+  },
+  "1972ece48e7c293b": {
+    "subject": "Le Weekly #82 \u2013 Hike Right \ud83e\udd7e",
+    "sender": "Le Editor from Le Scarf <lescarf@substack.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Mon, 2 Jun 2025 04:00:46 +0000",
+    "content_hash": "fecd3244e9f1fc81873e60c4b1933b1e",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.497551",
+    "chunk_count": 1
+  },
+  "1972eb0d0e4964b3": {
+    "subject": "[You're assigned] Vertical Farming at Home",
+    "sender": "\"Automations via monday.com\" <notifications@monday.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Mon, 02 Jun 2025 03:30:28 +0000 (UTC)",
+    "content_hash": "b512c779f3af5012804f1177f2517c2d",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.534019",
+    "chunk_count": 1
+  },
+  "19720c293ca1a5ec": {
+    "subject": "Re: 2 Hour Brief",
+    "sender": "Mariska van Helsdingen <mariskavanhelsdingen2@gmail.com>",
+    "recipient": "Bryce Hepburn <hello@showup.courses>",
+    "date": "Fri, 30 May 2025 12:34:57 +0200",
+    "content_hash": "e613408cf5dffbcf89cafece467448c6",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.572388",
+    "chunk_count": 1
+  },
+  "1970b0609be5b1de": {
+    "subject": "Re: 2 Hour Brief",
+    "sender": "Mariska van Helsdingen <mariskavanhelsdingen2@gmail.com>",
+    "recipient": "Bryce Hepburn <hello@showup.courses>",
+    "date": "Mon, 26 May 2025 07:17:01 +0200",
+    "content_hash": "4c54dbea0c3fa2843dcddf0c323752d7",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.613257",
+    "chunk_count": 1
+  },
+  "196f2c7237aefe2a": {
+    "subject": "Re: 2 Hour Brief",
+    "sender": "Mariska van Helsdingen <mariskavanhelsdingen2@gmail.com>",
+    "recipient": "Bryce Hepburn <hello@showup.courses>",
+    "date": "Wed, 21 May 2025 14:17:11 +0200",
+    "content_hash": "9936c60934c6210e793e1f869aca87ee",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.648469",
+    "chunk_count": 1
+  },
+  "196f17f1980a1a4f": {
+    "subject": "Re: 2 Hour Brief",
+    "sender": "Mariska van Helsdingen <mariskavanhelsdingen2@gmail.com>",
+    "recipient": "Bryce Hepburn <hello@showup.courses>",
+    "date": "Wed, 21 May 2025 08:19:07 +0200",
+    "content_hash": "bbfa37e91fcd8a9d81c39138a975938d",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.684100",
+    "chunk_count": 1
+  },
+  "196f12cdfb97ce8b": {
+    "subject": "Re: 2 Hour Brief",
+    "sender": "Mariska van Helsdingen <mariskavanhelsdingen2@gmail.com>",
+    "recipient": "Bryce Hepburn <hello@showup.courses>",
+    "date": "Wed, 21 May 2025 06:49:18 +0200",
+    "content_hash": "23b9977febe3f738ac0ebb33dc57461d",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.720138",
+    "chunk_count": 1
+  },
+  "196ecd4ea3be8959": {
+    "subject": "Re: 2 Hour Brief",
+    "sender": "Mariska van Helsdingen <mariskavanhelsdingen2@gmail.com>",
+    "recipient": "Bryce Hepburn <hello@showup.courses>",
+    "date": "Tue, 20 May 2025 10:34:46 +0200",
+    "content_hash": "da2b8c8772728951d579b492fc9abf89",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.757458",
+    "chunk_count": 1
+  },
+  "196cfdb5708479b9": {
+    "subject": "Re: 2 Hour Brief",
+    "sender": "Mariska van Helsdingen <mariskavanhelsdingen2@gmail.com>",
+    "recipient": "Bryce Hepburn <hello@showup.courses>",
+    "date": "Wed, 14 May 2025 19:32:48 +0200",
+    "content_hash": "2384e89b21558c56dea9dbd329045732",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.813766",
+    "chunk_count": 1
+  },
+  "196cfcd8c3e3abe6": {
+    "subject": "Payment Received by VIRTUALLY MARISKA",
+    "sender": "Mariska van Helsdingen <message-service@sender.zohoinvoice.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Wed, 14 May 2025 10:17:52 -0700 (PDT)",
+    "content_hash": "f519f101388e74b5ccf25e7d87d06b3c",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.859653",
+    "chunk_count": 1
+  },
+  "196c825af1c879cd": {
+    "subject": "Re: First task: Document review and report",
+    "sender": "Mariska van Helsdingen <mariskavanhelsdingen2@gmail.com>",
+    "recipient": "Bryce Hepburn <hello@showup.courses>",
+    "date": "Tue, 13 May 2025 07:37:03 +0200",
+    "content_hash": "b3e3a8444020493ee629a35b7dfe42d5",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.899843",
+    "chunk_count": 1
+  },
+  "196b94d71192fe1b": {
+    "subject": "Re: First task: Document review and report",
+    "sender": "Mariska van Helsdingen <mariskavanhelsdingen2@gmail.com>",
+    "recipient": "Bryce Hepburn <hello@showup.courses>",
+    "date": "Sat, 10 May 2025 10:26:09 +0200",
+    "content_hash": "27cd1c09fe14e78bf8e15aad1c00ccf9",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:44:22.936742",
+    "chunk_count": 1
+  },
+  "1972a3cfa5ee488c": {
+    "subject": "\"hey Bryce check out Virtual Assistant for Mariska van Helsdingen Mon 26 May, 07:17 (3 days ago) to me  Good morning Bryce  I hope you are doing well and have fully recovered.    I just wanted to follow up on my last email and find out if you have anything else you would like me to do for you.   Hope you have a good day.  Kind regards Mariska",
+    "sender": "\"Automations via monday.com\" <notifications@monday.com>",
+    "recipient": "hello@showup.courses",
+    "date": "Sun, 01 Jun 2025 06:45:28 +0000 (UTC)",
+    "content_hash": "1e1448944f4ff91dbc5140235b264ea2",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:48:22.999259",
+    "chunk_count": 2
+  },
+  "196f15b5a7ec4933": {
+    "subject": "Re: 2 Hour Brief",
+    "sender": "Bryce Hepburn <hello@showup.courses>",
+    "recipient": "Mariska van Helsdingen <mariskavanhelsdingen2@gmail.com>",
+    "date": "Wed, 21 May 2025 07:40:16 +0200",
+    "content_hash": "54218180cc1c3c8a25e399ba85cdcc94",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:48:23.099157",
+    "chunk_count": 5
+  },
+  "196ec1b895a541a4": {
+    "subject": "Re: 2 Hour Brief",
+    "sender": "Bryce Hepburn <hello@showup.courses>",
+    "recipient": "Mariska van Helsdingen <mariskavanhelsdingen2@gmail.com>",
+    "date": "Tue, 20 May 2025 07:12:29 +0200",
+    "content_hash": "4fb0d40b2adc0d65bd6f55e833adacd2",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:48:23.274671",
+    "chunk_count": 5
+  },
+  "196cfe1940877880": {
+    "subject": "Re: 2 Hour Brief",
+    "sender": "Bryce Hepburn <hello@showup.courses>",
+    "recipient": "Mariska van Helsdingen <mariskavanhelsdingen2@gmail.com>",
+    "date": "Wed, 14 May 2025 19:39:48 +0200",
+    "content_hash": "1667781c5ed76b87d1bb5fa24dcb6818",
+    "tags": [],
+    "indexed_at": "2025-06-02T10:48:23.470029",
+    "chunk_count": 5
+  },
+  "197340967f44fb8d": {
+    "subject": "[helloshowup/LOCAL-EVA-] Run failed: CI - main (a95b0bc)",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Mon, 02 Jun 2025 21:25:19 -0700",
+    "content_hash": "673175062fd163599baf07995b687261",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "indexed_at": "2025-06-03T06:49:19.930445",
+    "chunk_count": 1
+  },
+  "19734093519f16b8": {
+    "subject": "[helloshowup/LOCAL-EVA-] PR run failed: CI - Finalize Semantic RAG (463399a)",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Mon, 02 Jun 2025 21:25:06 -0700",
+    "content_hash": "a3c25dfb4fb6327cb94275fc1f451cde",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "indexed_at": "2025-06-03T06:49:20.911591",
+    "chunk_count": 2
+  },
+  "19733fed2f0d44d0": {
+    "subject": "[helloshowup/LOCAL-EVA-] Run failed: CI - main (5ec8e87)",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Mon, 02 Jun 2025 21:13:46 -0700",
+    "content_hash": "14c627af7b5dc589a246642d5136bc5a",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "indexed_at": "2025-06-03T06:49:21.003364",
+    "chunk_count": 1
+  },
+  "19733fdf426d8eee": {
+    "subject": "[helloshowup/LOCAL-EVA-] Run failed: CI - main (ee9c630)",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Mon, 02 Jun 2025 21:12:49 -0700",
+    "content_hash": "e3ce21057f92bf6a2f490bf6865b1fb1",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "indexed_at": "2025-06-03T06:49:21.060574",
+    "chunk_count": 1
+  },
+  "19733e0b3d18b2c2": {
+    "subject": "Accepted: Bryce Hepburn and Jamie Sundelson @ Wed Jun 4, 2025 7:30am - 8am (SAST) (hilightcoach@gmail.com)",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 03 Jun 2025 03:40:53 +0000",
+    "content_hash": "63106fbb1eca489b59dab6b3efd5c365",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "indexed_at": "2025-06-03T06:49:21.140184",
+    "chunk_count": 1
+  },
+  "19733d005be49561": {
+    "subject": "Invitation: Bryce Hepburn and Jamie Sundelson @ Wed 4 Jun 2025 07:30 - 08:00 (SAST) (hello@showup.courses)",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 03 Jun 2025 03:22:39 +0000",
+    "content_hash": "d32ffc0b83fbf4743805938a43efd2f7",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "indexed_at": "2025-06-03T06:49:21.218774",
+    "chunk_count": 1
+  },
+  "19732df89d5174a3": {
+    "subject": "Re: You have unread messages about the job Weight Loss Course Buildout",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 3 Jun 2025 01:00:00 +0200",
+    "content_hash": "5f2e7ee0d18d9a89588bfb58b484393a",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "indexed_at": "2025-06-03T06:49:21.266512",
+    "chunk_count": 5
+  },
+  "19732b32436e6e69": {
+    "subject": "Trumpworld\u2019s Court Philosopher",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Mon, 2 Jun 2025 18:11:30 -0400 (EDT)",
+    "content_hash": "502630806bbf2ca98db5375ae37e91e9",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "indexed_at": "2025-06-03T06:49:21.533576",
+    "chunk_count": 1
+  },
+  "19732206fa2cd051": {
+    "subject": "Anthropic Incident - Elevated errors on requests to Claude Sonnet 3.7 and 4 - 2 June 2025",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Mon, 02 Jun 2025 19:31:15 +0000",
+    "content_hash": "656a7733d2d65a45658a71a133897ad2",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "indexed_at": "2025-06-03T06:49:21.592570",
+    "chunk_count": 2
+  },
+  "1973210242ab451c": {
+    "subject": "Anthropic Incident - Elevated errors on requests to Claude Sonnet 3.7 and 4 - 2 June 2025",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Mon, 02 Jun 2025 19:13:27 +0000",
+    "content_hash": "b4f86c93b1cf7083aea147bec36a6642",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "indexed_at": "2025-06-03T06:49:21.676634",
+    "chunk_count": 3
+  },
+  "197341f572bf139b": {
+    "subject": "[helloshowup/LOCAL-EVA-] PR run failed: CI - Resolve wheel docs and test skips (bdd5446)",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Mon, 02 Jun 2025 21:49:17 -0700",
+    "content_hash": "8b2daaa143bd684cf7e82a550f7f41a5",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Excel High School",
+      "client:Excel High School"
+    ],
+    "indexed_at": "2025-06-03T06:49:26.019762",
+    "chunk_count": 2
+  },
+  "19734200119c8e37": {
+    "subject": "[helloshowup/LOCAL-EVA-] Run failed: CI - main (f2d25ed)",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Mon, 02 Jun 2025 21:50:01 -0700",
+    "content_hash": "06747bef9ea17a9b04116d4d5f9d6988",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "indexed_at": "2025-06-03T06:58:33.312615",
+    "chunk_count": 1
+  },
+  "197341fc897367b4": {
+    "subject": "[helloshowup/LOCAL-EVA-] PR run failed: CI - Resolve wheel docs and test skips (c8393c6)",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Mon, 02 Jun 2025 21:49:47 -0700",
+    "content_hash": "bbfc84fd1bc93837ed0f85a398a2fd4a",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "indexed_at": "2025-06-03T06:58:33.393931",
+    "chunk_count": 2
+  },
+  "19734293b073ae74": {
+    "subject": "Morning Brief | June 03, 2025",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 3 Jun 2025 05:00:06 +0000",
+    "content_hash": "eef28551a8c087cacdf7f926825b738d",
+    "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "client:Further Learner"
+    ],
+    "indexed_at": "2025-06-03T07:01:38.673945",
+    "chunk_count": 5
+  }
+}

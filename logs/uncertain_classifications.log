@@ -1,0 +1,262 @@
+2025-06-01 06:23:14 | Query: what do you know about bryce hepburn? | Scores: catch_up: 0.07, email_search: 0.02, triage: 0.00, clarify: 0.12
+2025-06-01 06:23:40 | Query: I want to see if you can do research and tell me what you know about bryce hepburn | Scores: catch_up: 0.11, email_search: 0.11, triage: 0.02, clarify: 0.14
+2025-06-01 06:49:11 | Query: tell me what you know about Bryce Hepburn. | Scores: catch_up: 0.09, email_search: 0.04, triage: 0.01, clarify: 0.10
+2025-06-01 06:51:29 | Query: What do you know about Bryce Hepburn? | Scores: catch_up: 0.07, email_search: 0.02, triage: 0.00, clarify: 0.12
+2025-06-01 06:51:29 | Query: Find emails from John | Scores: catch_up: 0.00, email_search: 0.14, triage: 0.00, clarify: 0.00
+2025-06-01 06:51:29 | Query: What needs my attention? | Scores: catch_up: 0.15, email_search: 0.00, triage: 0.03, clarify: 0.02
+2025-06-01 06:51:29 | Query: Can you delegate some tasks? | Scores: catch_up: 0.02, email_search: 0.00, triage: 0.06, clarify: 0.14
+2025-06-01 06:52:03 | Query: What do you know about Bryce Hepburn? | Scores: catch_up: 0.07, email_search: 0.02, triage: 0.00, clarify: 0.12
+2025-06-01 06:52:03 | Query: What tasks need my attention? | Scores: catch_up: 0.12, email_search: 0.00, triage: 0.02, clarify: 0.04
+2025-06-01 06:52:03 | Query: Tell me about our project status | Scores: catch_up: 0.01, email_search: 0.04, triage: 0.01, clarify: 0.00
+2025-06-01 06:53:10 | Query: do research about Bryce Hepburn and give me a sumamry what you know. | Scores: catch_up: 0.09, email_search: 0.08, triage: 0.01, clarify: 0.12
+2025-06-01 06:59:05 | Query: Tell me about Bryce Hepburn | Scores: catch_up: 0.01, email_search: 0.04, triage: 0.01, clarify: 0.00, general_chat: 0.15
+2025-06-01 06:59:05 | Query: who is Bryce Hepburn? | Scores: catch_up: 0.00, email_search: 0.00, triage: 0.00, clarify: 0.02, general_chat: 0.07
+2025-06-01 06:59:05 | Query: What do you know about AI? | Scores: catch_up: 0.07, email_search: 0.02, triage: 0.00, clarify: 0.12, general_chat: 0.11
+2025-06-01 06:59:05 | Query: explain how quantum computing works | Scores: catch_up: 0.00, email_search: 0.00, triage: 0.00, clarify: 0.12, general_chat: 0.07
+2025-06-01 06:59:05 | Query: Find emails from John | Scores: catch_up: 0.00, email_search: 0.14, triage: 0.00, clarify: 0.00, general_chat: 0.00
+2025-06-01 06:59:49 | Query: do research about Bryce Hepburn and give me a summary what you know | Scores: catch_up: 0.09, email_search: 0.08, triage: 0.01, clarify: 0.12, general_chat: 0.24
+2025-06-01 06:59:57 | Query: tell me about Bryce Hepburn | Scores: catch_up: 0.01, email_search: 0.04, triage: 0.01, clarify: 0.00, general_chat: 0.15
+2025-06-01 07:00:14 | Query: who is Bryce Hepburn? | Scores: catch_up: 0.00, email_search: 0.00, triage: 0.00, clarify: 0.02, general_chat: 0.07
+2025-06-01 07:00:14 | Query: explain how quantum computing works | Scores: catch_up: 0.00, email_search: 0.00, triage: 0.00, clarify: 0.12, general_chat: 0.07
+2025-06-01 07:00:14 | Query: Find emails from John | Scores: catch_up: 0.00, email_search: 0.14, triage: 0.00, clarify: 0.00, general_chat: 0.00
+2025-06-01 07:04:24 | Query: Who is the CEO of Microsoft? | Scores: catch_up: 0.00, email_search: 0.01, triage: 0.00, clarify: 0.02, general_chat: 0.08
+2025-06-01 07:04:24 | Query: Find emails from John | Scores: catch_up: 0.00, email_search: 0.14, triage: 0.00, clarify: 0.00, general_chat: 0.00
+2025-06-01 07:05:07 | Query: Who is the CEO of Microsoft? | Scores: catch_up: 0.00, email_search: 0.01, triage: 0.00, clarify: 0.02, general_chat: 0.07
+2025-06-01 07:05:07 | Query: Find emails from John | Scores: catch_up: 0.00, email_search: 0.14, triage: 0.00, clarify: 0.00, general_chat: 0.01
+2025-06-01 07:15:24 | Query: telll me about bryce hepburn. | Scores: catch_up: 0.01, email_search: 0.04, triage: 0.01, clarify: 0.00, general_chat: 0.09
+2025-06-01 07:15:57 | Query: what have you got stored in your vector database? | Scores: catch_up: 0.08, email_search: 0.00, triage: 0.00, clarify: 0.10, general_chat: 0.02
+2025-06-01 07:25:06 | Query: search the memory. what can you tell me then? | Scores: catch_up: 0.09, email_search: 0.07, triage: 0.01, clarify: 0.16, general_chat: 0.08
+2025-06-01 07:35:02 | Query: can you search the inbox for facts that you think would useful to store in the vector database so that we can have better enriched conversation. | Scores: catch_up: 0.01, email_search: 0.15, triage: 0.01, clarify: 0.24, general_chat: 0.01
+2025-06-01 07:35:30 | Query: Yes please do so! | Scores: catch_up: 0.00, email_search: 0.00, triage: 0.00, clarify: 0.02, general_chat: 0.02
+2025-06-01 07:35:58 | Query: try for the last 3 months | Scores: catch_up: 0.00, email_search: 0.02, triage: 0.00, clarify: 0.00, general_chat: 0.00
+2025-06-01 07:45:28 | Query: search the inbox for info that you think should be in our vector database so you can help me by better understanding bryce | Scores: catch_up: 0.02, email_search: 0.14, triage: 0.01, clarify: 0.26, general_chat: 0.05
+2025-06-01 07:54:22 | Query: check for any specific information about Bryce's recent client work or email patterns | Scores: catch_up: 0.05, email_search: 0.08, triage: 0.00, clarify: 0.00, general_chat: 0.08
+2025-06-01 07:55:28 | Query: i think you misunderstood the weork for **Hoorah Digital:**
+
+
+Can you tell me why?> | Scores: catch_up: 0.03, email_search: 0.03, triage: 0.01, clarify: 0.22, general_chat: 0.07
+2025-06-01 08:03:01 | Query: can you do a search and think about possible task that he can delegate to his human PA? Dont go for low hanging suggestions that I can already see. | Scores: catch_up: 0.02, email_search: 0.12, triage: 0.07, clarify: 0.24, general_chat: 0.09
+2025-06-01 08:03:41 | Query: what will the benefit to Bryce be. isnt this busywork basicallky? | Scores: catch_up: 0.07, email_search: 0.03, triage: 0.01, clarify: 0.10, general_chat: 0.01
+2025-06-01 08:04:47 | Query: of your suggestions only this one has value: - **Client communication monitoring** - This could actually be valuable if Bryce frequently misses follow-ups due to inbox volume, preventing potential client frustration | Scores: catch_up: 0.00, email_search: 0.07, triage: 0.02, clarify: 0.10, general_chat: 0.01
+2025-06-01 11:41:53 | Query: What’s going on with Excel High School? | Scores: catch_up: 0.12, email_search: 0.01, triage: 0.01, clarify: 0.10, general_chat: 0.05
+2025-06-01 11:42:17 | Query: look for pending requests, ongoing projects, or any urgent matters that might need your attention. | Scores: catch_up: 0.06, email_search: 0.06, triage: 0.08, clarify: 0.02, general_chat: 0.00
+2025-06-02 05:16:56 | Query: can you search a vector database? | Scores: catch_up: 0.00, email_search: 0.05, triage: 0.00, clarify: 0.14, general_chat: 0.02
+2025-06-02 05:17:29 | Query: im looking for you to update your notebook understanding of Mariska a PA i want to debrief to help me.  | Scores: catch_up: 0.03, email_search: 0.05, triage: 0.02, clarify: 0.16, general_chat: 0.07
+2025-06-02 05:31:19 | Query: I want to write an email to Mariska | Scores: catch_up: 0.02, email_search: 0.07, triage: 0.01, clarify: 0.00, general_chat: 0.00
+2025-06-02 05:32:30 | Query: yes. search for emails for mariskavanhelsdingen2@gmail.com and update your notebook so that you will know who she is and what the working relationship is with me.  | Scores: catch_up: 0.09, email_search: 0.21, triage: 0.01, clarify: 0.20, general_chat: 0.10
+2025-06-02 05:33:09 | Query: try and do search and thinking to understand the bottleneck and why i cant get work to her.  | Scores: catch_up: 0.03, email_search: 0.08, triage: 0.01, clarify: 0.10, general_chat: 0.02
+2025-06-02 05:34:50 | Query: can you do a search and suggest task that I can delegate to her.  | Scores: catch_up: 0.02, email_search: 0.08, triage: 0.07, clarify: 0.16, general_chat: 0.04
+2025-06-02 05:41:20 | Query: can you tell me what i need to tell mariska? | Scores: catch_up: 0.11, email_search: 0.04, triage: 0.03, clarify: 0.18, general_chat: 0.08
+2025-06-02 05:41:47 | Query: what is todays date? | Scores: catch_up: 0.07, email_search: 0.00, triage: 0.00, clarify: 0.08, general_chat: 0.02
+2025-06-02 05:43:27 | Query: tell me what is in your database? | Scores: catch_up: 0.09, email_search: 0.01, triage: 0.01, clarify: 0.08, general_chat: 0.08
+2025-06-02 05:43:57 | Query: search my inbox and then update your notebook with items you think are relevant./ | Scores: catch_up: 0.02, email_search: 0.10, triage: 0.00, clarify: 0.17, general_chat: 0.01
+2025-06-02 05:44:32 | Query: this is clearly a hallucination.  | Scores: catch_up: 0.00, email_search: 0.00, triage: 0.00, clarify: 0.10, general_chat: 0.02
+2025-06-02 06:09:28 | Query: search my inbox for emails about excel education or excel high school.  | Scores: catch_up: 0.00, email_search: 0.21, triage: 0.00, clarify: 0.08, general_chat: 0.05
+2025-06-02 06:11:27 | Query: based on my inbox. hwo is the following? 
+
+Key Contacts:
+
+[Names of key personnel you communicate with at Excel]
+Primary contact seems to be [Primary Contact Name + Title] | Scores: catch_up: 0.01, email_search: 0.09, triage: 0.02, clarify: 0.10, general_chat: 0.07
+2025-06-02 06:12:05 | Query: create a detail list of contacts for excel and include the position and email address then saved this info to yoru notebook.  | Scores: catch_up: 0.00, email_search: 0.09, triage: 0.01, clarify: 0.08, general_chat: 0.02
+2025-06-02 06:12:39 | Query: Why did you not pick up max? | Scores: catch_up: 0.01, email_search: 0.00, triage: 0.01, clarify: 0.08, general_chat: 0.01
+2025-06-02 06:13:26 | Query: review basecamp notifications since that is teh way i communication with taht client | Scores: catch_up: 0.02, email_search: 0.02, triage: 0.00, clarify: 0.02, general_chat: 0.01
+2025-06-02 06:14:09 | Query: Look more deeply into the specific projects you're working on with Max through Basecamp? | Scores: catch_up: 0.01, email_search: 0.03, triage: 0.01, clarify: 0.08, general_chat: 0.05
+2025-06-02 06:21:07 | Query: what is saved in your bookbook? | Scores: catch_up: 0.07, email_search: 0.00, triage: 0.00, clarify: 0.08, general_chat: 0.02
+2025-06-02 06:41:01 | Query: Show me emails from John | Scores: catch_up: 0.16, clarify: 0.16, email_search: 0.31, general_chat: 0.17, triage: 0.20
+2025-06-02 06:41:01 | Query: What needs my attention today? | Scores: catch_up: 0.18, clarify: 0.17, email_search: 0.18, general_chat: 0.18, triage: 0.30
+2025-06-02 06:41:01 | Query: Catch me up on my inbox | Scores: catch_up: 0.29, clarify: 0.16, email_search: 0.20, general_chat: 0.16, triage: 0.18
+2025-06-02 06:41:01 | Query: Tell me about email best practices | Scores: catch_up: 0.18, clarify: 0.18, email_search: 0.21, general_chat: 0.26, triage: 0.17
+2025-06-02 06:41:01 | Query: Show me important emails | Scores: catch_up: 0.17, clarify: 0.17, email_search: 0.24, general_chat: 0.18, triage: 0.25
+2025-06-02 06:41:01 | Query: Check my inbox | Scores: catch_up: 0.20, clarify: 0.15, email_search: 0.29, general_chat: 0.15, triage: 0.20
+2025-06-02 06:41:01 | Query: help | Scores: catch_up: 0.18, clarify: 0.27, email_search: 0.18, general_chat: 0.18, triage: 0.19
+2025-06-02 06:51:07 | Query: Show me emails from John | Scores: catch_up: 0.16, clarify: 0.16, email_search: 0.31, general_chat: 0.17, triage: 0.20
+2025-06-02 06:51:07 | Query: What needs my attention today? | Scores: catch_up: 0.18, clarify: 0.17, email_search: 0.18, general_chat: 0.18, triage: 0.30
+2025-06-02 06:51:07 | Query: Catch me up on my inbox | Scores: catch_up: 0.29, clarify: 0.16, email_search: 0.20, general_chat: 0.16, triage: 0.18
+2025-06-02 06:51:07 | Query: Tell me about email best practices | Scores: catch_up: 0.18, clarify: 0.18, email_search: 0.21, general_chat: 0.26, triage: 0.17
+2025-06-02 06:51:07 | Query: Show me important emails | Scores: catch_up: 0.17, clarify: 0.17, email_search: 0.24, general_chat: 0.18, triage: 0.25
+2025-06-02 06:51:07 | Query: Check my inbox | Scores: catch_up: 0.20, clarify: 0.15, email_search: 0.29, general_chat: 0.15, triage: 0.20
+2025-06-02 06:51:07 | Query: help | Scores: catch_up: 0.18, clarify: 0.27, email_search: 0.18, general_chat: 0.18, triage: 0.19
+2025-06-02 07:31:06 | Query: tell me about excel high school.  | Scores: catch_up: 0.18, clarify: 0.18, email_search: 0.21, general_chat: 0.26, triage: 0.17
+2025-06-02 07:31:22 | Query: yes please | Scores: catch_up: 0.20, clarify: 0.20, email_search: 0.20, general_chat: 0.20, triage: 0.21
+2025-06-02 07:32:18 | Query: add to your notebap that a lot of emails from excel high school (my client) is done through basecamp so you might need to read the basecamp notifications in my inbox. can you update my notebook? | Scores: catch_up: 0.17, clarify: 0.21, email_search: 0.27, general_chat: 0.16, triage: 0.19
+2025-06-02 07:32:30 | Query: you sure? | Scores: catch_up: 0.16, clarify: 0.28, email_search: 0.16, general_chat: 0.24, triage: 0.17
+2025-06-02 07:37:04 | Query: what do you know about Bryce Hepburn? | Scores: catch_up: 0.17, clarify: 0.26, email_search: 0.21, general_chat: 0.19, triage: 0.16
+2025-06-02 07:37:27 | Query: and todays date. do you know it? | Scores: catch_up: 0.16, clarify: 0.30, email_search: 0.16, general_chat: 0.21, triage: 0.17
+2025-06-02 08:23:06 | Query: Tell me what you know about excel high school.  | Scores: catch_up: 0.17, clarify: 0.21, email_search: 0.19, general_chat: 0.27, triage: 0.16
+2025-06-02 08:23:06 | Query: Tell me what you know about excel high school.  | Scores: catch_up: 0.17, clarify: 0.21, email_search: 0.19, general_chat: 0.27, triage: 0.16
+2025-06-02 08:33:09 | Query: what preferences do i have? | Scores: catch_up: 0.22, clarify: 0.24, email_search: 0.18, general_chat: 0.18, triage: 0.18
+2025-06-02 08:33:09 | Query: what preferences do i have? | Scores: catch_up: 0.22, clarify: 0.24, email_search: 0.18, general_chat: 0.18, triage: 0.18
+2025-06-02 08:37:20 | Query: what are my preferences? | Scores: catch_up: 0.20, clarify: 0.18, email_search: 0.21, general_chat: 0.21, triage: 0.19
+2025-06-02 08:37:20 | Query: what are my preferences? | Scores: catch_up: 0.20, clarify: 0.18, email_search: 0.21, general_chat: 0.21, triage: 0.19
+2025-06-02 08:55:27 | Query: test | Scores: catch_up: 0.20, clarify: 0.20, email_search: 0.20, general_chat: 0.20, triage: 0.21
+2025-06-02 08:55:53 | Query: can you tell me about excel high school and my involvement? | Scores: catch_up: 0.16, clarify: 0.24, email_search: 0.20, general_chat: 0.23, triage: 0.16
+2025-06-02 08:55:53 | Query: can you tell me about excel high school and my involvement? | Scores: catch_up: 0.16, clarify: 0.24, email_search: 0.20, general_chat: 0.23, triage: 0.16
+2025-06-02 08:56:11 | Query: search your inbox directly for more specific information about your relationship with Excel High School | Scores: catch_up: 0.17, clarify: 0.17, email_search: 0.30, general_chat: 0.18, triage: 0.18
+2025-06-02 08:56:11 | Query: search your inbox directly for more specific information about your relationship with Excel High School | Scores: catch_up: 0.17, clarify: 0.17, email_search: 0.30, general_chat: 0.18, triage: 0.18
+2025-06-02 08:56:32 | Query: what search terms did you use? | Scores: catch_up: 0.17, clarify: 0.29, email_search: 0.18, general_chat: 0.19, triage: 0.17
+2025-06-02 08:56:32 | Query: what search terms did you use? | Scores: catch_up: 0.17, clarify: 0.29, email_search: 0.18, general_chat: 0.19, triage: 0.17
+2025-06-02 08:56:50 | Query: try just Excel | Scores: catch_up: 0.19, clarify: 0.23, email_search: 0.19, general_chat: 0.19, triage: 0.20
+2025-06-02 08:56:50 | Query: try just Excel | Scores: catch_up: 0.19, clarify: 0.23, email_search: 0.19, general_chat: 0.19, triage: 0.20
+2025-06-02 08:57:05 | Query: can you find any emails? | Scores: catch_up: 0.15, clarify: 0.27, email_search: 0.20, general_chat: 0.18, triage: 0.20
+2025-06-02 08:57:05 | Query: can you find any emails? | Scores: catch_up: 0.15, clarify: 0.27, email_search: 0.20, general_chat: 0.18, triage: 0.20
+2025-06-02 08:57:57 | Query: what is in the preferences? | Scores: catch_up: 0.18, clarify: 0.19, email_search: 0.24, general_chat: 0.21, triage: 0.18
+2025-06-02 08:57:57 | Query: what is in the preferences? | Scores: catch_up: 0.18, clarify: 0.19, email_search: 0.24, general_chat: 0.21, triage: 0.18
+2025-06-02 09:00:21 | Query: what emails did i receive today? | Scores: catch_up: 0.17, clarify: 0.21, email_search: 0.19, general_chat: 0.19, triage: 0.24
+2025-06-02 09:00:21 | Query: what emails did i receive today? | Scores: catch_up: 0.17, clarify: 0.21, email_search: 0.19, general_chat: 0.19, triage: 0.24
+2025-06-02 09:00:31 | Query: yes | Scores: catch_up: 0.20, clarify: 0.20, email_search: 0.20, general_chat: 0.20, triage: 0.21
+2025-06-02 09:02:10 | Query: can you find any email in my inbox? | Scores: catch_up: 0.17, clarify: 0.22, email_search: 0.28, general_chat: 0.16, triage: 0.17
+2025-06-02 09:02:10 | Query: can you find any email in my inbox? | Scores: catch_up: 0.17, clarify: 0.22, email_search: 0.28, general_chat: 0.16, triage: 0.17
+2025-06-02 09:03:14 | Query: did i receive any emails today? | Scores: catch_up: 0.16, clarify: 0.20, email_search: 0.19, general_chat: 0.19, triage: 0.25
+2025-06-02 09:03:14 | Query: did i receive any emails today? | Scores: catch_up: 0.16, clarify: 0.20, email_search: 0.19, general_chat: 0.19, triage: 0.25
+2025-06-02 09:32:37 | Query: can you add to your notebook that i use wise.com to receive payments from Excel High School  | Scores: catch_up: 0.10, clarify: 0.33, email_search: 0.34, general_chat: 0.14, triage: 0.10
+2025-06-02 09:32:37 | Query: can you add to your notebook that i use wise.com to receive payments from Excel High School  | Scores: catch_up: 0.10, clarify: 0.33, email_search: 0.34, general_chat: 0.14, triage: 0.10
+2025-06-02 09:32:54 | Query: can you update the notebook? | Scores: catch_up: 0.09, clarify: 0.34, email_search: 0.26, general_chat: 0.20, triage: 0.10
+2025-06-02 09:32:54 | Query: can you update the notebook? | Scores: catch_up: 0.09, clarify: 0.34, email_search: 0.26, general_chat: 0.20, triage: 0.10
+2025-06-02 09:38:22 | Query: what have you got stored in your notebook about bryce hepburn\ | Scores: catch_up: 0.16, clarify: 0.15, email_search: 0.29, general_chat: 0.14, preference_update: 0.17, triage: 0.10
+2025-06-02 09:38:22 | Query: what have you got stored in your notebook about bryce hepburn\ | Scores: catch_up: 0.16, clarify: 0.15, email_search: 0.29, general_chat: 0.14, preference_update: 0.17, triage: 0.10
+2025-06-02 09:38:52 | Query: search the notebook | Scores: catch_up: 0.10, clarify: 0.11, email_search: 0.32, general_chat: 0.15, preference_update: 0.21, triage: 0.11
+2025-06-02 09:38:52 | Query: search the notebook | Scores: catch_up: 0.10, clarify: 0.11, email_search: 0.32, general_chat: 0.15, preference_update: 0.21, triage: 0.11
+2025-06-02 09:47:51 | Query: tell me what is in your notebook | Scores: catch_up: 0.09, clarify: 0.09, email_search: 0.18, general_chat: 0.17, notebook_lookup: 0.26, preference_update: 0.13, triage: 0.08
+2025-06-02 09:47:51 | Query: tell me what is in your notebook | Scores: catch_up: 0.09, clarify: 0.09, email_search: 0.18, general_chat: 0.17, notebook_lookup: 0.26, preference_update: 0.13, triage: 0.08
+2025-06-02 09:48:49 | Query: what do you know about Bryce Hepburn? | Scores: catch_up: 0.09, clarify: 0.13, email_search: 0.17, general_chat: 0.10, notebook_lookup: 0.33, preference_update: 0.09, triage: 0.09
+2025-06-02 09:48:49 | Query: what do you know about Bryce Hepburn? | Scores: catch_up: 0.09, clarify: 0.13, email_search: 0.17, general_chat: 0.10, notebook_lookup: 0.33, preference_update: 0.09, triage: 0.09
+2025-06-02 09:49:36 | Query: can you plan to do a detailed search to understand how Mariska is? | Scores: catch_up: 0.07, clarify: 0.27, email_search: 0.16, general_chat: 0.12, notebook_lookup: 0.17, preference_update: 0.14, triage: 0.07
+2025-06-02 09:49:36 | Query: can you plan to do a detailed search to understand how Mariska is? | Scores: catch_up: 0.07, clarify: 0.27, email_search: 0.16, general_chat: 0.12, notebook_lookup: 0.17, preference_update: 0.14, triage: 0.07
+2025-06-02 09:50:09 | Query: yes. look at one email from her.  | Scores: catch_up: 0.09, clarify: 0.09, email_search: 0.29, general_chat: 0.13, notebook_lookup: 0.17, preference_update: 0.14, triage: 0.09
+2025-06-02 09:50:09 | Query: yes. look at one email from her.  | Scores: catch_up: 0.09, clarify: 0.09, email_search: 0.29, general_chat: 0.13, notebook_lookup: 0.17, preference_update: 0.14, triage: 0.09
+2025-06-02 09:50:19 | Query: try agian | Scores: catch_up: 0.10, clarify: 0.11, email_search: 0.25, general_chat: 0.12, notebook_lookup: 0.17, preference_update: 0.14, triage: 0.12
+2025-06-02 09:50:19 | Query: try agian | Scores: catch_up: 0.10, clarify: 0.11, email_search: 0.25, general_chat: 0.12, notebook_lookup: 0.17, preference_update: 0.14, triage: 0.12
+2025-06-02 09:50:41 | Query: there is no mariska murpthy | Scores: catch_up: 0.10, clarify: 0.10, email_search: 0.25, general_chat: 0.11, notebook_lookup: 0.16, preference_update: 0.18, triage: 0.11
+2025-06-02 09:50:41 | Query: there is no mariska murpthy | Scores: catch_up: 0.10, clarify: 0.10, email_search: 0.25, general_chat: 0.11, notebook_lookup: 0.16, preference_update: 0.18, triage: 0.11
+2025-06-02 09:51:23 | Query: Mariska van Helsdingen | Scores: catch_up: 0.10, clarify: 0.11, email_search: 0.25, general_chat: 0.12, notebook_lookup: 0.17, preference_update: 0.14, triage: 0.12
+2025-06-02 09:51:23 | Query: Mariska van Helsdingen | Scores: catch_up: 0.10, clarify: 0.11, email_search: 0.25, general_chat: 0.12, notebook_lookup: 0.17, preference_update: 0.14, triage: 0.12
+2025-06-02 09:52:08 | Query: look and read in detail the latest email from mariska.  | Scores: catch_up: 0.08, clarify: 0.08, email_search: 0.30, general_chat: 0.12, notebook_lookup: 0.19, preference_update: 0.14, triage: 0.09
+2025-06-02 09:52:08 | Query: look and read in detail the latest email from mariska.  | Scores: catch_up: 0.08, clarify: 0.08, email_search: 0.30, general_chat: 0.12, notebook_lookup: 0.19, preference_update: 0.14, triage: 0.09
+2025-06-02 09:53:10 | Query: yes please | Scores: catch_up: 0.10, clarify: 0.10, email_search: 0.23, general_chat: 0.11, notebook_lookup: 0.16, preference_update: 0.19, triage: 0.11
+2025-06-02 09:53:10 | Query: yes please | Scores: catch_up: 0.10, clarify: 0.10, email_search: 0.23, general_chat: 0.11, notebook_lookup: 0.16, preference_update: 0.19, triage: 0.11
+2025-06-02 10:36:16 | Query: can you tell me what is in your notebook | Scores: catch_up: 0.08, clarify: 0.18, email_search: 0.14, general_chat: 0.17, notebook_lookup: 0.24, preference_update: 0.12, triage: 0.07
+2025-06-02 10:36:16 | Query: can you tell me what is in your notebook | Scores: catch_up: 0.08, clarify: 0.18, email_search: 0.14, general_chat: 0.17, notebook_lookup: 0.24, preference_update: 0.12, triage: 0.07
+2025-06-02 10:37:06 | Query: what do you know about bryce | Scores: catch_up: 0.09, clarify: 0.13, email_search: 0.16, general_chat: 0.10, notebook_lookup: 0.34, preference_update: 0.09, triage: 0.09
+2025-06-02 10:37:06 | Query: what do you know about bryce | Scores: catch_up: 0.09, clarify: 0.13, email_search: 0.16, general_chat: 0.10, notebook_lookup: 0.34, preference_update: 0.09, triage: 0.09
+2025-06-02 10:39:02 | Query: what do you know about bryce? | Scores: catch_up: 0.09, clarify: 0.13, email_search: 0.16, general_chat: 0.10, notebook_lookup: 0.34, preference_update: 0.09, triage: 0.09
+2025-06-02 10:39:02 | Query: what do you know about bryce? | Scores: catch_up: 0.09, clarify: 0.13, email_search: 0.16, general_chat: 0.10, notebook_lookup: 0.34, preference_update: 0.09, triage: 0.09
+2025-06-02 10:45:32 | Query: tell me about bryce | Scores: catch_up: 0.09, clarify: 0.09, email_search: 0.19, general_chat: 0.22, notebook_lookup: 0.23, preference_update: 0.10, triage: 0.08
+2025-06-02 10:45:32 | Query: tell me about bryce | Scores: catch_up: 0.09, clarify: 0.09, email_search: 0.19, general_chat: 0.22, notebook_lookup: 0.23, preference_update: 0.10, triage: 0.08
+2025-06-02 10:47:07 | Query: I need you to do a deep research into mariska my pa.  | Scores: catch_up: 0.08, clarify: 0.15, email_search: 0.20, general_chat: 0.11, notebook_lookup: 0.20, preference_update: 0.13, triage: 0.13
+2025-06-02 10:47:07 | Query: I need you to do a deep research into mariska my pa.  | Scores: catch_up: 0.08, clarify: 0.15, email_search: 0.20, general_chat: 0.11, notebook_lookup: 0.20, preference_update: 0.13, triage: 0.13
+2025-06-02 10:49:02 | Query: can you save this to memory. part of the idea is that im looking for items to delegate to her and so it is vital that you know who she is.  | Scores: catch_up: 0.09, clarify: 0.22, email_search: 0.15, general_chat: 0.12, notebook_lookup: 0.17, preference_update: 0.19, triage: 0.07
+2025-06-02 10:49:02 | Query: can you save this to memory. part of the idea is that im looking for items to delegate to her and so it is vital that you know who she is.  | Scores: catch_up: 0.09, clarify: 0.22, email_search: 0.15, general_chat: 0.12, notebook_lookup: 0.17, preference_update: 0.19, triage: 0.07
+2025-06-02 10:49:22 | Query: can you confirm but recalling hte info from the notebook? | Scores: catch_up: 0.07, clarify: 0.20, email_search: 0.15, general_chat: 0.11, notebook_lookup: 0.28, preference_update: 0.13, triage: 0.07
+2025-06-02 10:49:22 | Query: can you confirm but recalling hte info from the notebook? | Scores: catch_up: 0.07, clarify: 0.20, email_search: 0.15, general_chat: 0.11, notebook_lookup: 0.28, preference_update: 0.13, triage: 0.07
+2025-06-02 10:51:51 | Query: what do you know about Mariska? | Scores: catch_up: 0.09, clarify: 0.14, email_search: 0.16, general_chat: 0.11, notebook_lookup: 0.33, preference_update: 0.09, triage: 0.08
+2025-06-02 10:51:51 | Query: what do you know about Mariska? | Scores: catch_up: 0.09, clarify: 0.14, email_search: 0.16, general_chat: 0.11, notebook_lookup: 0.33, preference_update: 0.09, triage: 0.08
+2025-06-02 10:52:13 | Query: is that all you have? | Scores: catch_up: 0.09, clarify: 0.17, email_search: 0.18, general_chat: 0.11, notebook_lookup: 0.21, preference_update: 0.16, triage: 0.08
+2025-06-02 10:52:13 | Query: is that all you have? | Scores: catch_up: 0.09, clarify: 0.17, email_search: 0.18, general_chat: 0.11, notebook_lookup: 0.21, preference_update: 0.16, triage: 0.08
+2025-06-02 10:52:26 | Query: yes.  | Scores: catch_up: 0.10, clarify: 0.11, email_search: 0.25, general_chat: 0.12, notebook_lookup: 0.17, preference_update: 0.14, triage: 0.12
+2025-06-02 10:52:46 | Query: do so | Scores: catch_up: 0.08, clarify: 0.19, email_search: 0.21, general_chat: 0.09, notebook_lookup: 0.22, preference_update: 0.11, triage: 0.09
+2025-06-02 10:52:46 | Query: do so | Scores: catch_up: 0.08, clarify: 0.19, email_search: 0.21, general_chat: 0.09, notebook_lookup: 0.22, preference_update: 0.11, triage: 0.09
+2025-06-02 10:53:40 | Query: can you create a plan where you do a deep research into my work and then update the notebook for context? | Scores: catch_up: 0.06, clarify: 0.26, email_search: 0.14, general_chat: 0.10, notebook_lookup: 0.25, preference_update: 0.12, triage: 0.07
+2025-06-02 10:53:40 | Query: can you create a plan where you do a deep research into my work and then update the notebook for context? | Scores: catch_up: 0.06, clarify: 0.26, email_search: 0.14, general_chat: 0.10, notebook_lookup: 0.25, preference_update: 0.12, triage: 0.07
+2025-06-02 10:54:14 | Query: compile this information into a structured notebook entry about your professional context. | Scores: catch_up: 0.08, clarify: 0.10, email_search: 0.17, general_chat: 0.08, notebook_lookup: 0.35, preference_update: 0.14, triage: 0.08
+2025-06-02 10:54:14 | Query: compile this information into a structured notebook entry about your professional context. | Scores: catch_up: 0.08, clarify: 0.10, email_search: 0.17, general_chat: 0.08, notebook_lookup: 0.35, preference_update: 0.14, triage: 0.08
+2025-06-02 10:54:51 | Query: reformat this using api, and then update the notebook. 
+
+Step 1: Professional Role and Clients
+I'll search for information about your professional identity and client relationships.
+
+subject:(role OR position OR job OR hired OR contract) after:2024/01/01
+
+Based on this first search, I'm finding:
+
+You appear to be involved in technology development or consulting work. Several key clients emerged including:
+
+Various technology companies
+Some project-related communications mentioning development timelines
+References to meetings and client presentations
+Let me continue with more focused searches.
+
+Step 2: Project Work and Patterns
+Now I'll look for specific project names and recurring work patterns.
+
+subject:(project OR development OR launch OR milestone OR deadline) after:2024/06/01
+
+This search reveals:
+
+You're working on multiple technology projects simultaneously
+There are recurring status meetings with different stakeholders
+Several deadlines appear to be coming up in the next quarter
+Your work involves both development and strategic planning
+Step 3: Key Relationships and Networks
+Finally, I'll examine your professional network including colleagues, partners, and service providers (like Mariska).
+
+from:mariska OR subject:(team OR colleague OR partner OR collaboration) after:2024/03/01
+
+From this third search:
+
+Mariska is indeed your virtual assistant who helps manage your workflow
+You collaborate with several different teams across projects
+There's evidence of you delegating tasks and coordinating multiple workstreams
+Several recurring meeting invites suggest regular check-ins with different stakeholders
+I've completed 3 steps. Should I keep going with more detailed searches about specific projects or relationships? I can also compile this information into a structured notebook entry about your professional context. | Scores: catch_up: 0.08, clarify: 0.13, email_search: 0.18, general_chat: 0.12, notebook_lookup: 0.29, preference_update: 0.12, triage: 0.07
+2025-06-02 10:54:51 | Query: reformat this using api, and then update the notebook. 
+
+Step 1: Professional Role and Clients
+I'll search for information about your professional identity and client relationships.
+
+subject:(role OR position OR job OR hired OR contract) after:2024/01/01
+
+Based on this first search, I'm finding:
+
+You appear to be involved in technology development or consulting work. Several key clients emerged including:
+
+Various technology companies
+Some project-related communications mentioning development timelines
+References to meetings and client presentations
+Let me continue with more focused searches.
+
+Step 2: Project Work and Patterns
+Now I'll look for specific project names and recurring work patterns.
+
+subject:(project OR development OR launch OR milestone OR deadline) after:2024/06/01
+
+This search reveals:
+
+You're working on multiple technology projects simultaneously
+There are recurring status meetings with different stakeholders
+Several deadlines appear to be coming up in the next quarter
+Your work involves both development and strategic planning
+Step 3: Key Relationships and Networks
+Finally, I'll examine your professional network including colleagues, partners, and service providers (like Mariska).
+
+from:mariska OR subject:(team OR colleague OR partner OR collaboration) after:2024/03/01
+
+From this third search:
+
+Mariska is indeed your virtual assistant who helps manage your workflow
+You collaborate with several different teams across projects
+There's evidence of you delegating tasks and coordinating multiple workstreams
+Several recurring meeting invites suggest regular check-ins with different stakeholders
+I've completed 3 steps. Should I keep going with more detailed searches about specific projects or relationships? I can also compile this information into a structured notebook entry about your professional context. | Scores: catch_up: 0.08, clarify: 0.13, email_search: 0.18, general_chat: 0.12, notebook_lookup: 0.29, preference_update: 0.12, triage: 0.07
+2025-06-02 11:42:01 | Query: do research about Mariska | Scores: catch_up: 0.07, clarify: 0.14, email_search: 0.19, general_chat: 0.08, notebook_lookup: 0.33, preference_update: 0.10, triage: 0.08
+2025-06-02 11:42:01 | Query: do research about Mariska | Scores: catch_up: 0.07, clarify: 0.14, email_search: 0.19, general_chat: 0.08, notebook_lookup: 0.33, preference_update: 0.10, triage: 0.08
+2025-06-02 11:44:38 | Query: tell me about bryce | Scores: catch_up: 0.09, clarify: 0.09, email_search: 0.19, general_chat: 0.22, notebook_lookup: 0.23, preference_update: 0.10, triage: 0.08
+2025-06-02 11:44:38 | Query: tell me about bryce | Scores: catch_up: 0.09, clarify: 0.09, email_search: 0.19, general_chat: 0.22, notebook_lookup: 0.23, preference_update: 0.10, triage: 0.08
+2025-06-02 11:45:06 | Query: this is clearly an hallucniation.  | Scores: catch_up: 0.09, clarify: 0.15, email_search: 0.22, general_chat: 0.10, notebook_lookup: 0.13, preference_update: 0.22, triage: 0.10
+2025-06-02 11:45:06 | Query: this is clearly an hallucniation.  | Scores: catch_up: 0.09, clarify: 0.15, email_search: 0.22, general_chat: 0.10, notebook_lookup: 0.13, preference_update: 0.22, triage: 0.10
+2025-06-02 11:45:32 | Query: yes | Scores: catch_up: 0.10, clarify: 0.11, email_search: 0.25, general_chat: 0.12, notebook_lookup: 0.17, preference_update: 0.14, triage: 0.12
+2025-06-02 11:45:40 | Query: yes | Scores: catch_up: 0.10, clarify: 0.11, email_search: 0.25, general_chat: 0.12, notebook_lookup: 0.17, preference_update: 0.14, triage: 0.12
+2025-06-02 11:45:49 | Query: do the search | Scores: catch_up: 0.07, clarify: 0.12, email_search: 0.21, general_chat: 0.10, notebook_lookup: 0.31, preference_update: 0.10, triage: 0.08
+2025-06-02 11:45:49 | Query: do the search | Scores: catch_up: 0.07, clarify: 0.12, email_search: 0.21, general_chat: 0.10, notebook_lookup: 0.31, preference_update: 0.10, triage: 0.08
+2025-06-02 12:24:10 | Query: check my inbox | Scores: catch_up: 0.00, email_search: 0.06, triage: 0.00, clarify: 0.00, general_chat: 0.00, notebook_lookup: 0.02
+2025-06-02 12:24:10 | Query: check my inbox | Scores: catch_up: 0.00, email_search: 0.06, triage: 0.00, clarify: 0.00, general_chat: 0.00, notebook_lookup: 0.02
+2025-06-02 13:13:00 | Query: check my inbox | Scores: catch_up: 0.00, email_search: 0.10, triage: 0.00, clarify: 0.00, general_chat: 0.00, notebook_lookup: 0.02
+2025-06-02 13:13:00 | Query: check my inbox | Scores: catch_up: 0.00, email_search: 0.10, triage: 0.00, clarify: 0.00, general_chat: 0.00, notebook_lookup: 0.02
+2025-06-02 13:13:20 | Query: look for emails from mariska | Scores: catch_up: 0.00, email_search: 0.12, triage: 0.00, clarify: 0.00, general_chat: 0.00, notebook_lookup: 0.00
+2025-06-02 13:13:20 | Query: look for emails from mariska | Scores: catch_up: 0.00, email_search: 0.12, triage: 0.00, clarify: 0.00, general_chat: 0.00, notebook_lookup: 0.00
+2025-06-02 13:20:09 | Query: mariska is teh person I would like to be my human PA. but I am struggling to delegate work to her. the first thing we need you to do is collect all the info you have on her and write it to your notebook so you will always know who she is.  | Scores: catch_up: 0.07, clarify: 0.11, email_search: 0.14, general_chat: 0.14, notebook_lookup: 0.30, preference_update: 0.15, triage: 0.08
+2025-06-02 13:20:09 | Query: mariska is teh person I would like to be my human PA. but I am struggling to delegate work to her. the first thing we need you to do is collect all the info you have on her and write it to your notebook so you will always know who she is.  | Scores: catch_up: 0.07, clarify: 0.11, email_search: 0.14, general_chat: 0.14, notebook_lookup: 0.30, preference_update: 0.15, triage: 0.08
+2025-06-02 13:20:24 | Query: innorect | Scores: catch_up: 0.10, clarify: 0.11, email_search: 0.25, general_chat: 0.12, notebook_lookup: 0.17, preference_update: 0.14, triage: 0.12
+2025-06-02 13:20:24 | Query: innorect | Scores: catch_up: 0.10, clarify: 0.11, email_search: 0.25, general_chat: 0.12, notebook_lookup: 0.17, preference_update: 0.14, triage: 0.12
+2025-06-02 13:22:59 | Query: What are my notes on Mariska van Helsdingen? | Scores: catch_up: 0.12, clarify: 0.08, email_search: 0.20, general_chat: 0.13, notebook_lookup: 0.30, preference_update: 0.09, triage: 0.09
+2025-06-02 13:22:59 | Query: What are my notes on Mariska van Helsdingen? | Scores: catch_up: 0.12, clarify: 0.08, email_search: 0.20, general_chat: 0.13, notebook_lookup: 0.30, preference_update: 0.09, triage: 0.09
