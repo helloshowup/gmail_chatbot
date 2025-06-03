@@ -1,6 +1,7 @@
 import sys
 import types
 import unittest
+import contextlib
 from unittest.mock import MagicMock
 
 # Provide a minimal streamlit stub if streamlit is not available
@@ -8,6 +9,31 @@ if 'streamlit' not in sys.modules:
     st_stub = types.ModuleType('streamlit')
     st_stub.toast = lambda *args, **kwargs: None
     st_stub.session_state = types.SimpleNamespace()
+    # Minimal UI stubs
+    st_stub.set_page_config = lambda *a, **k: None
+    st_stub.title = lambda *a, **k: None
+    st_stub.progress = lambda *a, **k: types.SimpleNamespace(progress=lambda *a2, **k2: None)
+    st_stub.info = lambda *a, **k: None
+    st_stub.error = lambda *a, **k: None
+    st_stub.success = lambda *a, **k: None
+    st_stub.warning = lambda *a, **k: None
+    st_stub.balloons = lambda *a, **k: None
+    @contextlib.contextmanager
+    def spinner(*args, **kwargs):
+        yield
+    st_stub.spinner = spinner
+    st_stub.sidebar = types.SimpleNamespace(
+        subheader=lambda *a, **k: None,
+        success=lambda *a, **k: None,
+        warning=lambda *a, **k: None,
+        info=lambda *a, **k: None,
+        write=lambda *a, **k: None,
+        markdown=lambda *a, **k: None,
+        expander=lambda *a, **k: contextlib.nullcontext(),
+    )
+    st_stub.json = lambda *a, **k: None
+    st_stub.chat_message = contextlib.nullcontext
+    st_stub.chat_input = lambda *a, **k: None
     sys.modules['streamlit'] = st_stub
 else:
     st_stub = sys.modules['streamlit']
@@ -15,6 +41,33 @@ else:
         st_stub.session_state = types.SimpleNamespace()
     if not hasattr(st_stub, 'toast'):
         st_stub.toast = lambda *args, **kwargs: None
+    if not hasattr(st_stub, 'progress'):
+        st_stub.progress = lambda *a, **k: types.SimpleNamespace(progress=lambda *a2, **k2: None)
+    if not hasattr(st_stub, 'spinner'):
+        @contextlib.contextmanager
+        def spinner(*args, **kwargs):
+            yield
+        st_stub.spinner = spinner
+    if not hasattr(st_stub, 'info'):
+        st_stub.info = lambda *a, **k: None
+    if not hasattr(st_stub, 'error'):
+        st_stub.error = lambda *a, **k: None
+    if not hasattr(st_stub, 'success'):
+        st_stub.success = lambda *a, **k: None
+    if not hasattr(st_stub, 'warning'):
+        st_stub.warning = lambda *a, **k: None
+    if not hasattr(st_stub, 'balloons'):
+        st_stub.balloons = lambda *a, **k: None
+    if not hasattr(st_stub, 'sidebar'):
+        st_stub.sidebar = types.SimpleNamespace(
+            subheader=lambda *a, **k: None,
+            success=lambda *a, **k: None,
+            warning=lambda *a, **k: None,
+            info=lambda *a, **k: None,
+            write=lambda *a, **k: None,
+            markdown=lambda *a, **k: None,
+            expander=lambda *a, **k: contextlib.nullcontext(),
+        )
 
 from agentic_executor import execute_step, handle_step_limit_reached
 import agentic_executor
@@ -75,6 +128,35 @@ class TestAgenticExecutorFlow(unittest.TestCase):
         res4 = execute_step(step4, res3["updated_agentic_state"])
         st_stub.session_state.bot.enhanced_memory_store.add_memory_entry.assert_called_once()
         self.assertEqual(res4["status"], "success")
+
+    def test_sequential_plan_execution(self):
+        plan = [
+            {
+                "step_id": "test_search_step",
+                "description": "Step 1",
+                "action_type": "placeholder_search_tool",
+                "parameters": {"query": "agentic"},
+                "output_key": "search_results",
+            },
+            {
+                "step_id": "test_summarize_step",
+                "description": "Step 2",
+                "action_type": "placeholder_summarize_tool",
+                "parameters": {"input_data_key": "search_results"},
+                "output_key": "summary",
+            },
+        ]
+
+        state: dict = {}
+        for step in plan:
+            res = execute_step(step, state)
+            state = res["updated_agentic_state"]
+
+        self.assertIn("summary", state.get("accumulated_results", {}))
+        self.assertEqual(
+            state["accumulated_results"]["summary"],
+            "Simulated summary of 1 documents.",
+        )
 
 
 class TestHandleStepLimitReached(unittest.TestCase):

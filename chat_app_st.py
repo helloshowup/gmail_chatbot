@@ -15,6 +15,7 @@ from agentic_executor import (
     handle_step_limit_reached,
 )
 
+
 # --- Global Exception Hook for Debugging ---
 def log_exception_to_file(exc_type, exc_value, exc_traceback):
     error_log_file = Path(__file__).resolve().parent / "streamlit_crash_report.txt"
@@ -162,7 +163,6 @@ def run_agentic_plan() -> None:
             st.rerun()
         else:
             st.stop()
-
 
 # Initialize chat history
 
