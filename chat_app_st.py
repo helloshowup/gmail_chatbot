@@ -19,6 +19,8 @@ import io
 import time
 from pathlib import Path
 import dotenv
+from agentic_planner import generate_plan
+from agentic_executor import execute_step, summarize_and_log_agentic_results # Added for agentic execution
 
 # --- Global Exception Hook for Debugging ---
 def log_exception_to_file(exc_type, exc_value, exc_traceback):
@@ -46,6 +48,52 @@ from pathlib import Path
 import dotenv
 
 st.title("✉️ Gmail Claude Chatbot Assistant")
+
+# --- Agentic Mode Initialization & Controls ---
+# Ensure all agentic mode related keys are initialized first
+default_agentic_state_values = {
+    "current_step_index": 0,
+    "executed_call_count": 0,
+    "accumulated_results": [],
+    "error_messages": []
+}
+if "agentic_mode_enabled" not in st.session_state:
+    st.session_state.agentic_mode_enabled = False # This will be the source for the toggle's default
+if "agentic_step_limit" not in st.session_state:
+    st.session_state.agentic_step_limit = 10 # Source for number_input's default
+if "agentic_plan" not in st.session_state:
+    st.session_state.agentic_plan = None
+if "agentic_state" not in st.session_state:
+    st.session_state.agentic_state = default_agentic_state_values.copy()
+
+# Sidebar controls
+st.sidebar.header("🤖 Agentic Mode Settings")
+
+# Store previous mode to detect changes for reset logic
+_previous_agentic_mode_status = st.session_state.agentic_mode_enabled
+
+st.sidebar.toggle( # This widget will now directly control st.session_state.agentic_mode_enabled
+    "Enable Agentic Mode",
+    key="agentic_mode_enabled", # Binds widget to this session state key
+    help="Allow the chatbot to autonomously execute a plan with multiple steps."
+)
+
+# If agentic mode was just turned OFF, reset plan and associated state.
+if _previous_agentic_mode_status and not st.session_state.agentic_mode_enabled:
+    st.session_state.agentic_plan = None
+    st.session_state.agentic_state = default_agentic_state_values.copy()
+    # Optional: st.rerun() if other UI elements depend critically on this reset immediately.
+
+if st.session_state.agentic_mode_enabled:
+    st.sidebar.number_input( # This widget directly controls st.session_state.agentic_step_limit
+        "Max Autonomous Steps",
+        min_value=1,
+        max_value=50, # Sensible default max
+        key="agentic_step_limit", # Binds widget to this session state key
+        step=1,
+        help="Maximum number of API/tool calls the agent can make autonomously in one go."
+    )
+# --- End Agentic Mode Initialization & Controls ---
 
 # Initialize chat history
 
@@ -190,23 +238,145 @@ if st.session_state.get("initialization_attempted", False):
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
 
+    # --- Agentic Execution Loop ---
+    if st.session_state.get("agentic_mode_enabled") and st.session_state.get("agentic_plan"):
+        plan = st.session_state.agentic_plan
+        agentic_state = st.session_state.agentic_state # This is a dict
+        
+        current_step_idx = agentic_state.get("current_step_index", 0)
+        executed_call_count = agentic_state.get("executed_call_count", 0)
+        step_limit = st.session_state.get("agentic_step_limit", 10)
+
+        st.info(f"🤖 Agentic Mode: Executing Plan ({current_step_idx}/{len(plan)} steps completed, {executed_call_count}/{step_limit} calls made)")
+        if len(plan) > 0:
+            st.progress(current_step_idx / len(plan))
+
+        # Check if call limit reached
+        if executed_call_count >= step_limit:
+            if not agentic_state.get("limit_reached_flag", False): # Prevent multiple summaries if stuck
+                summarize_and_log_agentic_results(agentic_state, plan_completed=False, limit_reached=True)
+                st.warning(f"Agentic execution stopped: Call limit of {step_limit} reached. Partial results (if any) logged.")
+                agentic_state["limit_reached_flag"] = True
+                st.session_state.agentic_plan = None # Stop further execution
+                st.session_state.agentic_state = default_agentic_state_values.copy()
+                st.button("Acknowledge & Clear Plan", on_click=lambda: setattr(st.session_state, 'agentic_plan', None) or st.rerun())
+            # No 'Next Step' button if limit is reached and plan is cleared.
+
+        # Check if plan is still active (not cleared by limit or completion)
+        elif st.session_state.get("agentic_plan") and current_step_idx < len(plan):
+            step_details = plan[current_step_idx]
+            st.markdown(f"**Current Task:** {step_details.get('description', 'No description')}")
+
+            # Placeholder for "Pause/Resume/Abort" later
+            # For now, execution proceeds with "Next Step" button
+
+            if st.button(f"Execute Step {current_step_idx + 1}: {step_details.get('step_id', 'Unnamed')}", key=f"exec_step_{current_step_idx}"):
+                with st.spinner(f"Executing: {step_details.get('description', 'Working...')}"):
+                    execution_result = execute_step(step_details, agentic_state.copy()) # Pass a copy to avoid direct mutation issues before update
+                    
+                    # Update agentic_state with the returned state from execute_step
+                    st.session_state.agentic_state = execution_result.get("updated_agentic_state", agentic_state)
+                    st.session_state.agentic_state["executed_call_count"] = executed_call_count + 1
+
+                    if execution_result.get("status") == "failure":
+                        error_msg = f"Step {current_step_idx + 1} ('{step_details.get('step_id', 'Unnamed')}') failed: {execution_result.get('message', 'Unknown error')}"
+                        st.error(error_msg)
+                        if "error_messages" not in st.session_state.agentic_state:
+                            st.session_state.agentic_state["error_messages"] = []
+                        st.session_state.agentic_state["error_messages"].append(error_msg)
+                        # Decide on error handling: stop plan, or allow user to retry/skip (future enhancement)
+                        # For now, stop the plan on failure.
+                        summarize_and_log_agentic_results(st.session_state.agentic_state, plan_completed=False)
+                        st.session_state.agentic_plan = None # Stop plan
+                        st.session_state.agentic_state = default_agentic_state_values.copy()
+                        st.rerun()
+                    
+                    elif execution_result.get("requires_user_input", False):
+                        st.info(f"Step {current_step_idx + 1} requires user input: {execution_result.get('message', '')}")
+                        # UI for user input would go here. For now, just pauses.
+                        # The plan remains, current_step_idx is not incremented yet.
+                        st.rerun() # Rerun to show info and wait for next interaction
+                    else: # Success
+                        st.session_state.agentic_state["current_step_index"] = current_step_idx + 1
+                        st.success(f"Step {current_step_idx + 1} completed. {execution_result.get('message', '')}")
+                        st.rerun() # Rerun to process next step or finalize
+            # If button not clicked, Streamlit script just ends, preserving state for next interaction.
+        
+        # Check if plan completed (and not already handled by limit/error)
+        elif st.session_state.get("agentic_plan") and current_step_idx >= len(plan):
+            if not agentic_state.get("completion_logged_flag", False): # Prevent multiple summaries
+                summarize_and_log_agentic_results(agentic_state, plan_completed=True)
+                st.success("🎉 Agentic plan fully completed!")
+                agentic_state["completion_logged_flag"] = True # Mark as logged
+                st.session_state.agentic_plan = None # Clear the completed plan
+                st.session_state.agentic_state = default_agentic_state_values.copy() # Reset state
+                st.balloons()
+                st.button("Acknowledge & Clear", on_click=lambda: setattr(st.session_state, 'agentic_plan', None) or st.rerun())
+    # --- End Agentic Execution Loop ---
+
     # Accept user input
     if prompt := st.chat_input("Ask me about your inbox:"):
+        # Display user message and add to history immediately
         with st.chat_message("user"):
             st.markdown(prompt)
-
+        
         if st.session_state.get("bot_initialized_successfully") and "bot" in st.session_state:
-            with st.spinner("Thinking..."):
-                try:
-                    # process_message will internally update bot.chat_history with user and assistant messages
-                    _ = st.session_state["bot"].process_message(prompt)
-                    st.rerun() # Rerun to display the updated chat history from bot.chat_history
-                except Exception as e:
-                    st.error(f"Error processing message: {e}")
-                    with st.chat_message("assistant"):
-                        st.markdown(f"Sorry, I encountered an error: {e}")
-        elif not st.session_state.get("bot_initialized_successfully"):
-            st.error("Chatbot initialization failed. Please check the error details below.")
+            if not hasattr(st.session_state.bot, "chat_history") or not isinstance(st.session_state.bot.chat_history, list):
+                st.session_state.bot.chat_history = [] # Initialize if missing
+            st.session_state.bot.chat_history.append({"role": "user", "content": prompt})
+        else:
+            # If bot not initialized, display error and stop further processing for this input
+            st.error("Chatbot is not initialized. Cannot process messages.")
+            st.stop() # Stop current script run
+
+        # Agentic Mode: Planning Step
+        attempt_agentic_planning = st.session_state.get("agentic_mode_enabled", False)
+        new_plan_generated_and_stored = False
+
+        if attempt_agentic_planning:
+            # Reset plan and state before attempting to generate a new one from this prompt
+            st.session_state.agentic_plan = None 
+            st.session_state.agentic_state = default_agentic_state_values.copy() # Assumes default_agentic_state_values is defined
+
+            with st.spinner("Planner is thinking about a multi-step approach..."):
+                plan = generate_plan(prompt, st.session_state) # Pass current session state for context
+            
+            if plan:
+                st.session_state.agentic_plan = plan
+                new_plan_generated_and_stored = True
+                st.info("🤖 Agentic plan generated. Preparing for execution.")
+                with st.expander("View Generated Plan", expanded=True):
+                    if st.session_state.agentic_plan:
+                        for i, step_data in enumerate(st.session_state.agentic_plan):
+                            st.markdown(f"**Step {i+1}:** {step_data.get('description', 'No description')}")
+                    else:
+                        st.markdown("No plan details available.")
+                st.rerun() # Rerun to let the (future) execution block pick up the plan
+        
+        # Normal message processing (if not st.rerun()'d due to new agentic plan)
+        # This block executes if: 
+        #   1. Agentic mode is OFF, OR
+        #   2. Agentic mode is ON, but generate_plan(prompt) returned None (no specific plan for this query)
+        if not new_plan_generated_and_stored: # Check if a rerun was already triggered
+            if st.session_state.get("bot_initialized_successfully") and "bot" in st.session_state:
+                with st.spinner("Thinking..."):
+                    try:
+                        response = st.session_state.bot.process_message(prompt)
+                        # Ensure assistant's response is added to history and displayed
+                        if response: # Make sure there's a response to add/display
+                            st.session_state.bot.chat_history.append({"role": "assistant", "content": response})
+                            with st.chat_message("assistant"):
+                                st.markdown(response)
+                        # No explicit st.rerun() here, standard Streamlit flow.
+                    except Exception as e:
+                        st.error(f"Error processing message: {e}")
+                        traceback.print_exc(file=sys.stderr)
+                        error_message_for_chat = f"Sorry, I encountered an error: {e}"
+                        st.session_state.bot.chat_history.append({"role": "assistant", "content": error_message_for_chat})
+                        with st.chat_message("assistant"):
+                            st.markdown(error_message_for_chat)
+            # No need for the 'elif not st.session_state.get("bot_initialized_successfully")' here,
+            # as it's handled at the beginning of the prompt processing.e check the error details below.")
             
             # Show initialization diagnostics again if available
             if "initialization_steps" in st.session_state:
