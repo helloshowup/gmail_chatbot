@@ -16,6 +16,7 @@ for mod_name in ['anthropic', 'joblib', 'numpy']:
             def argmax(seq):
                 return max(range(len(seq)), key=lambda i: seq[i])
             stub.argmax = argmax
+            stub.array = lambda *a, **k: []
             stub.__version__ = '0.0'
         sys.modules[mod_name] = stub
 from unittest.mock import MagicMock
@@ -53,3 +54,16 @@ if 'google' not in sys.modules:
     sys.modules['googleapiclient'] = googleapiclient
     sys.modules['googleapiclient.discovery'] = discovery_module
     sys.modules['googleapiclient.errors'] = errors_module
+
+# Ensure constants exist on email_vector_db for tests
+try:
+    import gmail_chatbot.email_vector_db as evdb
+    from pathlib import Path
+    if not hasattr(evdb, 'EMBEDDING_MODEL_NAME'):
+        evdb.EMBEDDING_MODEL_NAME = 'test-embedding'
+    if not hasattr(evdb, 'DEFAULT_CACHE_DIR'):
+        evdb.DEFAULT_CACHE_DIR = Path('/tmp')
+    if not hasattr(evdb, 'VECTOR_LIBS_AVAILABLE'):
+        evdb.VECTOR_LIBS_AVAILABLE = False
+except Exception:
+    pass
