@@ -260,3 +260,5 @@ I've completed 3 steps. Should I keep going with more detailed searches about sp
 2025-06-02 13:20:24 | Query: innorect | Scores: catch_up: 0.10, clarify: 0.11, email_search: 0.25, general_chat: 0.12, notebook_lookup: 0.17, preference_update: 0.14, triage: 0.12
 2025-06-02 13:22:59 | Query: What are my notes on Mariska van Helsdingen? | Scores: catch_up: 0.12, clarify: 0.08, email_search: 0.20, general_chat: 0.13, notebook_lookup: 0.30, preference_update: 0.09, triage: 0.09
 2025-06-02 13:22:59 | Query: What are my notes on Mariska van Helsdingen? | Scores: catch_up: 0.12, clarify: 0.08, email_search: 0.20, general_chat: 0.13, notebook_lookup: 0.30, preference_update: 0.09, triage: 0.09
+2025-06-03 07:49:35 | Query: what emails did i receive today? | Scores: catch_up: 0.09, email_search: 0.11, triage: 0.00, clarify: 0.02, general_chat: 0.01, notebook_lookup: 0.04
+2025-06-03 07:50:17 | Query: what info do you have about Bryce Hepburn.  | Scores: catch_up: 0.08, email_search: 0.01, triage: 0.00, clarify: 0.12, general_chat: 0.09, notebook_lookup: 0.07

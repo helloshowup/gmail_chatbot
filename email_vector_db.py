@@ -94,15 +94,9 @@ try:
     logger.info("FAISS GPU acceleration explicitly disabled. Running in CPU-only mode.")
     print("DEBUG: email_vector_db.py - FAISS GPU_AVAILABLE explicitly set to False.", file=sys.stderr)
     
-    # Try to import from the new recommended package first
-    try:
-        from langchain_huggingface import HuggingFaceEmbeddings
-        logger.info("Using HuggingFaceEmbeddings from langchain_huggingface package")
-    except ImportError:
-        # Fall back to the deprecated import if needed
-        from langchain_community.embeddings import HuggingFaceEmbeddings
-        logger.warning("Using deprecated HuggingFaceEmbeddings from langchain_community"
-                     " - consider upgrading to langchain-huggingface package")
+    # Ensure 'langchain-huggingface' is installed in your environment
+    from langchain_huggingface import HuggingFaceEmbeddings
+    logger.info("Using HuggingFaceEmbeddings from langchain_huggingface package")
     
     VECTOR_LIBS_AVAILABLE = True
 except ModuleNotFoundError as e:
@@ -232,17 +226,7 @@ class EmailVectorDB:
                 logger.info(f"Initialized embedding model: {embedding_model}")
             except Exception as e:
                 logger.exception(f"Failed to initialize embedding model: {e}")
-                try:
-                    # Try fallback to smaller model
-                    self.embedding_model_name = "paraphrase-MiniLM-L3-v2"
-                    self.embeddings = HuggingFaceEmbeddings(
-                        model_name=self.embedding_model_name,
-                        cache_folder=os.path.join(self.cache_dir, "models")
-                    )
-                    logger.info(f"Using fallback embedding model: {self.embedding_model_name}")
-                except Exception as e2:
-                    logger.exception(f"Failed to initialize fallback model: {e2}")
-                    self.embeddings = None
+                self.embeddings = None
         
         # Active vector DB and chunks
         self.active_db = None
