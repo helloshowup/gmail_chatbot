@@ -29,10 +29,10 @@ A Claude-powered chatbot that interacts with your Gmail account. This tool allow
 ### 1. Claude API Setup
 
 1. Sign up for an Anthropic API key at [https://console.anthropic.com/](https://console.anthropic.com/)
-2. Create a `.env` file in the project root with the following contents:
+2. Copy `.env.example` in the project root to `.env` and fill in your key:
 
    ```env
-   ANTHROPIC_API_KEY=your_anthropic_api_key_here
+   ANTHROPIC_API_KEY=your_key_here
    ```
    The application automatically loads this `.env` file at startup via `gmail_chatbot.email_config.load_env()`.
    Configure all required environment variables here once.
@@ -134,7 +134,7 @@ Missing or misnamed credentials can prevent the OAuth authorization window from 
 
 If you see Claude API errors:
 
-1. Verify your API key in the `.env` file
+1. Verify your API key in the `.env` file (copied from `.env.example`)
 2. Check that your Claude API subscription is active
 
 ### Agentic Mode and TASK_CHAIN
