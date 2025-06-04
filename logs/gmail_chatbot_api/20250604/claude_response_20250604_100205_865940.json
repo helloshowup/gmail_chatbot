@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T10:02:05.865940",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_100157_609982.json"
+  },
+  "response": {
+    "content": "I'll search your Gmail for information about Mariska now.\n\n```\nfrom:mariska OR to:mariska\n```\n\nBased on your emails, here's what I found about Mariska:\n\n# \ud83d\udcd3 About Mariska\n\nMariska appears to be Mariska van Wyk, who works at Hoorah Digital. Based on emails, she is:\n\n- A Contact/Account Manager at Hoorah Digital\n- Email: mariska@hoorahdigital.com\n- Works on clients including **Nedbank** and **Old Mutual**\n- Has been working with you on a project called **\"Chatter Chat\"** (which seems to be a chatb...",
+    "tokens": {
+      "input_tokens": 3901,
+      "output_tokens": 255
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_100157_609982.json"
+  },
+  "error": null
+}

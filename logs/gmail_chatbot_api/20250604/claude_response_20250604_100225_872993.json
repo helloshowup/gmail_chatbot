@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T10:02:25.872993",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_100210_766877.json"
+  },
+  "response": {
+    "content": "I notice you've asked for an analysis of recent emails with a simple \"yes\" as your request. Let me provide you with a summary of the most important emails in your inbox today, June 4, 2025.\n\n## Recent Important Emails (June 4, 2025)\n\n### \ud83d\udcd3 Kepu Gas Order Confirmation\n- You've ordered 2 \u00d7 9kg gas cylinders (R316 each)\n- Delivery fee: R60\n- Delivery address: 12 Bellevliet Road, Observatory, Cape Town\n- Delivery date: Today (June 4) between 12pm - 5pm\n- Payment method: Card\n\n### \ud83d\udcd3 Meeting with Jami...",
+    "tokens": {
+      "input_tokens": 11618,
+      "output_tokens": 390
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_100210_766877.json"
+  },
+  "error": null
+}

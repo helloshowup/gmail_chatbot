@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-06-04T09:59:40.128644",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_095936_156459.json"
+  },
+  "response": {
+    "content": "\ud83d\udcd3 I'll add this preference to my notebook: \"ShowUp (also written as 'Show Up' or 'showup.courses') is Bryce's brand name.\"\n\nThis is now stored in your preferences, and I'll recognize any mentions of ShowUp, Show Up, or showup.courses as referring to your brand in future conversations.",
+    "tokens": {
+      "input_tokens": 1579,
+      "output_tokens": 80,
+      "request_id": "893d9d6c-45ae-499e-a371-a518fcd8fa58",
+      "is_error": false
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_095936_156459.json"
+  },
+  "error": null
+}

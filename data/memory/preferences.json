@@ -1,14 +1,14 @@
 [
   {
-    "id": "6f3e21649800592c7b558bbf1290ffdb",
+    "id": "4bb5e7fd41c6390e987ced1e19d79cb7",
     "type": "preference",
-    "label": "busywork",
-    "content": "can you do a searchj and suggest task that I can delegate to her. remember that I dont like busywork. ",
+    "label": "general",
+    "content": "can you remember that Show Up or showup or showup.courses  is my \"brand\"",
     "source": "user",
-    "date_added": "2025-06-02T05:34:10.363457",
+    "date_added": "2025-06-04T09:59:40.131169",
     "tags": [
       "user-preference",
-      "busywork"
+      "general"
     ]
   }
 ]
