@@ -217,6 +217,40 @@ def test_process_message_triage(mock_pref_detector, mock_classify, mock_vec_mem,
 
 @pytest.mark.skipif(GmailChatbotApp is None, reason="GmailChatbotApp could not be imported from email_main.py")
 @patch('gmail_chatbot.email_main.ClaudeAPIClient')
+@patch('gmail_chatbot.email_main.vector_memory')
+@patch('gmail_chatbot.email_main.classify_query_type')
+@patch('gmail_chatbot.email_main.preference_detector')
+def test_triage_no_duplicate_gmail_prompt(mock_pref_detector, mock_classify, mock_vec_mem, mock_claude, mock_dependencies):
+    """Triage shouldn't keep asking to search Gmail if it just asked."""
+    mock_claude_client_instance = mock_claude.return_value
+
+    mock_classify.return_value = (
+        "triage",
+        0.9,
+        {"trigger_phrase": "triage"},
+        "Classified as triage request."
+    )
+    mock_pref_detector.process_message.return_value = (False, None)
+    mock_vec_mem.find_relevant_preferences.return_value = []
+    mock_vec_mem.vector_search_available = True
+    mock_vec_mem.find_related_emails.return_value = []
+
+    mock_claude_client_instance.evaluate_vector_match.return_value = ""
+
+    app = GmailChatbotApp()
+    app.claude_client = mock_claude_client_instance
+    app.memory_store = mock_vec_mem
+
+    first = app.process_message("Triage")
+    assert "Should I check your inbox" in first
+
+    mock_vec_mem.find_related_emails.reset_mock()
+    second = app.process_message("Triage")
+    assert "Should I check your inbox" not in second
+
+
+@pytest.mark.skipif(GmailChatbotApp is None, reason="GmailChatbotApp could not be imported from email_main.py")
+@patch('gmail_chatbot.email_main.ClaudeAPIClient')
 @patch('gmail_chatbot.email_main.classify_query_type')
 @patch('gmail_chatbot.email_main.preference_detector')
 @patch('gmail_chatbot.email_main.vector_memory')
