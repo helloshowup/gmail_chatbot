@@ -8,10 +8,10 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime
 
 # Import the base memory store for backward compatibility
-from email_memory import EmailMemoryStore
+from gmail_chatbot.email_memory import EmailMemoryStore
 
 # Import the vector database
-from email_vector_db import vector_db, VECTOR_LIBS_AVAILABLE
+from gmail_chatbot.email_vector_db import vector_db, VECTOR_LIBS_AVAILABLE
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)

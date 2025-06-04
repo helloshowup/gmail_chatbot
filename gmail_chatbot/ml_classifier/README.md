@@ -21,7 +21,7 @@ The classifier is automatically used by the Gmail Chatbot system. The existing `
 
 ```python
 # Example code showing how the classifier is called
-from query_classifier import classify_query_type
+from gmail_chatbot.query_classifier import classify_query_type
 
 query = "Search my inbox for invoices from ABC."
 query_type, confidence, all_scores = classify_query_type(query)

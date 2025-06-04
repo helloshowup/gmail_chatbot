@@ -21,7 +21,10 @@ GMAIL_DIR = MODULE_DIR.parent
 sys.path.insert(0, str(GMAIL_DIR))
 
 # Import the classifier
-from query_classifier import classify_query_type, get_classification_feedback
+from gmail_chatbot.query_classifier import (
+    classify_query_type,
+    get_classification_feedback,
+)
 
 # Test queries
 TEST_QUERIES = [
