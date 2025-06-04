@@ -564,6 +564,13 @@ class GmailChatbotApp:
         """Returns the stored error message from vector search initialization, if any."""
         return self.vector_search_error_message
 
+    def get_last_assistant_reply(self) -> Optional[str]:
+        """Return the most recent assistant message from the chat history."""
+        for entry in reversed(self.chat_history):
+            if entry.get("role") == "assistant":
+                return entry.get("content")
+        return None
+
     def _is_simple_inbox_query(self, message_lower: str) -> bool:
         """Checks if a query is a simple request for inbox contents, suitable for a menu."""
         generic_inbox_phrases = [

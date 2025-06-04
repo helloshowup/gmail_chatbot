@@ -99,6 +99,16 @@ class MemoryActionsHandler:
                 logger.error(f"[{request_id}] Error storing email {email_data.get('id')}: {e}")
         logger.info(f"[{request_id}] Finished storing emails.")
 
+    def find_related_emails(
+        self, query: str, limit: int = 5, request_id: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """Delegate email search to the memory store."""
+        if request_id:
+            logger.info(
+                f"[{request_id}] Searching memory for emails related to: {query}"
+            )
+        return self.memory_store.find_related_emails(query, limit=limit)
+
     def handle_user_memory_query(self, message: str, request_id: str) -> Optional[str]:
         """Handle queries about stored memory information by dispatching to specific handlers.
 
@@ -428,6 +438,11 @@ class MemoryActionsHandler:
                     f"- Subject: {item.get('subject', 'N/A')}, Action: {item.get('action_type', 'N/A')}, Date: {item.get('date')}"
                 )
         return "\n".join(response_parts)
+
+    def get_action_items_structured(self, request_id: str) -> List[Dict[str, Any]]:
+        """Return raw action items for programmatic use."""
+        logging.info(f"[{request_id}] Retrieving structured action items")
+        return self.memory_store.get_action_items()
 
     def manage_preferences(self, message: str, request_id: str) -> str:
         """Handle queries about user preferences.

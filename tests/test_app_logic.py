@@ -198,6 +198,41 @@ def test_process_message_triage(mock_pref_detector, mock_classify, mock_vec_mem,
 
 @pytest.mark.skipif(GmailChatbotApp is None, reason="GmailChatbotApp could not be imported from email_main.py")
 @patch('gmail_chatbot.email_main.ClaudeAPIClient')
+@patch('gmail_chatbot.email_main.vector_memory')
+@patch('gmail_chatbot.email_main.classify_query_type')
+@patch('gmail_chatbot.email_main.preference_detector')
+def test_triage_repeated_query_skips_search(mock_pref_detector, mock_classify, mock_vec_mem, mock_claude, mock_dependencies):
+    """Ensure repeated triage requests do not trigger a new search."""
+    mock_claude_client_instance = mock_claude.return_value
+
+    mock_classify.return_value = ("triage", 0.9, {}, "Classified as triage")
+    mock_pref_detector.process_message.return_value = (False, None)
+    mock_vec_mem.find_relevant_preferences.return_value = []
+    mock_vec_mem.vector_search_available = True
+    mock_vec_mem.get_action_items.return_value = []
+    mock_vec_mem.find_related_emails.return_value = [
+        {"id": "a", "subject": "Task A", "body": "A", "relevance_score": 0.9}
+    ]
+    mock_claude_client_instance.evaluate_vector_match.return_value = (
+        "Here are items that might need your attention:\n- Task A"
+    )
+
+    app = GmailChatbotApp()
+    app.claude_client = mock_claude_client_instance
+    app.memory_store = mock_vec_mem
+
+    first_response = app.process_message("Triage my inbox")
+    assert "need your attention" in first_response.lower()
+    assert mock_vec_mem.find_related_emails.call_count == 1
+
+    mock_vec_mem.find_related_emails.reset_mock()
+    second_response = app.process_message("Triage my inbox")
+    assert "recently provided" in second_response.lower()
+    mock_vec_mem.find_related_emails.assert_not_called()
+
+
+@pytest.mark.skipif(GmailChatbotApp is None, reason="GmailChatbotApp could not be imported from email_main.py")
+@patch('gmail_chatbot.email_main.ClaudeAPIClient')
 @patch('gmail_chatbot.email_main.classify_query_type')
 @patch('gmail_chatbot.email_main.preference_detector')
 @patch('gmail_chatbot.email_main.vector_memory')

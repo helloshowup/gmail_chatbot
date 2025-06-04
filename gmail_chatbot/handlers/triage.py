@@ -12,6 +12,25 @@ if TYPE_CHECKING:
     from gmail_chatbot.app.core import GmailChatbotApp
 
 
+def _recent_triage_provided(app: "GmailChatbotApp", look_back: int = 3) -> bool:
+    """Check recent assistant messages for triage content."""
+    keywords = [
+        "need your attention",
+        "quick search",
+        "immediate attention",
+    ]
+    count = 0
+    for entry in reversed(app.chat_history):
+        if entry.get("role") != "assistant":
+            continue
+        if any(k in entry.get("content", "").lower() for k in keywords):
+            return True
+        count += 1
+        if count >= look_back:
+            break
+    return False
+
+
 def handle_triage_query(
     app: "GmailChatbotApp",
     message: str,
@@ -68,7 +87,10 @@ def handle_triage_query(
             for item in delegation_candidates[:3]:
                 response_parts.append(f"- {item.get('subject', 'No Subject')}")
         response = "\n".join(response_parts)
-    elif app.memory_actions_handler.is_vector_search_available(request_id=request_id):
+    elif (
+        app.memory_actions_handler.is_vector_search_available(request_id=request_id)
+        and not _recent_triage_provided(app)
+    ):
         logging.info(
             f"[{request_id}] No action items for triage, trying vector search for relevant emails."
         )
@@ -88,6 +110,10 @@ def handle_triage_query(
                 "I checked for urgent items and also performed a quick search based "
                 "on your message, but didn't find anything specific that needs immediate attention."
             )
+    elif _recent_triage_provided(app):
+        response = (
+            "I've recently provided a triage summary. Let me know if you need more details."
+        )
     else:
         response = (
             "I checked for urgent items, but there's nothing specific in the action list right now, "
