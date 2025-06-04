@@ -14,7 +14,6 @@ from gmail_chatbot.email_memory import EmailMemoryStore
 from gmail_chatbot.email_vector_db import vector_db, VECTOR_LIBS_AVAILABLE
 
 # Set up logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 

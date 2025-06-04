@@ -11,7 +11,6 @@ from datetime import datetime
 from gmail_chatbot.email_config import DATA_DIR
 
 # Set up logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 

@@ -14,12 +14,7 @@ from pathlib import Path
 import json
 import traceback
 
-# Configure basic logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='[%(asctime)s] [%(levelname)s] %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
+logger = logging.getLogger(__name__)
 
 # Add project root directory to path to allow imports
 script_dir = Path(__file__).resolve().parent
