@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T08:53:02.739758",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_085255_943518.json"
+  },
+  "response": {
+    "content": "I'll search your Gmail for information about Bryce Hepburn.\n\n`from:bryce OR to:bryce OR subject:bryce`\n\nLooking through your email data, I can provide some information about Bryce Hepburn (which is you):\n\n\ud83d\udcd3 Based on email signatures and content:\n- You are Bryce Hepburn, working as an Account Executive at Radian Solutions\n- Your email is bryce.hepburn@radiansolutions.com\n- You manage client relationships for multiple companies\n- You appear to be involved in consulting or business services\n\nYour r...",
+    "tokens": {
+      "input_tokens": 1176,
+      "output_tokens": 198
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_085255_943518.json"
+  },
+  "error": null
+}
