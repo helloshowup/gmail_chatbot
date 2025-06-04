@@ -101,3 +101,6 @@ __pypackages__/
 # OS generated files
 .DS_Store
 Thumbs.db
+*.log
+*output.txt
+startup_*.txt
