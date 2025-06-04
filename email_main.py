@@ -113,7 +113,7 @@ from gmail_chatbot import email_vector_db
 from gmail_chatbot.email_memory_vector import EmailVectorMemoryStore
 from gmail_chatbot.enhanced_memory import EnhancedMemoryStore
 from gmail_chatbot.query_classifier import THRESHOLDS
-from gmail_chatbot.prompt_templates import NOTEBOOK_NO_RESULTS_TEMPLATES
+from .prompt_templates import NOTEBOOK_NO_RESULTS_TEMPLATES
 
 # Import ML classifier components
 from gmail_chatbot.ml_classifier.ml_query_classifier import MLQueryClassifier, ClassifierError

@@ -33,7 +33,7 @@ try:
         fallback_logs_dir = Path("logs") / "gmail_chatbot_api"  # Last resort fallback to local directory
     
     # Try to import from config
-    from email_config import API_LOGS_DIR
+    from gmail_chatbot.email_config import API_LOGS_DIR
     log_dir = API_LOGS_DIR
     print(f"Loaded API_LOGS_DIR from config: {API_LOGS_DIR}")
     

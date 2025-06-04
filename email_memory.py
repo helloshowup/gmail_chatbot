@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 
-from email_config import DATA_DIR
+from gmail_chatbot.email_config import DATA_DIR
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)

@@ -12,7 +12,7 @@ if str(parent_dir) not in sys.path:
     sys.path.insert(0, str(parent_dir))
 
 # Import the main application
-from email_main import GmailChatbotApp
+from gmail_chatbot.email_main import GmailChatbotApp
 
 
 class TestEmailSearchFlow:
@@ -32,7 +32,7 @@ class TestEmailSearchFlow:
     @pytest.fixture
     def app(self, mock_gmail_client):
         """Create a test instance of the GmailChatbotApp with mocked dependencies."""
-        with patch('email_main.GmailClient', return_value=mock_gmail_client):
+        with patch('gmail_chatbot.email_main.GmailClient', return_value=mock_gmail_client):
             app = GmailChatbotApp()
             app.gmail_client = mock_gmail_client
             app.cl_client = MagicMock()  # Mock Claude client
@@ -75,7 +75,7 @@ class TestEmailSearchFlow:
         
     def test_heuristic_override_logging(self, app, mock_gmail_client):
         """Test that the heuristic override is logged properly."""
-        with patch('email_main.logging.info') as mock_logging:
+        with patch('gmail_chatbot.email_main.logging.info') as mock_logging:
             # Use a query that might have been misclassified before
             query = "Did I receive any emails today?"
             app.process_message(query)

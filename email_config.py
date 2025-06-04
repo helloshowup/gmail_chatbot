@@ -8,7 +8,7 @@ from datetime import date
 # Import the warm functional system message
 # This is imported via a function to avoid circular imports
 def get_warm_functional_system_message():
-    from gmail_chatbot.prompt_templates import WARM_FUNCTIONAL_SYSTEM_MESSAGE
+    from .prompt_templates import WARM_FUNCTIONAL_SYSTEM_MESSAGE
     return WARM_FUNCTIONAL_SYSTEM_MESSAGE
 
 # API configuration
