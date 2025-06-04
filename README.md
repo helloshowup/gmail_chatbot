@@ -103,6 +103,8 @@ The main application `chat_app_st.py` demonstrates Streamlit chat widgets such a
 
 Short-term conversation state lives in `st.session_state`; for long-term or multi-user deployments, store history in external persistence (e.g., an EFS volume or database). When running at scale, containerize the app and place it behind a load balancer, applying caching and rate limiting to avoid hitting API quotas.
 
+The autonomous memory enrichment thread is also controlled via `st.session_state`. A flag named `autonomous_thread_started` prevents the enrichment thread from launching more than once per session.
+
 Agentic features use structured prompt templates and few-shot tool examples, allowing the chatbot to reason about tasks and self-correct when necessary.
 
 ## Using TASK_CHAIN

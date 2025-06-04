@@ -206,7 +206,9 @@ class GmailChatbotApp:
 
         # Context tracking for pending queries
         self.pending_email_context = None  # Store pending query context (original message + search string) for confirmation
-        self.pending_notebook_context = None  # Track follow-ups when notebook has no results
+        self.pending_notebook_context = (
+            None  # Track follow-ups when notebook has no results
+        )
 
         # Check for Anthropic API key
         if not os.environ.get(CLAUDE_API_KEY_ENV):
@@ -445,6 +447,14 @@ class GmailChatbotApp:
         # Chat history for context
         self.chat_history: List[Dict[str, str]] = []
 
+        # Track if the enrichment thread has been started for this session
+        self.autonomous_thread_started = False
+        if st is not None and hasattr(st, "session_state"):
+            st.session_state.setdefault("autonomous_thread_started", False)
+            self.autonomous_thread_started = (
+                st.session_state.autonomous_thread_started
+            )
+
         # Counter for tracking autonomous task steps, referenced from Streamlit session state
         self.counter = (
             autonomous_counter_ref
@@ -467,18 +477,26 @@ class GmailChatbotApp:
                     f"[{self.__class__.__name__}] Using shared autonomous_task_counter (id: {id(self.counter)}), current value: {self.counter['autonomous_task_counter']}"
                 )
 
-        # Start autonomous memory enrichment in a background thread
-        enrichment_request_id = str(uuid.uuid4())
-        logging.info(
-            f"[{enrichment_request_id}] Initiating background autonomous memory enrichment task in __init__."
-        )
-        enrichment_thread = threading.Thread(
-            target=self.memory_actions_handler.perform_autonomous_memory_enrichment,
-            args=(enrichment_request_id,),
-            daemon=True,
-            name="AutonomousMemoryEnrichmentThread",
-        )
-        enrichment_thread.start()
+        # Start autonomous memory enrichment in a background thread only once
+        if not self.autonomous_thread_started:
+            enrichment_request_id = str(uuid.uuid4())
+            logging.info(
+                f"[{enrichment_request_id}] Initiating background autonomous memory enrichment task in __init__."
+            )
+            enrichment_thread = threading.Thread(
+                target=self.memory_actions_handler.perform_autonomous_memory_enrichment,
+                args=(enrichment_request_id,),
+                daemon=True,
+                name="AutonomousMemoryEnrichmentThread",
+            )
+            enrichment_thread.start()
+            self.autonomous_thread_started = True
+            if st is not None and hasattr(st, "session_state"):
+                st.session_state.autonomous_thread_started = True
+        else:
+            logging.info(
+                "Autonomous memory enrichment thread already started; skipping"
+            )
 
         logging.info("Gmail Chatbot application initialized")
         print("DEBUG: GmailChatbotApp.__init__ - END")  # Added for debugging
@@ -819,7 +837,6 @@ class GmailChatbotApp:
             else:
                 response = NOTEBOOK_NO_RESULTS_TEMPLATES["generic"]
 
-
             # Store context for potential follow-up
             self.pending_notebook_context = follow_up
 
@@ -1130,7 +1147,9 @@ class GmailChatbotApp:
                         "I've initiated a memory enrichment process based on your confirmation. "
                         "You can continue interacting."
                     )
-                    self.chat_history.append({"role": "assistant", "content": response})
+                    self.chat_history.append(
+                        {"role": "assistant", "content": response}
+                    )
                     return response
 
                 try:
@@ -1159,7 +1178,9 @@ class GmailChatbotApp:
                         )
 
                 response = "Okay, I'm starting that task chain."
-                self.chat_history.append({"role": "assistant", "content": response})
+                self.chat_history.append(
+                    {"role": "assistant", "content": response}
+                )
                 return response
 
         if self.pending_email_context:
@@ -1918,7 +1939,11 @@ class GmailChatbotApp:
                             "Would you like me to keep going?"
                         )
                 else:
-                    if plan and st and st.session_state.get("agentic_mode_enabled"):
+                    if (
+                        plan
+                        and st
+                        and st.session_state.get("agentic_mode_enabled")
+                    ):
                         st.session_state.agentic_plan = plan
                         st.session_state.agentic_state = {
                             "current_step_index": 0,
@@ -1948,9 +1973,7 @@ class GmailChatbotApp:
                         logging.info(
                             f"[{request_id}] Parsed plan queued for confirmation"
                         )
-                        response_str += (
-                            "\n\nWould you like me to proceed with this multi-step task?"
-                        )
+                        response_str += "\n\nWould you like me to proceed with this multi-step task?"
         return response_str
 
     def get_email_by_id(
