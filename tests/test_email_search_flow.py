@@ -43,9 +43,11 @@ class TestEmailSearchFlow:
             # Direct email search queries
             "Show me emails from John",
             "Search my inbox for invoices",
+            "search Gmail for from:bryce@example.com",
             
             # Inbox check queries that should be routed to email_search
             "Did I receive any emails today?",
+            "check today's email",
             "Check my inbox for new messages",
             "Have I got mail today?",
             "Any new messages in my inbox?",
