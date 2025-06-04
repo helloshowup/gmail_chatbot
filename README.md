@@ -33,6 +33,8 @@ A Claude-powered chatbot that interacts with your Gmail account. This tool allow
    ```env
    ANTHROPIC_API_KEY=your_anthropic_api_key_here
    ```
+   The application automatically loads this `.env` file at startup via `gmail_chatbot.email_config.load_env()`.
+   Configure all required environment variables here once.
 
 ### 2. Google Cloud Setup
 
@@ -79,6 +81,8 @@ pip install -r requirements-lite.txt
    or run `streamlit run chat_app_st.py` for the web UI
 2. First-time users will be prompted to authorize the application to access their Gmail account
 3. Enter natural language queries in the chat interface to interact with your emails
+
+4. Logging is initialized by the main application using `safe_logger.configure_safe_logging`; individual modules no longer call `logging.basicConfig`.
 
 ### Example Queries
 
