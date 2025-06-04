@@ -12,7 +12,7 @@ import logging
 from datetime import datetime, timedelta
 
 import anthropic
-from gmail_chatbot.email_config import CLAUDE_API_KEY_ENV, CLAUDE_DEFAULT_MODEL, CLAUDE_MAX_TOKENS, LOGS_DIR
+from gmail_chatbot.email_config import CLAUDE_API_KEY_ENV, CLAUDE_DEFAULT_MODEL, CLAUDE_MAX_TOKENS
 from gmail_chatbot.api_logging import log_claude_request, log_claude_response
 from .prompt_templates import format_executable_logic_prompt, VECTOR_RESULTS_EVALUATION_PROMPT
 
@@ -23,17 +23,10 @@ import io
 
 # Configure stdout/stderr for UTF-8 to properly handle emojis in console output
 if not os.environ.get("PYTEST_RUNNING"):
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler(LOGS_DIR / f"claude_api_{datetime.now().strftime('%Y%m%d')}.log", encoding='utf-8'),
-        logging.StreamHandler(sys.stdout)
-    ]
-)
+logger = logging.getLogger(__name__)
 
 class ClaudeAPIClient:
     """Client for interacting with Claude API to process email queries and responses."""

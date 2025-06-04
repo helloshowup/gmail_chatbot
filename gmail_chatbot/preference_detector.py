@@ -18,7 +18,6 @@ from gmail_chatbot.query_classifier import classify_query_type
 from gmail_chatbot.enhanced_memory import EnhancedMemoryStore
 
 # Set up logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 

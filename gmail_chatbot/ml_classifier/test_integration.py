@@ -9,11 +9,7 @@ import sys
 from pathlib import Path
 import logging
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logger = logging.getLogger(__name__)
 
 # Add Gmail chatbot path
 MODULE_DIR = Path(__file__).parent
