@@ -1060,19 +1060,51 @@ class GmailChatbotApp:
                     f"[{request_id}] User confirmed TASK_CHAIN execution"
                 )
                 self.autonomous_task_counter = 0
-                logging.info(
-                    f"[{request_id}] User confirmed TASK_CHAIN. Initiating autonomous memory enrichment."
-                )
-                self.memory_actions_handler.perform_autonomous_memory_enrichment(
-                    request_id=request_id
-                )
-                response = (
-                    "I've initiated a memory enrichment process based on your confirmation. "
-                    "You can continue interacting."
-                )
-                self.chat_history.append(
-                    {"role": "assistant", "content": response}
-                )
+
+                plan_lower = last_assistant_msg.lower()
+                if "enrich" in plan_lower and "memory" in plan_lower:
+                    logging.info(
+                        f"[{request_id}] User confirmed TASK_CHAIN. Initiating autonomous memory enrichment."
+                    )
+                    self.memory_actions_handler.perform_autonomous_memory_enrichment(
+                        request_id=request_id
+                    )
+                    response = (
+                        "I've initiated a memory enrichment process based on your confirmation. "
+                        "You can continue interacting."
+                    )
+                    self.chat_history.append({"role": "assistant", "content": response})
+                    return response
+
+                try:
+                    from gmail_chatbot.task_chain_parser import parse_task_chain
+
+                    plan = parse_task_chain(last_assistant_msg)
+                except Exception as e:  # pragma: no cover - defensive
+                    logging.error(
+                        f"[{request_id}] Failed to parse TASK_CHAIN: {e}"
+                    )
+                    plan = []
+
+                if plan and st:
+                    st.session_state.agentic_plan = plan
+                    st.session_state.agentic_state = {
+                        "current_step_index": 0,
+                        "executed_call_count": 0,
+                        "accumulated_results": {},
+                        "error_messages": [],
+                    }
+                    try:  # Delayed import to avoid circular dependency
+                        from chat_app_st import run_agentic_plan  # type: ignore
+
+                        run_agentic_plan()
+                    except Exception as e:  # pragma: no cover - defensive
+                        logging.error(
+                            f"[{request_id}] Error running agentic plan: {e}"
+                        )
+
+                response = "Okay, I'm starting that task chain."
+                self.chat_history.append({"role": "assistant", "content": response})
                 return response
 
         if self.pending_email_context:
