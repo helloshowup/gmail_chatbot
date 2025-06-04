@@ -114,3 +114,13 @@ Adherence to these standards is crucial for maintaining code quality, readabilit
 - Apply `st.cache_resource` or `st.cache_data` for expensive operations, and include rate limiting when invoking LLM or Gmail APIs.
 - Leverage observability tools such as LangSmith to debug agent reasoning.
 - Prompt templates and few-shot examples should guide tool usage, and self-correction loops can improve reliability.
+
+## 10. Modularization Progress
+
+The first refactoring pull request split several large modules into smaller packages:
+
+- The email search logic previously embedded in `app/core.py` now lives in `gmail_chatbot/app/handlers/email_search.py`.
+- Triage routines were extracted into the new `gmail_chatbot/handlers` package.
+- Vector database utilities from `email_vector_db.py` were modularized under `gmail_chatbot/vector_db` with `indexing.py` and `search.py`.
+
+Future contributors are encouraged to keep moving lengthy functionality out of oversized modules and into dedicated packages to maintain readability and testability.
