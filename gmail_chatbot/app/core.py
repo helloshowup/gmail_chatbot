@@ -601,6 +601,10 @@ class GmailChatbotApp:
                 break
         return False
 
+    def get_notebook_overview(self, request_id: str) -> str:
+        """Return a concise overview of the notebook contents."""
+        return self.memory_actions_handler.get_notebook_overview(request_id)
+
     def _is_simple_inbox_query(self, message_lower: str) -> bool:
         """Checks if a query is a simple request for inbox contents, suitable for a menu."""
         generic_inbox_phrases = [
@@ -883,6 +887,7 @@ class GmailChatbotApp:
                 else message
             )
             # Reuse confirmation context but proceed with the search immediately
+
             self.pending_email_context = {
                 "gmail_query": search_query,
                 "original_message": message,
@@ -900,7 +905,6 @@ class GmailChatbotApp:
                 system_message=self.system_message,
                 request_id=request_id,
             )
-
             if (
                 search_results_text
                 and "error" in search_results_text.lower()
@@ -946,6 +950,7 @@ class GmailChatbotApp:
 
             response = "\n\n".join(filter(None, final_parts))
             self.pending_email_context = None
+
 
         # Log the notebook search (hit or miss) via MemoryActionsHandler
         self.memory_actions_handler.record_interaction_in_memory(
