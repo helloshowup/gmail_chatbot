@@ -34,6 +34,8 @@ import argparse
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 
+from gmail_chatbot.vector_db import create_new_index, store_chunks_without_vectors
+from gmail_chatbot.vector_db import search as vector_search, keyword_search
 # Apply hot-patch for PyTorch before importing it
 try:  # pragma: no cover - torch is optional in the test environment
     import torch  # type: ignore
@@ -527,65 +529,12 @@ class EmailVectorDB:
     def _create_new_index(
         self, chunks: List[str], chunk_metadata: List[Dict[str, Any]]
     ) -> None:
-        """Create a new FAISS index from chunks"""
-        try:
-            # Create new vector DB
-            self.active_db = FAISS.from_texts(
-                chunks, self.embeddings, metadatas=chunk_metadata
-            )
-
-            # Save index to disk
-            self.active_db.save_local(self.cache_dir, index_name=self.index_id)
-
-            # Save chunks and metadata
-            self.chunks = chunks
-            self.chunk_metadata = chunk_metadata
-
-            # Save chunks metadata
-            chunks_path = self._get_chunks_path()
-            with open(chunks_path, "w", encoding="utf-8") as f:
-                json.dump(
-                    {"chunks": self.chunks, "metadata": self.chunk_metadata},
-                    f,
-                    indent=2,
-                )
-
-            logger.info(f"Created new FAISS index with {len(chunks)} chunks")
-            self.is_indexed = True
-
-        except Exception as e:
-            logger.error(f"Error creating FAISS index: {e}")
-            traceback.print_exc()
-            self.is_indexed = False
+        create_new_index(self, chunks, chunk_metadata)
 
     def _store_chunks_without_vectors(
         self, chunks: List[str], chunk_metadata: List[Dict[str, Any]]
     ) -> None:
-        """Store chunks without vector embeddings for fallback search"""
-        try:
-            # Just save the chunks and metadata for keyword search
-            self.chunks = chunks if not self.chunks else self.chunks + chunks
-            self.chunk_metadata = (
-                chunk_metadata
-                if not self.chunk_metadata
-                else self.chunk_metadata + chunk_metadata
-            )
-
-            # Save chunks metadata
-            chunks_path = self._get_chunks_path()
-            with open(chunks_path, "w", encoding="utf-8") as f:
-                json.dump(
-                    {"chunks": self.chunks, "metadata": self.chunk_metadata},
-                    f,
-                    indent=2,
-                )
-
-            logger.info(
-                f"Stored {len(chunks)} chunks without vector indexing (fallback mode)"
-            )
-        except Exception as e:
-            logger.error(f"Error storing chunks without vectors: {e}")
-            traceback.print_exc()
+        store_chunks_without_vectors(self, chunks, chunk_metadata)
 
     def search(
         self,
@@ -593,72 +542,7 @@ class EmailVectorDB:
         num_results: int = 5,
         filters: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
-        """Search for relevant email chunks based on a query
-
-        Args:
-            query: The search query
-            num_results: Number of results to return
-            filters: Optional filters to apply (e.g. sender, date range)
-
-        Returns:
-            List of result dictionaries with chunk text and metadata
-        """
-        results = []
-
-        # Try vector search first if available
-        if (
-            VECTOR_LIBS_AVAILABLE
-            and self.embeddings is not None
-            and self.active_db is not None
-        ):
-            try:
-                logger.info(f"Performing vector search for query: {query}")
-                vector_results = self.active_db.similarity_search_with_score(
-                    query, k=num_results
-                )
-
-                # Process results
-                for doc, score in vector_results:
-                    # Convert score to similarity (FAISS returns distance)
-                    similarity = 1.0 - min(
-                        1.0, score
-                    )  # Normalize to 0-1 range
-
-                    # Get the document content and metadata
-                    content = doc.page_content
-                    metadata = doc.metadata
-
-                    # Apply filters if specified
-                    if filters:
-                        # Skip if doesn't match filters
-                        if not self._matches_filters(metadata, filters):
-                            continue
-
-                    # Add to results
-                    results.append(
-                        {
-                            "content": content,
-                            "metadata": metadata,
-                            "similarity": similarity,
-                            "search_type": "vector",
-                        }
-                    )
-
-                if results:
-                    logger.info(
-                        f"Found {len(results)} results via vector search"
-                    )
-                    return results
-                else:
-                    logger.info(
-                        "No vector search results, falling back to keyword search"
-                    )
-            except Exception as e:
-                logger.error(f"Error in vector search: {e}")
-                traceback.print_exc()
-
-        # Fallback to keyword search if vector search failed or no results
-        return self._keyword_search(query, num_results, filters)
+        return vector_search(self, query, num_results, filters)
 
     def _keyword_search(
         self,
@@ -666,81 +550,7 @@ class EmailVectorDB:
         num_results: int = 5,
         filters: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
-        """Fallback keyword-based search when vector search is unavailable
-
-        Args:
-            query: The search query
-            num_results: Number of results to return
-            filters: Optional filters to apply
-
-        Returns:
-            List of result dictionaries with chunk text and metadata
-        """
-        # Load chunks if not already loaded
-        if not self.chunks:
-            chunks_path = self._get_chunks_path()
-            if os.path.exists(chunks_path):
-                try:
-                    with open(chunks_path, "r", encoding="utf-8") as f:
-                        chunks_data = json.load(f)
-                        self.chunks = chunks_data.get("chunks", [])
-                        self.chunk_metadata = chunks_data.get("metadata", [])
-                except Exception as e:
-                    logger.error(
-                        f"Error loading chunks for keyword search: {e}"
-                    )
-                    return []
-            else:
-                logger.warning("No chunks found for keyword search")
-                return []
-
-        # Prepare results list
-        results = []
-
-        # Simple keyword matching
-        query_terms = query.lower().split()
-
-        # Score each chunk based on keyword matches
-        for i, chunk in enumerate(self.chunks):
-            # Apply filters if specified
-            if filters and i < len(self.chunk_metadata):
-                if not self._matches_filters(self.chunk_metadata[i], filters):
-                    continue
-
-            # Count keyword matches
-            chunk_lower = chunk.lower()
-            score = 0
-            for term in query_terms:
-                if term in chunk_lower:
-                    # Higher weight for exact matches
-                    score += 1 + chunk_lower.count(term) * 0.1
-
-            # Add to results if there's at least one match
-            if score > 0:
-                metadata = (
-                    self.chunk_metadata[i]
-                    if i < len(self.chunk_metadata)
-                    else {}
-                )
-                results.append(
-                    {
-                        "content": chunk,
-                        "metadata": metadata,
-                        "similarity": min(
-                            1.0, score / len(query_terms)
-                        ),  # Normalize to 0-1 range
-                        "search_type": "keyword",
-                    }
-                )
-
-        # Sort by score (descending)
-        results.sort(key=lambda x: x["similarity"], reverse=True)
-
-        # Limit to requested number of results
-        results = results[:num_results]
-
-        logger.info(f"Found {len(results)} results via keyword search")
-        return results
+        return keyword_search(self, query, num_results, filters)
 
     def _matches_filters(
         self, metadata: Dict[str, Any], filters: Dict[str, Any]
