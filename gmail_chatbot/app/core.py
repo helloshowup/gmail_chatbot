@@ -882,7 +882,7 @@ class GmailChatbotApp:
                 if entity
                 else message
             )
-            # Reuse existing confirmation flow for Gmail searches
+            # Prepare context for potential follow-up, but default to searching now
             self.pending_email_context = {
                 "gmail_query": search_query,
                 "original_message": message,
@@ -891,8 +891,29 @@ class GmailChatbotApp:
 
             logging.info(
                 f"[{request_id}] Notebook miss for query: '{message[:50]}...'. "
-                f"Suggested follow-up: {follow_up['action'].name} for entity: '{entity}'"
+                f"Searching Gmail with query: '{search_query}'"
             )
+
+            emails, gmail_text = self.gmail_client.search_emails(
+                query=search_query,
+                original_user_query=message,
+                system_message=self.system_message,
+                request_id=request_id,
+            )
+            if gmail_text and "error" in gmail_text.lower() and st:
+                st.session_state.last_gmail_error = gmail_text
+
+            if emails:
+                self.memory_actions_handler.store_emails_in_memory(
+                    emails=emails, query=message, request_id=request_id
+                )
+                append_text = gmail_text or (
+                    f"I found {len(emails)} email(s) related to your query."
+                )
+                response = f"{response}\n\n{append_text}"
+            elif gmail_text:
+                response = f"{response}\n\n{gmail_text}"
+
 
         # Log the notebook search (hit or miss) via MemoryActionsHandler
         self.memory_actions_handler.record_interaction_in_memory(
