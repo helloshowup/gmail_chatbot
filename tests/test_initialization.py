@@ -54,6 +54,9 @@ def _create_streamlit_stub():
         def checkbox(self, *a, **k):
             return False
 
+        def button(self, *a, **k):
+            return False
+
         def file_uploader(self, *a, **k):
             return None
 

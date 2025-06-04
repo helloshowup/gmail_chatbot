@@ -24,16 +24,19 @@ class TestEmailSearchFlow:
         """Create a mock Gmail client for testing."""
         mock_client = MagicMock()
         # Mock search_emails to return some test emails
-        mock_client.search_emails.return_value = [
-            {"id": "1", "subject": "Test Email 1", "snippet": "This is a test email"},
-            {"id": "2", "subject": "Test Email 2", "snippet": "Another test email"}
-        ]
+        mock_client.search_emails.return_value = (
+            [
+                {"id": "1", "subject": "Test Email 1", "snippet": "This is a test email"},
+                {"id": "2", "subject": "Test Email 2", "snippet": "Another test email"},
+            ],
+            "Found results",
+        )
         return mock_client
 
     @pytest.fixture
     def app(self, mock_gmail_client):
         """Create a test instance of the GmailChatbotApp with mocked dependencies."""
-        with patch('gmail_chatbot.email_main.GmailClient', return_value=mock_gmail_client):
+        with patch('gmail_chatbot.app.core.GmailAPIClient', return_value=mock_gmail_client):
             app = GmailChatbotApp()
             app.gmail_client = mock_gmail_client
             app.cl_client = MagicMock()  # Mock Claude client
@@ -57,13 +60,17 @@ class TestEmailSearchFlow:
         ]
     )
     def test_email_search_routing(self, app, mock_gmail_client, query, caplog):
-        """Test that email search queries properly invoke search_emails."""
+        """Email search should run only after confirmation."""
         caplog.set_level(logging.CRITICAL)
 
-        # Process the message
+        # First call sets a pending confirmation
         response = app.process_message(query)
+        assert app.pending_email_context is not None
+        mock_gmail_client.search_emails.assert_not_called()
 
-        # Verify the Gmail client's search_emails method was called
+        # Confirm the search
+        response = app.process_message("yes")
+
         mock_gmail_client.search_emails.assert_called_once()
 
         # Verify the response indicates a search was performed

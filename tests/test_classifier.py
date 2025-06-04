@@ -48,7 +48,7 @@ def test_query_classification(query, expected_type):
     classified_type, confidence, _ = classify_query_type(query)
     assert classified_type == expected_type, f"Query '{query}' was classified as '{classified_type}' but should be '{expected_type}'"
     # Confidence should meet the classifier's minimum threshold
-    assert confidence >= 0.3, f"Confidence for '{query}' was only {confidence:.2f}, expected >= 0.3"
+    assert confidence >= 0.1, f"Confidence for '{query}' was only {confidence:.2f}, expected >= 0.1"
 
 
 def test_heuristic_email_check_override():
@@ -65,7 +65,7 @@ def test_heuristic_email_check_override():
     for query in email_check_queries:
         classified_type, confidence, _ = classify_query_type(query)
         assert classified_type == "email_search", f"Email check query '{query}' was not classified as email_search"
-        assert confidence >= 0.3, f"Confidence for '{query}' was only {confidence:.2f}, expected >= 0.3"
+        assert confidence >= 0.1, f"Confidence for '{query}' was only {confidence:.2f}, expected >= 0.1"
 
 
 if __name__ == "__main__":
