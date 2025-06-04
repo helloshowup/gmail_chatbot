@@ -22,6 +22,7 @@ A Claude-powered chatbot that interacts with your Gmail account. This tool allow
 - Claude API key
 - Google Cloud Platform project with Gmail API enabled
 - OAuth 2.0 client credentials saved as `data/client_secret.json`
+- Gmail OAuth token will be stored at `data/token.json`
 
 ## Setup Instructions
 
@@ -43,6 +44,11 @@ A Claude-powered chatbot that interacts with your Gmail account. This tool allow
 3. Configure the OAuth consent screen
 4. Create OAuth 2.0 credentials and download the `client_secret.json` file
 5. Place your downloaded credentials at `data/client_secret.json`
+6. The OAuth process will create `data/token.json` in the same directory.
+
+The application uses the `DATA_DIR` constant in `gmail_chatbot.email_config` to
+determine where these files live. By default `DATA_DIR` points to the
+`data/` directory at the project root.
 
 ### 3. Installation
 
@@ -112,7 +118,7 @@ Agentic features use structured prompt templates and few-shot tool examples, all
 
 If you encounter authentication errors with Gmail API:
 
-1. Delete the `token.json` file in the `data` directory
+1. Delete the `token.json` file in the project-root `data/` directory
 2. Restart the application and go through the authentication flow again
 
 ### API Key Issues
