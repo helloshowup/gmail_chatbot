@@ -11,6 +11,8 @@ from typing import Callable, List, Dict, Any
 import threading
 import queue
 
+logger = logging.getLogger(__name__)
+
 def can_initialize_gui() -> bool:
     """Checks if a Tkinter GUI can be initialized.
     Returns True if successful, False otherwise.
@@ -23,7 +25,7 @@ def can_initialize_gui() -> bool:
         error_msg = (
             f"GUI environment check: Tkinter module import failed: {e}. Ensure Tkinter is installed."
         )
-        logging.error(error_msg)
+        logger.error(error_msg)
         return False
 
     try:
@@ -32,19 +34,19 @@ def can_initialize_gui() -> bool:
         root = tk_local.Tk()
         root.withdraw()  # Make it invisible, don't show on screen
         root.destroy()   # Cleanly destroy it
-        logging.info("GUI environment check: Tkinter initialized successfully.")
+        logger.info("GUI environment check: Tkinter initialized successfully.")
         return True
     except tk_local.TclError as e: # Catch specific Tcl errors often related to display
         error_msg = (
             f"GUI environment check: Tkinter TclError: {e}. This often means no display is available or X server is misconfigured."
         )
-        logging.error(error_msg)
+        logger.error(error_msg)
         return False
     except Exception as e: # Catch any other unexpected errors during Tkinter initialization
         error_msg = (
             f"GUI environment check: Failed to initialize Tkinter due to an unexpected error: {e}"
         )
-        logging.error(error_msg)
+        logger.error(error_msg)
         return False
 
 # Determine GUI availability by calling the check function.
@@ -59,7 +61,7 @@ if GUI_AVAILABLE:
 else:
     # Error messages are printed by can_initialize_gui().
     # Logging is also attempted by can_initialize_gui().
-    logging.info(
+    logger.info(
         "GUI_AVAILABLE is False. GUI components will not be loaded. Application behavior depends on main module."
     )
     tk = None # Define tk as None to prevent NameErrors if parts of the code not guarded by GUI_AVAILABLE try to access tk
@@ -72,7 +74,7 @@ try:
     VECTOR_MEMORY_AVAILABLE = True
 except ImportError:
     VECTOR_MEMORY_AVAILABLE = False
-    logging.warning("Vector memory module not available, vector search features will be disabled")
+    logger.warning("Vector memory module not available, vector search features will be disabled")
 
 # Configure logging
 # Configure stdout/stderr for UTF-8 to properly handle emojis in console output
@@ -80,14 +82,6 @@ if not os.environ.get("PYTEST_RUNNING"):
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler(LOGS_DIR / f"gui_{datetime.now().strftime('%Y%m%d')}.log", encoding='utf-8'),
-        logging.StreamHandler(sys.stdout)
-    ]
-)
 
 class EmailChatbotGUI:
     """GUI for Gmail Chatbot Assistant with vector search capabilities.
@@ -106,14 +100,14 @@ class EmailChatbotGUI:
         
         if not GUI_AVAILABLE:
             # Headless mode initialization
-            logging.info("Initializing in headless mode (no GUI)")
+            logger.info("Initializing in headless mode (no GUI)")
             print("[HEADLESS MODE] Gmail Chatbot running without GUI")
             print("[HEADLESS MODE] Use the command line interface instead")
             self.headless_mode = True
             return
             
         # GUI mode initialization
-        logging.info("Initializing GUI mode")
+        logger.info("Initializing GUI mode")
         self.headless_mode = False
         
         try:
@@ -135,10 +129,10 @@ class EmailChatbotGUI:
             # Start message processing thread
             self.root.after(100, self._process_message_queue)
             
-            logging.info("GUI initialized successfully")
+            logger.info("GUI initialized successfully")
         except Exception as e:
             error_msg = f"Failed to initialize GUI: {str(e)}"
-            logging.error(error_msg)
+            logger.error(error_msg)
             print(f"[ERROR] {error_msg}")
             traceback.print_exc()
             self.headless_mode = True
@@ -271,7 +265,7 @@ class EmailChatbotGUI:
         """Send the user message."""
         # This method should only be called in GUI mode
         if getattr(self, 'headless_mode', False):
-            logging.warning("_send_message called in headless mode - this should not happen")
+            logger.warning("_send_message called in headless mode - this should not happen")
             return
             
         try:
@@ -281,7 +275,7 @@ class EmailChatbotGUI:
             
             # Add debug logging
             print(f"[GUI DEBUG] _send_message called with: {message[:50]}...")
-            logging.info(f"[GUI DEBUG] _send_message called with: {message[:50]}...")
+            logger.info(f"[GUI DEBUG] _send_message called with: {message[:50]}...")
             
             # Display user message in chat
             self.display_message("You", message)
@@ -302,14 +296,14 @@ class EmailChatbotGUI:
             print("[GUI DEBUG] Forcing immediate queue processing")
             self._process_message_queue() # Force immediate queue processing
         except Exception as e:
-            logging.error(f"Error in _send_message: {str(e)}")
+            logger.error(f"Error in _send_message: {str(e)}")
             print(f"[GUI ERROR] {str(e)}")
             # Don't crash if GUI components are unavailable
     
     def _safe_log_error(self, message: str) -> None:
         """Log errors safely even during shutdown."""
         try:
-            logging.error(message)
+            logger.error(message)
         except Exception:
             pass  # Ignore logging errors during shutdown
         
@@ -384,12 +378,12 @@ class EmailChatbotGUI:
         try:
             # Add debug logging
             print(f"[GUI DEBUG] _threaded_message_processing started with: {message[:50]}...")
-            logging.info(f"[GUI DEBUG] _threaded_message_processing started with: {message[:50]}...")
+            logger.info(f"[GUI DEBUG] _threaded_message_processing started with: {message[:50]}...")
             
             # Special test case for debugging API logging
             if message.lower().strip() == "log test":
                 print("[GUI DEBUG] Detected 'log test' command - forcing API call for testing")
-                logging.info("[GUI DEBUG] Detected 'log test' command - forcing API call for testing")
+                logger.info("[GUI DEBUG] Detected 'log test' command - forcing API call for testing")
             
             # Call the callback function to process the message
             print("[GUI DEBUG] About to call process_message_callback()")
@@ -401,7 +395,7 @@ class EmailChatbotGUI:
                 # In headless mode, just print the response
                 # (This block should not be reached in normal headless mode as we don't use threads there)
                 print(f"\nAssistant: {response}\n")
-                logging.info(f"[HEADLESS] Response: {response[:100]}...")
+                logger.info(f"[HEADLESS] Response: {response[:100]}...")
             else:
                 # Update GUI in the main thread
                 try:
@@ -409,14 +403,14 @@ class EmailChatbotGUI:
                     self.root.after(0, lambda: self.update_status("Ready"))
                 except Exception as gui_error:
                     # This could happen if GUI becomes unavailable during processing
-                    logging.error(f"Error updating GUI after processing: {str(gui_error)}")
+                    logger.error(f"Error updating GUI after processing: {str(gui_error)}")
                     print(f"[GUI ERROR] {str(gui_error)}")
                     print(f"\nAssistant: {response}\n")  # Fall back to console output
         except Exception as e:
             error_msg = f"Error in message processing thread: {e}"
             print(f"[GUI DEBUG] {error_msg}")
             traceback.print_exc()  # This will print the full stack trace
-            logging.error(error_msg)
+            logger.error(error_msg)
             
             if getattr(self, 'headless_mode', False):
                 print(f"\nError: {str(e)}\n")
@@ -439,7 +433,7 @@ class EmailChatbotGUI:
         """
         # In headless mode, just log the message
         if getattr(self, 'headless_mode', False):
-            logging.info(f"[{sender}] {message[:100]}...")
+            logger.info(f"[{sender}] {message[:100]}...")
             return
             
         try:
@@ -466,7 +460,7 @@ class EmailChatbotGUI:
             self.chat_display.see(tk.END)
             self.chat_display.config(state=tk.DISABLED)
         except Exception as e:
-            logging.error(f"Error displaying message in GUI: {str(e)}")
+            logger.error(f"Error displaying message in GUI: {str(e)}")
             # Don't crash if GUI components are unavailable
     
     def display_error(self, error_message: str) -> None:
@@ -477,7 +471,7 @@ class EmailChatbotGUI:
         """
         # In headless mode, just log and print the error
         if getattr(self, 'headless_mode', False):
-            logging.error(f"Error: {error_message}")
+            logger.error(f"Error: {error_message}")
             print(f"Error: {error_message}")
             return
             
@@ -502,7 +496,7 @@ class EmailChatbotGUI:
             # Update status
             self.update_status("Ready")
         except Exception as e:
-            logging.error(f"Error displaying error message in GUI: {str(e)}")
+            logger.error(f"Error displaying error message in GUI: {str(e)}")
             # Don't crash if GUI components are unavailable
     
     def update_status(self, status: str) -> None:
@@ -513,7 +507,7 @@ class EmailChatbotGUI:
         """
         # In headless mode, just log the status change
         if getattr(self, 'headless_mode', False):
-            logging.info(f"Status update: {status}")
+            logger.info(f"Status update: {status}")
             return
             
         try:
@@ -525,7 +519,7 @@ class EmailChatbotGUI:
             else:
                 self.loading_label.config(text="Processing...")
         except Exception as e:
-            logging.error(f"Error updating status in GUI: {str(e)}")
+            logger.error(f"Error updating status in GUI: {str(e)}")
             # Don't crash if GUI components are unavailable
     
     def run(self) -> None:
@@ -557,13 +551,13 @@ class EmailChatbotGUI:
                                 print(f"\nAssistant: {response}\n")
                             except Exception as e:
                                 print(f"\nError: {str(e)}\n")
-                                logging.error(f"Error processing message in headless mode: {str(e)}")
+                                logger.error(f"Error processing message in headless mode: {str(e)}")
                                 traceback.print_exc()
                     except KeyboardInterrupt:
                         print("\nExiting application...")
                         break
             except Exception as e:
-                logging.error(f"Error in headless CLI mode: {str(e)}")
+                logger.error(f"Error in headless CLI mode: {str(e)}")
                 print(f"Error in headless CLI mode: {str(e)}")
                 traceback.print_exc()
                 return
@@ -757,7 +751,7 @@ class EmailChatbotGUI:
             self.vector_status_text.config(state=tk.DISABLED)
         except Exception as e:
             error_message = f"Error refreshing vector status: {str(e)}"
-            logging.error(error_message)
+            logger.error(error_message)
             messagebox.showerror("Error", error_message)
     
     def _run_vector_search(self) -> None:
@@ -805,7 +799,7 @@ class EmailChatbotGUI:
             self._display_search_results(results, query)
         except Exception as e:
             error_message = f"Error performing vector search: {str(e)}"
-            logging.error(error_message)
+            logger.error(error_message)
             traceback.print_exc()
             messagebox.showerror("Error", error_message)
     
@@ -893,7 +887,7 @@ class EmailChatbotGUI:
             thread.start()
         except Exception as e:
             error_message = f"Error starting batch processing: {str(e)}"
-            logging.error(error_message)
+            logger.error(error_message)
             traceback.print_exc()
             messagebox.showerror("Error", error_message)
             
@@ -934,7 +928,7 @@ class EmailChatbotGUI:
             self.root.after(0, lambda: self._complete_batch_processing(total_processed))
         except Exception as e:
             error_message = f"Error in batch processing: {str(e)}"
-            logging.error(error_message)
+            logger.error(error_message)
             traceback.print_exc()
             
             # Update UI in the main thread
@@ -972,7 +966,7 @@ class EmailChatbotGUI:
         Args:
             error_message: Error message
         """
-        logging.error(f"Batch processing error: {error_message}")
+        logger.error(f"Batch processing error: {error_message}")
         traceback.print_exc()
         
         # Update UI in the main thread
@@ -983,14 +977,14 @@ class EmailChatbotGUI:
                 self.root.after(0, lambda: self.batch_progress.config(value=0))
                 messagebox.showerror("Batch Processing Error", error_message)
             except Exception as e:
-                logging.error(f"Error updating batch UI after error: {str(e)}")
+                logger.error(f"Error updating batch UI after error: {str(e)}")
                 print(f"[ERROR] {error_message}")
     
     def close(self) -> None:
         """Close the GUI or terminate headless mode safely."""
         # Use a try-except block for all logging operations since they might fail during shutdown
         try:
-            logging.info("Closing Gmail Chatbot application")
+            logger.info("Closing Gmail Chatbot application")
         except Exception:
             pass  # Silently ignore logging errors during shutdown
             
