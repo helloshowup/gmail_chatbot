@@ -20,11 +20,10 @@ def can_initialize_gui() -> bool:
         # Attempt to import tkinter. This is the first point of failure if not installed.
         import tkinter as tk_local
     except ImportError as e:
-        error_msg = f"GUI environment check: Tkinter module import failed: {e}. Ensure Tkinter is installed."
-        print(f"[ERROR] {error_msg}")
-        # Logging might not be fully configured here, but attempt it.
-        if logging.getLogger().hasHandlers():
-            logging.error(error_msg)
+        error_msg = (
+            f"GUI environment check: Tkinter module import failed: {e}. Ensure Tkinter is installed."
+        )
+        logging.error(error_msg)
         return False
 
     try:
@@ -33,21 +32,19 @@ def can_initialize_gui() -> bool:
         root = tk_local.Tk()
         root.withdraw()  # Make it invisible, don't show on screen
         root.destroy()   # Cleanly destroy it
-        print("[INFO] GUI environment check: Tkinter initialized successfully.")
-        if logging.getLogger().hasHandlers():
-            logging.info("[INFO] GUI environment check: Tkinter initialized successfully.")
+        logging.info("GUI environment check: Tkinter initialized successfully.")
         return True
     except tk_local.TclError as e: # Catch specific Tcl errors often related to display
-        error_msg = f"GUI environment check: Tkinter TclError: {e}. This often means no display is available or X server is misconfigured."
-        print(f"[ERROR] {error_msg}")
-        if logging.getLogger().hasHandlers():
-            logging.error(error_msg)
+        error_msg = (
+            f"GUI environment check: Tkinter TclError: {e}. This often means no display is available or X server is misconfigured."
+        )
+        logging.error(error_msg)
         return False
     except Exception as e: # Catch any other unexpected errors during Tkinter initialization
-        error_msg = f"GUI environment check: Failed to initialize Tkinter due to an unexpected error: {e}"
-        print(f"[ERROR] {error_msg}")
-        if logging.getLogger().hasHandlers():
-            logging.error(error_msg)
+        error_msg = (
+            f"GUI environment check: Failed to initialize Tkinter due to an unexpected error: {e}"
+        )
+        logging.error(error_msg)
         return False
 
 # Determine GUI availability by calling the check function.
@@ -62,7 +59,9 @@ if GUI_AVAILABLE:
 else:
     # Error messages are printed by can_initialize_gui().
     # Logging is also attempted by can_initialize_gui().
-    print("[INFO] GUI_AVAILABLE is False. GUI components will not be loaded. Application behavior depends on main module.")
+    logging.info(
+        "GUI_AVAILABLE is False. GUI components will not be loaded. Application behavior depends on main module."
+    )
     tk = None # Define tk as None to prevent NameErrors if parts of the code not guarded by GUI_AVAILABLE try to access tk
 
 from gmail_chatbot.email_config import UI_TITLE, UI_WIDTH, UI_HEIGHT, UI_THEME_COLOR, LOGS_DIR

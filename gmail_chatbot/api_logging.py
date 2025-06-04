@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-print("Loading API logging module with path: C:\\Users\\User\\Documents\\showup-v4\\logs\\gmail_chatbot_api")
-
-import os
-import sys
 import json
 import logging
+import os
+import sys
 import traceback
 from datetime import datetime
-from typing import Dict, Any, List, Optional
 from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+logger = logging.getLogger(__name__)
+logger.debug(
+    "Loading API logging module with path: C:\\Users\\User\\Documents\\showup-v4\\logs\\gmail_chatbot_api"
+)
 
 # Setup direct console output for critical errors
 def log_critical(message):
@@ -26,7 +29,7 @@ try:
         project_root = Path(__file__).resolve().parents[2]
         logs_dir_base = project_root / "logs"
         fallback_logs_dir = logs_dir_base / "gmail_chatbot_api"
-        print(f"Determined fallback logs directory: {fallback_logs_dir}")
+        logger.debug("Determined fallback logs directory: %s", fallback_logs_dir)
     except Exception as e:
         log_critical(f"Error determining fallback logs directory: {e}")
         fallback_logs_dir = Path("logs") / "gmail_chatbot_api"  # Last resort fallback to local directory
@@ -34,27 +37,27 @@ try:
     # Try to import from config
     from gmail_chatbot.email_config import API_LOGS_DIR
     log_dir = API_LOGS_DIR
-    print(f"Loaded API_LOGS_DIR from config: {API_LOGS_DIR}")
+    logger.debug("Loaded API_LOGS_DIR from config: %s", API_LOGS_DIR)
     
     # Verify log directory exists
     if not os.path.exists(API_LOGS_DIR):
         try:
             os.makedirs(API_LOGS_DIR, exist_ok=True)
-            print(f"Created API logs directory: {API_LOGS_DIR}")
+            logger.info("Created API logs directory: %s", API_LOGS_DIR)
         except Exception as e:
             log_critical(f"Failed to create configured logs directory: {e}")
             log_critical(f"Falling back to alternative logs directory: {fallback_logs_dir}")
             API_LOGS_DIR = fallback_logs_dir
             try:
                 os.makedirs(API_LOGS_DIR, exist_ok=True)
-                print(f"Created fallback API logs directory: {API_LOGS_DIR}")
+                logger.info("Created fallback API logs directory: %s", API_LOGS_DIR)
             except Exception as e2:
                 log_critical(f"Failed to create fallback logs directory: {e2}")
                 traceback.print_exc()
                 API_LOGS_DIR = Path(".") / "logs"  # Absolute last resort - local directory
                 try:
                     os.makedirs(API_LOGS_DIR, exist_ok=True)
-                    print(f"Created last resort logs directory: {API_LOGS_DIR}")
+                    logger.info("Created last resort logs directory: %s", API_LOGS_DIR)
                 except Exception:
                     log_critical("Failed to create any logs directory. Logging may fail.")
     
@@ -64,7 +67,7 @@ try:
         with open(test_file_path, 'w') as f:
             f.write("Testing write permissions")
         os.remove(test_file_path)
-        print(f"Verified write permissions for logs directory: {API_LOGS_DIR}")
+        logger.debug("Verified write permissions for logs directory: %s", API_LOGS_DIR)
     except Exception as e:
         log_critical(f"No write permission for logs directory: {e}")
         # Don't traceback, just log the issue
@@ -73,10 +76,10 @@ try:
 except ImportError as e:
     log_critical(f"Failed to import API_LOGS_DIR from email_config: {e}")
     API_LOGS_DIR = fallback_logs_dir
-    print(f"Using fallback API_LOGS_DIR: {API_LOGS_DIR}")
+    logger.info("Using fallback API_LOGS_DIR: %s", API_LOGS_DIR)
     try:
         os.makedirs(API_LOGS_DIR, exist_ok=True)
-        print(f"Created fallback logs directory after import error: {API_LOGS_DIR}")
+        logger.info("Created fallback logs directory after import error: %s", API_LOGS_DIR)
     except Exception as e2:
         log_critical(f"Failed to create fallback logs directory: {e2}")
 
@@ -92,17 +95,17 @@ def ensure_log_directory_exists() -> None:
         RuntimeError: If directories can't be created or aren't writable
     """
     try:
-        print(f"[INFO] Ensuring log directory exists: {API_LOGS_DIR}")
+        logger.debug("Ensuring log directory exists: %s", API_LOGS_DIR)
         
         # Check and create main logs directory
         if not os.path.exists(API_LOGS_DIR):
             os.makedirs(API_LOGS_DIR, exist_ok=True)
-            print(f"[INFO] Created main logs directory: {API_LOGS_DIR}")
+            logger.info("Created main logs directory: %s", API_LOGS_DIR)
             
         # Check and create date-specific subdirectory
         date_folder = os.path.join(API_LOGS_DIR, datetime.now().strftime('%Y%m%d'))
         os.makedirs(date_folder, exist_ok=True)
-        print(f"[INFO] Ensured date folder exists: {date_folder}")
+        logger.debug("Ensured date folder exists: %s", date_folder)
         
         # Verify write permissions with test file
         test_file_path = os.path.join(date_folder, "write_test.txt")
@@ -110,18 +113,16 @@ def ensure_log_directory_exists() -> None:
             with open(test_file_path, 'w') as f:
                 f.write("Testing write permissions")
             os.remove(test_file_path)
-            print("[OK] Write permissions verified for log directories")
+            logger.debug("Write permissions verified for log directories")
         except Exception as e:
             error_msg = f"[X] Cannot write to log directory: {e}"
-            print(error_msg)
-            logging.error(error_msg)
+            logger.error(error_msg)
             raise RuntimeError(f"Cannot write to log directory: {e}")
             
     except Exception as e:
         error_msg = f"[X] Failed to ensure log directories: {e}"
-        print(error_msg)
+        logger.error(error_msg)
         traceback.print_exc()
-        logging.error(error_msg)
         raise
 
 def log_api_interaction(interaction_type: str, 
@@ -143,16 +144,16 @@ def log_api_interaction(interaction_type: str,
         Path to the log file that was created
     """
     try:
-        print(f" [API LOGGING] Starting log_api_interaction for type: {interaction_type}")
+        logger.debug("[API LOGGING] Starting log_api_interaction for type: %s", interaction_type)
         
         # Ensure log directory exists
         ensure_log_directory_exists()
-        print(f" [API LOGGING] Log directory verified at: {API_LOGS_DIR}")
+        logger.debug("[API LOGGING] Log directory verified at: %s", API_LOGS_DIR)
         
         # Generate timestamp and log ID
         timestamp = datetime.now().isoformat()
         log_id = f"{interaction_type}_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
-        print(f" [API LOGGING] Created log ID: {log_id}")
+        logger.debug("[API LOGGING] Created log ID: %s", log_id)
         
         # Create data structure
         data = {
@@ -170,28 +171,34 @@ def log_api_interaction(interaction_type: str,
         
         # Define log file path
         log_path = os.path.join(date_folder, f"{log_id}.json")
-        print(f" [API LOGGING] Writing to log file: {log_path}")
+        logger.debug("[API LOGGING] Writing to log file: %s", log_path)
         
         # Write JSON to file
         with open(log_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2)
         
-        print(f"[OK] [API LOGGING] Successfully logged API interaction to: {log_path}")
+        logger.debug("[API LOGGING] Successfully logged API interaction to: %s", log_path)
         
         # Verify the file was actually created
         if os.path.exists(log_path):
             file_size = os.path.getsize(log_path)
-            print(f"[OK] [API LOGGING] Confirmed log file exists: {log_path} (Size: {file_size} bytes)")
+            logger.debug(
+                "[API LOGGING] Confirmed log file exists: %s (Size: %d bytes)",
+                log_path,
+                file_size,
+            )
         else:
-            print(f"[WARNING] [API LOGGING] WARNING: Log file not found after writing: {log_path}")
+            logger.warning(
+                "[API LOGGING] WARNING: Log file not found after writing: %s",
+                log_path,
+            )
         
         return log_path
     
     except Exception as e:
         error_msg = f"[X] [API LOGGING] CRITICAL ERROR logging API interaction: {str(e)}"
-        print(error_msg)
+        logger.error(error_msg)
         traceback.print_exc()
-        logging.error(error_msg)
         
         # Fail fast - we want to see these errors immediately
         raise
@@ -214,8 +221,8 @@ def log_claude_request(model: str,
         Path to the log file
     """
     try:
-        print(f"[INFO] CLAUDE API REQUEST LOGGING STARTED at {datetime.now().isoformat()}")
-        print(f"[INFO] Logging Claude API request for query: {original_query[:50]}...")
+        logger.debug("CLAUDE API REQUEST LOGGING STARTED at %s", datetime.now().isoformat())
+        logger.debug("Logging Claude API request for query: %s", original_query[:50])
         ensure_log_directory_exists()
         
         timestamp = datetime.now().isoformat()
@@ -234,18 +241,17 @@ def log_claude_request(model: str,
         os.makedirs(date_folder, exist_ok=True)
         
         log_path = os.path.join(date_folder, f"{log_id}.json")
-        print(f"[INFO] Writing Claude request log to: {log_path}")
+        logger.debug("Writing Claude request log to: %s", log_path)
         
         with open(log_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2)
         
-        print(f"[OK] Successfully logged Claude API request: {log_path}")
+        logger.debug("Successfully logged Claude API request: %s", log_path)
         return log_path
     except Exception as e:
         error_msg = f"[X] ERROR logging Claude request: {e}"
-        print(error_msg)
+        logger.error(error_msg)
         traceback.print_exc()
-        logging.error(error_msg)
         # Fail fast - raise the exception to make errors visible
         raise
 
@@ -265,8 +271,14 @@ def log_claude_response(request_log_path: str,
         Path to the log file that was created
     """
     try:
-        print(f"[INFO] CLAUDE API RESPONSE LOGGING STARTED at {datetime.now().isoformat()}")
-        print(f"[INFO] Logging Claude API response for length: {len(response_content)}")
+        logger.debug(
+            "CLAUDE API RESPONSE LOGGING STARTED at %s",
+            datetime.now().isoformat(),
+        )
+        logger.debug(
+            "Logging Claude API response for length: %s",
+            len(response_content),
+        )
         ensure_log_directory_exists()
         
         response_data = {
@@ -275,20 +287,19 @@ def log_claude_response(request_log_path: str,
             "related_request": request_log_path
         }
         
-        print("[INFO] About to call log_api_interaction for claude_response")
+        logger.debug("About to call log_api_interaction for claude_response")
         log_path = log_api_interaction(
             interaction_type="claude_response",
             request_data={"related_request": request_log_path},
             response_data=response_data,
             error=error
         )
-        print(f"[OK] Successfully logged Claude API response to: {log_path}")
+        logger.debug("Successfully logged Claude API response to: %s", log_path)
         return log_path
     except Exception as e:
         error_msg = f"[X] ERROR logging Claude response: {e}"
-        print(error_msg)
+        logger.error(error_msg)
         traceback.print_exc()
-        logging.error(error_msg)
         # Don't raise here as it might interrupt the main workflow
         return ""
 
@@ -304,8 +315,8 @@ def log_gmail_request(query: str, original_user_query: Optional[str] = None, req
         Path to the log file that was created
     """
     try:
-        print(f"[INFO] GMAIL API REQUEST LOGGING STARTED at {datetime.now().isoformat()}")
-        print(f"[INFO] Logging Gmail API request with query: {query[:50]}...")
+        logger.debug("GMAIL API REQUEST LOGGING STARTED at %s", datetime.now().isoformat())
+        logger.debug("Logging Gmail API request with query: %s", query[:50])
         ensure_log_directory_exists()
         
         request_data = {
@@ -321,9 +332,8 @@ def log_gmail_request(query: str, original_user_query: Optional[str] = None, req
         )
     except Exception as e:
         error_msg = f"[X] ERROR logging Gmail request: {e}"
-        print(error_msg)
+        logger.error(error_msg)
         traceback.print_exc()
-        logging.error(error_msg)
         # Fail fast - raise the exception to make errors visible
         raise
 
@@ -345,8 +355,14 @@ def log_gmail_response(request_log_path: str,
         Path to the log file that was created
     """
     try:
-        print(f"[INFO] GMAIL API RESPONSE LOGGING STARTED at {datetime.now().isoformat()}")
-        print(f"[INFO] Logging Gmail API response with {email_count} emails found.")
+        logger.debug(
+            "GMAIL API RESPONSE LOGGING STARTED at %s",
+            datetime.now().isoformat(),
+        )
+        logger.debug(
+            "Logging Gmail API response with %d emails found.",
+            email_count,
+        )
         ensure_log_directory_exists()
         
         # Create simplified email metadata without full bodies to keep logs manageable
@@ -370,13 +386,12 @@ def log_gmail_response(request_log_path: str,
             interaction_type="gmail_response",
             request_data={"related_request": request_log_path},
             response_data=response_data,
-            error=error
+            error=error,
         )
     except Exception as e:
         error_msg = f"[X] ERROR logging Gmail response: {e}"
-        print(error_msg)
+        logger.error(error_msg)
         traceback.print_exc()
-        logging.error(error_msg)
         # Fail fast - raise the exception to make errors visible
         raise
     response_data = {
