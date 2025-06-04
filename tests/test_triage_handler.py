@@ -1,4 +1,3 @@
-import pytest
 from unittest.mock import MagicMock
 
 from gmail_chatbot.handlers.triage import handle_triage_query

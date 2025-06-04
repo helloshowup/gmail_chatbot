@@ -7,9 +7,7 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional, TYPE_CHECKING
 import queue
 import threading
-from collections import deque
 
-from gmail_chatbot.email_config import DEFAULT_SYSTEM_MESSAGE
 from .prompt_templates import NOTEBOOK_EMPTY_PROMPT, NOTEBOOK_SUMMARY_PREFIX
 from gmail_chatbot.preference_detector import PreferenceDetector
 

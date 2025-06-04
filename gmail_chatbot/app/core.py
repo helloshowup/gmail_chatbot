@@ -2,32 +2,23 @@
 
 # -*- coding: utf-8 -*-
 
-import argparse
 import atexit
 import faulthandler
-import io
 import logging
 import os
 import re
-import ssl  # Added for SSL error handling
 import sys
 import threading
-import time
 import uuid
-from datetime import date, datetime, timedelta
-from enum import Enum
+from datetime import datetime
 from pathlib import Path
 from typing import (
     Any,
-    Callable,
     Dict,
     List,
-    Literal,
-    Mapping,
     MutableMapping,
     Optional,
     Tuple,
-    Union,
 )
 
 os.environ["STREAMLIT_SERVER_FILE_WATCHER_TYPE"] = "none"
@@ -109,15 +100,12 @@ from gmail_chatbot.email_config import (
     CLAUDE_API_KEY_ENV,
     load_env,
 )
-from gmail_chatbot.memory_models import MemoryKind
 from gmail_chatbot.email_claude_api import ClaudeAPIClient
 from gmail_chatbot.email_gmail_api import GmailAPIClient
-from gmail_chatbot import email_vector_db
 from gmail_chatbot.email_memory_vector import EmailVectorMemoryStore
 from gmail_chatbot.gui.core import EmailChatbotGUI
 from gmail_chatbot.enhanced_memory import EnhancedMemoryStore
 from gmail_chatbot.query_classifier import THRESHOLDS
-from ..prompt_templates import NOTEBOOK_NO_RESULTS_TEMPLATES
 
 # Import ML classifier components
 from gmail_chatbot.ml_classifier.ml_query_classifier import (
@@ -129,10 +117,6 @@ from gmail_chatbot.ml_classifier.ml_query_classifier import (
 from gmail_chatbot.preference_detector import PreferenceDetector
 
 # Import memory writers for professional context
-from gmail_chatbot.memory_writers import (
-    store_professional_context,
-    format_research_payload,
-)
 from gmail_chatbot.task_chain_parser import parse_task_chain
 
 # Set up the logs directory path
