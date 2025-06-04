@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T09:15:33.716683",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_091530_644543.json"
+  },
+  "response": {
+    "content": "Hi Bryce! Yes, I'm here and ready to help you with your inbox. Is there anything specific you'd like me to assist you with today? I can search for emails, summarize messages, or help draft responses.",
+    "tokens": {
+      "input_tokens": 1130,
+      "output_tokens": 51
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_091530_644543.json"
+  },
+  "error": null
+}

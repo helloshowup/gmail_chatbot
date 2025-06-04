@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T09:11:13.921996",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_091108_923980.json"
+  },
+  "response": {
+    "content": "\ud83d\udcd3 Based on my notebook entries about Bryce Hepburn:\n\nBryce Hepburn appears to be a professional who recently transitioned into a new role as of June 1, 2025. \n\nFrom my email notes, I've gathered that Bryce:\n- Maintains professional correspondence with various clients\n- Has a structured approach to email management\n- Recently underwent some kind of role transition\n\nSince I only have access to information from previous emails and notes in my notebook, my knowledge about Bryce is limited to what ha...",
+    "tokens": {
+      "input_tokens": 1144,
+      "output_tokens": 152
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_091108_923980.json"
+  },
+  "error": null
+}
