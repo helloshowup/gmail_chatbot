@@ -20,8 +20,8 @@ GMAIL_TOKEN_FILE = "token.json"
 GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 
 # File paths
-BASE_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
-PROJECT_DIR = BASE_DIR.parent.parent  # Navigate up to showup-v4 root
+BASE_DIR = Path(__file__).resolve().parent
+PROJECT_DIR = Path(__file__).resolve().parents[2]
 DATA_DIR = BASE_DIR / "data"
 LOGS_DIR = BASE_DIR / "logs"
 GLOBAL_LOGS_DIR = PROJECT_DIR / "logs"

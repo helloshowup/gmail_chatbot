@@ -133,7 +133,7 @@ from gmail_chatbot.preference_detector import PreferenceDetector
 from gmail_chatbot.memory_writers import store_professional_context, format_research_payload
 
 # Set up the logs directory path
-LOGS_DIR = Path(__file__).parent.parent.parent / "logs" / "gmail_chatbot"
+LOGS_DIR = Path(__file__).resolve().parents[3] / "logs" / "gmail_chatbot"
 os.makedirs(LOGS_DIR, exist_ok=True)
 
 # Provide a placeholder for tests that patch this attribute
