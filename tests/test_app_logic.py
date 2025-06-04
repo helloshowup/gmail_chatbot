@@ -58,11 +58,11 @@ def mock_dependencies():
 @patch("gmail_chatbot.email_main.ClaudeAPIClient")
 @patch("gmail_chatbot.email_main.GmailAPIClient")
 @patch("gmail_chatbot.email_main.vector_memory")
-@patch("gmail_chatbot.email_main.classify_query_type")
+@patch("gmail_chatbot.app.core.classify_query_type")
 @patch("gmail_chatbot.email_main.preference_detector")
 def test_process_message_general_chat(
     mock_pref_detector,
-    mock_classify,
+    mock_classify_core,
     mock_vec_mem,
     mock_gmail,
     mock_claude,
@@ -71,16 +71,16 @@ def test_process_message_general_chat(
     """Test process_message for a general chat scenario."""
     # Setup mocks from the fixture and patches
     mock_claude_client_instance = mock_claude.return_value
+    mock_claude_client_instance.prep_model = "prep-model"
     mock_gmail_client_instance = mock_gmail.return_value
     # mock_vector_memory_instance is mock_vec_mem (the patched global instance)
 
     # Configure mock behaviors
-    mock_classify.return_value = (
+    mock_classify_core.return_value = (
         "general_chat",
         0.9,
         {},
-        "Some feedback",
-    )  # query_type, confidence, details, feedback
+    )
     mock_claude_client_instance.chat.return_value = (
         "Hello, this is a general chat response."
     )
@@ -121,8 +121,8 @@ def test_process_message_general_chat(
     response = app.process_message(user_message)
 
     assert "general chat response" in response
-    mock_classify.assert_called_once_with(
-        user_message, request_id=ANY, chat_history=ANY
+    mock_classify_core.assert_called_once_with(
+        user_message, classifier=None
     )
     mock_claude_client_instance.chat.assert_called_once()
     # Check that the chat history was updated
@@ -151,6 +151,7 @@ def test_process_message_simple_email_search(
 ):
     """Test process_message for a simple email search scenario."""
     mock_claude_client_instance = mock_claude.return_value
+    mock_claude_client_instance.prep_model = "prep-model"
     mock_gmail_client_instance = (
         mock_gmail.return_value
     )  # Though likely unused if vector_memory handles it
@@ -226,6 +227,7 @@ def test_process_message_simple_email_search(
         vector_results=mock_email_results,
         system_message=ANY,
         context="general_vector_fallback",  # This context might change based on actual logic
+        model=mock_claude_client_instance.prep_model,
     )
     assert len(app.chat_history) == 2
 
@@ -247,6 +249,7 @@ def test_process_message_triage(
 ):
     """Test process_message for a triage scenario."""
     mock_claude_client_instance = mock_claude.return_value
+    mock_claude_client_instance.prep_model = "prep-model"
 
     # Mock classification result for triage
     mock_classify.return_value = (
@@ -303,7 +306,12 @@ def test_process_message_triage(
     mock_vec_mem.find_related_emails.assert_called_once()
     # Verify Claude was called to generate the triage summary.
     # The exact method and arguments might differ based on implementation (e.g., a dedicated triage_emails method).
-    mock_claude_client_instance.chat.assert_called_once()
+    mock_claude_client_instance.chat.assert_called_once_with(
+        ANY,
+        ANY,
+        ANY,
+        model=mock_claude_client_instance.prep_model,
+    )
     assert len(app.chat_history) == 2
 
 
@@ -324,6 +332,7 @@ def test_triage_no_duplicate_gmail_prompt(
 ):
     """Triage shouldn't keep asking to search Gmail if it just asked."""
     mock_claude_client_instance = mock_claude.return_value
+    mock_claude_client_instance.prep_model = "prep-model"
 
     mock_classify.return_value = (
         "triage",
@@ -367,6 +376,7 @@ def test_triage_repeat_after_results(
 ):
     """After providing triage results, the app shouldn't ask again to search Gmail."""
     mock_claude_client_instance = mock_claude.return_value
+    mock_claude_client_instance.prep_model = "prep-model"
 
     mock_classify.return_value = (
         "triage",
@@ -414,6 +424,7 @@ def test_process_message_preference_capture(
 ):
     """Test process_message for a preference capture scenario."""
     mock_claude_client_instance = mock_claude.return_value
+    mock_claude_client_instance.prep_model = "prep-model"
 
     # Mock preference_detector identifying a preference
     preference_feedback = (
@@ -458,7 +469,12 @@ def test_process_message_preference_capture(
     assert response == expected_response_containing_feedback
     mock_pref_detector.process_message.assert_called_once_with(user_message)
     # Check if Claude was called to make the response conversational
-    mock_claude_client_instance.chat.assert_called_once()
+    mock_claude_client_instance.chat.assert_called_once_with(
+        ANY,
+        ANY,
+        ANY,
+        model=mock_claude_client_instance.prep_model,
+    )
     assert len(app.chat_history) == 2
 
 
