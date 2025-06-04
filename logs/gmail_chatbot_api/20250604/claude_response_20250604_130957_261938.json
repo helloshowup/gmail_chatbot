@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T13:09:57.261938",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_130953_922822.json"
+  },
+  "response": {
+    "content": "I understand. I won't search your Gmail for information about Bryce.\n\nSince I don't have any notes or previous information stored in my notebook about Bryce Hepburn yet, I can't provide a summary. As we continue working together, I'll build up my notebook with relevant information from your emails and interactions, which will allow me to provide more helpful summaries in the future.\n\nIs there something else I can help you with today?",
+    "tokens": {
+      "input_tokens": 1357,
+      "output_tokens": 98
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_130953_922822.json"
+  },
+  "error": null
+}

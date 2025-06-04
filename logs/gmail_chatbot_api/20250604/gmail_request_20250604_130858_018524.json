@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-06-04T13:08:58.018524",
+  "interaction_type": "gmail_request",
+  "query": "Autonomous fetch for Hoorah Digital",
+  "request": {
+    "gmail_query": "newer_than:7d",
+    "original_user_query": "Autonomous fetch for Hoorah Digital",
+    "request_id": "c45c53df-224c-4db2-95c8-536b79a87789_client_Hoorah_Digital"
+  },
+  "response": null,
+  "error": null
+}
