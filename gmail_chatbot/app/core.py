@@ -14,7 +14,6 @@ import sys
 import threading
 import time
 import uuid
-from collections import defaultdict
 from datetime import date, datetime, timedelta
 from enum import Enum
 from pathlib import Path
@@ -46,6 +45,7 @@ from gmail_chatbot.query_classifier import (
     get_classification_feedback,
     postprocess_claude_response,
 )
+from gmail_chatbot.handlers import handle_triage_query
 
 # Configure stdout/stderr for UTF-8 to properly handle emojis in console output
 # Store original stdout/stderr to avoid issues during shutdown
@@ -794,79 +794,6 @@ class GmailChatbotApp:
                 )
         return response
 
-    def _handle_triage_query(
-        self, message: str, request_id: str, scores: Dict[str, float]
-    ) -> str:
-        """Handles queries classified as 'triage' or triage-leaning 'ambiguous'."""
-        logging.info(
-            f"[{request_id}] Handling 'triage' or triage-leaning 'ambiguous' query (scores: {scores})."
-        )
-        response = ""
-        # Prefer using MemoryActionsHandler for structured data if available
-        # Assuming get_action_items_structured() returns List[Dict] or similar
-        action_items = self.memory_actions_handler.get_action_items_structured(
-            request_id=request_id
-        )
-
-        if action_items:
-            grouped = defaultdict(list)
-            for item in action_items:
-                grouped[item.get("client", "Other Tasks")].append(item)
-
-            response_parts = [
-                "Here are items that might need your attention:\n"
-            ]
-            for client_name, items in grouped.items():
-                response_parts.append(
-                    f"**{client_name}** ({len(items)} item(s))"
-                )
-                for item in items[:4]:  # Show top 4 per client
-                    response_parts.append(
-                        f"- {item.get('subject', 'No Subject')} (Date: {item.get('date', 'N/A')})"
-                    )
-                if len(items) > 4:
-                    response_parts.append(f"  ...and {len(items) - 4} more.")
-                response_parts.append("")  # Add a blank line for spacing
-
-            # Assuming _get_delegation_candidates is part of MemoryActionsHandler now
-            delegation_candidates = (
-                self.memory_actions_handler.get_delegation_candidates(
-                    action_items, request_id=request_id
-                )
-            )
-            if delegation_candidates:
-                response_parts.append("\n**Potential tasks for your VA:**")
-                for item in delegation_candidates[:3]:  # Show top 3
-                    response_parts.append(
-                        f"- {item.get('subject', 'No Subject')}"
-                    )
-            response = "\n".join(response_parts)
-        # Check vector search availability via MemoryActionsHandler
-        elif self.memory_actions_handler.is_vector_search_available(
-            request_id=request_id
-        ):
-            logging.info(
-                f"[{request_id}] No action items for triage, trying vector search for relevant emails."
-            )
-            # Find related emails via MemoryActionsHandler
-            vector_results = self.memory_actions_handler.find_related_emails(
-                message, limit=5, request_id=request_id
-            )  # Search based on original message
-            if vector_results:
-                # Let Claude summarize/evaluate these results in the context of triage
-                response = self.claude_client.evaluate_vector_match(
-                    user_query=message,
-                    vector_results=vector_results,
-                    system_message=self.system_message,
-                    # context="triage_assistance_from_vector_search", # 'context' is not a param for evaluate_vector_match
-                    request_id=request_id,
-                )
-                response = postprocess_claude_response(response)
-            else:
-                response = "I checked for urgent items and also performed a quick search based on your message, but didn't find anything specific that needs immediate attention."
-        else:
-            response = "I checked for urgent items, but there's nothing specific in the action list right now, and semantic search is unavailable to find related emails."
-        return response
 
     def _handle_catch_up_query(self, request_id: str) -> str:
         """Handles queries classified as 'catch_up'."""
@@ -1397,7 +1324,7 @@ class GmailChatbotApp:
         elif query_type == "triage" or (
             query_type == "ambiguous" and scores.get("triage", 0) > 0.2
         ):
-            response = self._handle_triage_query(message, request_id, scores)
+            response = handle_triage_query(self, message, request_id, scores)
         elif query_type == "email_search":
             response = self._handle_email_search_query(
                 message, message_lower, request_id
@@ -1822,8 +1749,8 @@ class GmailChatbotApp:
             elif query_type == "triage" or (
                 query_type == "ambiguous" and scores.get("triage", 0) > 0.2
             ):
-                response = self._handle_triage_query(
-                    message, request_id, scores
+                response = handle_triage_query(
+                    self, message, request_id, scores
                 )
 
             elif query_type == "email_search":
