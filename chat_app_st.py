@@ -407,7 +407,10 @@ if prompt := st.chat_input("Ask me about your inbox:"):
     if st.session_state.get("agentic_mode_enabled"):
         if not st.session_state.get("agentic_plan"):
             with st.spinner("Bot is thinking..."):
+                spinner_placeholder = st.empty()
+                spinner_placeholder.markdown("### \u23f3 Bot is thinking...")
                 plan = generate_plan(prompt, st.session_state)
+                spinner_placeholder.empty()
             if plan is None:
                 assistant_reply = st.session_state.bot.process_message(prompt)
                 with st.chat_message("assistant"):
@@ -425,7 +428,10 @@ if prompt := st.chat_input("Ask me about your inbox:"):
             run_agentic_plan()
     else:
         with st.spinner("Bot is thinking..."):
+            spinner_placeholder = st.empty()
+            spinner_placeholder.markdown("### \u23f3 Bot is thinking...")
             assistant_reply = st.session_state.bot.process_message(prompt)
+            spinner_placeholder.empty()
         with st.chat_message("assistant"):
             st.markdown(assistant_reply)
 
