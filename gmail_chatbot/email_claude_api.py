@@ -174,12 +174,23 @@ class ClaudeAPIClient:
             )  # <-- ADDED LOG LINE
 
             # Call Claude API
-            response = self.client.messages.create(
-                model=model_to_use,
-                max_tokens=CLAUDE_MAX_TOKENS,
-                system=system_message,
-                messages=[{"role": "user", "content": prompt}],
-            )
+            try:
+                response = self.client.messages.create(
+                    model=model_to_use,
+                    max_tokens=CLAUDE_MAX_TOKENS,
+                    system=system_message,
+                    messages=[{"role": "user", "content": prompt}],
+                )
+            except getattr(
+                anthropic, "errors", anthropic
+            ).NotFoundError as api_err:
+                logging.error(
+                    f"[{request_id}] Claude API model not found: {api_err}"
+                )
+                return "ERROR: The specified Claude model is invalid or inaccessible."
+            except getattr(anthropic, "APIError", Exception) as api_err:
+                logging.error(f"[{request_id}] Claude API error: {api_err}")
+                return "ERROR: The specified Claude model is invalid or inaccessible."
 
             # Extract the formatted query
             formatted_query = response.content[0].text.strip()
@@ -331,12 +342,21 @@ class ClaudeAPIClient:
             )
 
             # Call Claude API
-            response = self.client.messages.create(
-                model=model_to_use,
-                max_tokens=CLAUDE_MAX_TOKENS,
-                system=system_message,
-                messages=[{"role": "user", "content": prompt}],
-            )
+            try:
+                response = self.client.messages.create(
+                    model=model_to_use,
+                    max_tokens=CLAUDE_MAX_TOKENS,
+                    system=system_message,
+                    messages=[{"role": "user", "content": prompt}],
+                )
+            except getattr(
+                anthropic, "errors", anthropic
+            ).NotFoundError as api_err:
+                logging.error(f"Claude API model not found: {api_err}")
+                return "Error: The specified Claude model is invalid or inaccessible."
+            except getattr(anthropic, "APIError", Exception) as api_err:
+                logging.error(f"Claude API error: {api_err}")
+                return "Error: The specified Claude model is invalid or inaccessible."
 
             # Extract the processed content
             processed_content = response.content[0].text.strip()
