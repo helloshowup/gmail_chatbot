@@ -263,4 +263,4 @@ ruff .
 
 ## License
 
-This project is for personal use only.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
