@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import logging
 import pytest
 from unittest.mock import patch, MagicMock
 from pathlib import Path
@@ -55,16 +56,25 @@ class TestEmailSearchFlow:
             "What hit my inbox today?",
         ]
     )
-    def test_email_search_routing(self, app, mock_gmail_client, query):
+    def test_email_search_routing(self, app, mock_gmail_client, query, caplog):
         """Test that email search queries properly invoke search_emails."""
+        caplog.set_level(logging.CRITICAL)
+
         # Process the message
         response = app.process_message(query)
-        
+
         # Verify the Gmail client's search_emails method was called
         mock_gmail_client.search_emails.assert_called_once()
-        
+
         # Verify the response indicates a search was performed
         assert "found" in response.lower() or "searched" in response.lower() or "results" in response.lower()
+
+        # Ensure a critical log was emitted for the user-initiated search
+        assert any(
+            "user-initiated search_emails using" in rec.getMessage()
+            for rec in caplog.records
+            if rec.levelno == logging.CRITICAL
+        )
 
     def test_catch_up_not_triggering_email_search(self, app, mock_gmail_client):
         """Test that catch_up queries do not trigger email searches."""
