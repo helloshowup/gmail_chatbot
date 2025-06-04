@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T13:05:01.237845",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_130455_359754.json"
+  },
+  "response": {
+    "content": "\ud83d\udcd3 **Email Summary - June 3-4, 2025**\n\n**People:**\n- Bryce Hepburn (hello@showup.courses, bryce@brycehepburn.co.za)\n- Jamie Sundelson (hilightcoach@gmail.com) - Meeting participant \n- Alicia Loe, Charlie Buehler-Hoard - Basecamp participants\n- Rod Colburn (rocketrod208@me.com) - Forwarded content\n- Brian McLaren - Mentioned recipient\n\n**Key Activities:**\n- Meeting with Jamie Sundelson (June 4, 7:30 AM SAST) - Recorded by Fireflies.ai\n- Gas delivery scheduled (June 4, 12:30 PM) - 2 x 9kg cylinders...",
+    "tokens": {
+      "input_tokens": 1699,
+      "output_tokens": 308
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_130455_359754.json"
+  },
+  "error": null
+}

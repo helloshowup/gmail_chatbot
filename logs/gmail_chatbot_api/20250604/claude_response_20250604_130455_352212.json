@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T13:04:55.352212",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_130439_097524.json"
+  },
+  "response": {
+    "content": "# Email Analysis: Names, Dates, and Key Topics\n\nBased on the email data provided, here's an extraction of names, dates, and key topics:\n\n## Names\n- **Bryce Hepburn**: Main recipient (hello@showup.courses, bryce@brycehepburn.co.za)\n- **Jamie Sundelson**: Meeting participant (hilightcoach@gmail.com)\n- **Alicia Loe**: Basecamp conversation participant\n- **Charlie Buehler-Hoard**: Basecamp conversation participant\n- **Rod Colburn**: Email forwarder (rocketrod208@me.com)\n- **Brian McLaren**: Email re...",
+    "tokens": {
+      "input_tokens": 11918,
+      "output_tokens": 565
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_130439_097524.json"
+  },
+  "error": null
+}
