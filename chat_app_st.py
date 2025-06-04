@@ -36,7 +36,7 @@ sys.excepthook = log_exception_to_file
 st.set_page_config(page_title="Gmail Chatbot", layout="wide")
 
 # from email_main import GmailChatbotApp # MOVED
-from email_config import CLAUDE_API_KEY_ENV # Assuming this is accessible
+from gmail_chatbot.email_config import CLAUDE_API_KEY_ENV
 import time
 from pathlib import Path
 import dotenv
@@ -201,7 +201,7 @@ def initialize_chatbot() -> bool:
             st.session_state["initialization_steps"].append(str("Attempting to import GmailChatbotApp..."))
             print("DEBUG: chat_app_st.py - BEFORE GmailChatbotApp import", file=sys.stderr, flush=True)
             try:
-                from email_main import GmailChatbotApp # Deferred import
+                from gmail_chatbot.email_main import GmailChatbotApp
                 print("DEBUG: chat_app_st.py - Import statement for GmailChatbotApp COMPLETED.", file=sys.stderr, flush=True)
                 if not ('GmailChatbotApp' in locals() and isinstance(GmailChatbotApp, type)):
                     critical_msg = "CRITICAL_DEBUG: chat_app_st.py - GmailChatbotApp import issue. Not a class after import."

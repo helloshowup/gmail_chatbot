@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 import anthropic
 from gmail_chatbot.email_config import CLAUDE_API_KEY_ENV, CLAUDE_DEFAULT_MODEL, CLAUDE_MAX_TOKENS, LOGS_DIR
 from gmail_chatbot.api_logging import log_claude_request, log_claude_response
-from gmail_chatbot.prompt_templates import format_executable_logic_prompt, VECTOR_RESULTS_EVALUATION_PROMPT
+from .prompt_templates import format_executable_logic_prompt, VECTOR_RESULTS_EVALUATION_PROMPT
 
 print(f"Claude API model in use: {CLAUDE_DEFAULT_MODEL}")
 

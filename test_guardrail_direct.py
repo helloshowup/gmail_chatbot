@@ -6,8 +6,8 @@ from unittest.mock import MagicMock
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # Import modules to test
-from email_main import GmailChatbotApp
-from prompt_templates import NOTEBOOK_NO_RESULTS_TEMPLATES
+from gmail_chatbot.email_main import GmailChatbotApp
+from gmail_chatbot.prompt_templates import NOTEBOOK_NO_RESULTS_TEMPLATES
 
 def run_test():
     print("Starting notebook guardrail test...")
@@ -32,8 +32,9 @@ def run_test():
     request_id = "test-123"
     
     # Mock the query classification
-    original_classify = __import__('email_main').classify_query_type
-    __import__('email_main').classify_query_type = lambda q: ("notebook_lookup", 0.8, {"notebook_lookup": 0.8})
+    import gmail_chatbot.email_main as email_main
+    original_classify = email_main.classify_query_type
+    email_main.classify_query_type = lambda q: ("notebook_lookup", 0.8, {"notebook_lookup": 0.8})
     
     try:
         # Execute
@@ -77,7 +78,8 @@ def run_test():
         print("\nAll tests completed!")
     finally:
         # Restore original function
-        __import__('email_main').classify_query_type = original_classify
+        import gmail_chatbot.email_main as email_main
+        email_main.classify_query_type = original_classify
 
 if __name__ == "__main__":
     run_test()

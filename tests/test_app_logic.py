@@ -14,7 +14,7 @@ sys.path.insert(0, parent_dir)
 
 # Attempt to import the app. This might fail if email_main.py has syntax errors.
 try:
-    from email_main import GmailChatbotApp
+    from gmail_chatbot.email_main import GmailChatbotApp
 except Exception as e:
     print(f"Could not import GmailChatbotApp from email_main: {e}")
     GmailChatbotApp = None # Placeholder if import fails
@@ -44,11 +44,11 @@ def mock_dependencies():
     }
 
 @pytest.mark.skipif(GmailChatbotApp is None, reason="GmailChatbotApp could not be imported from email_main.py")
-@patch('email_main.ClaudeAPIClient') # Path to ClaudeAPIClient where it's instantiated or imported in email_main
-@patch('email_main.GmailAPIClient')  # Path to GmailAPIClient
-@patch('email_main.vector_memory')   # Path to the vector_memory instance
-@patch('email_main.classify_query_type') # Path to classify_query_type function
-@patch('email_main.preference_detector') # Path to preference_detector instance
+@patch('gmail_chatbot.email_main.ClaudeAPIClient')
+@patch('gmail_chatbot.email_main.GmailAPIClient')
+@patch('gmail_chatbot.email_main.vector_memory')
+@patch('gmail_chatbot.email_main.classify_query_type')
+@patch('gmail_chatbot.email_main.preference_detector')
 def test_process_message_general_chat(mock_pref_detector, mock_classify, mock_vec_mem, mock_gmail, mock_claude, mock_dependencies):
     """Test process_message for a general chat scenario."""
     # Setup mocks from the fixture and patches
@@ -88,11 +88,11 @@ def test_process_message_general_chat(mock_pref_detector, mock_classify, mock_ve
     assert app.chat_history[1]["content"] == response
 
 @pytest.mark.skipif(GmailChatbotApp is None, reason="GmailChatbotApp could not be imported from email_main.py")
-@patch('email_main.ClaudeAPIClient')
-@patch('email_main.GmailAPIClient')
-@patch('email_main.vector_memory')
-@patch('email_main.classify_query_type')
-@patch('email_main.preference_detector')
+@patch('gmail_chatbot.email_main.ClaudeAPIClient')
+@patch('gmail_chatbot.email_main.GmailAPIClient')
+@patch('gmail_chatbot.email_main.vector_memory')
+@patch('gmail_chatbot.email_main.classify_query_type')
+@patch('gmail_chatbot.email_main.preference_detector')
 def test_process_message_simple_email_search(mock_pref_detector, mock_classify, mock_vec_mem, mock_gmail, mock_claude, mock_dependencies):
     """Test process_message for a simple email search scenario."""
     mock_claude_client_instance = mock_claude.return_value
@@ -143,10 +143,10 @@ def test_process_message_simple_email_search(mock_pref_detector, mock_classify, 
 
 
 @pytest.mark.skipif(GmailChatbotApp is None, reason="GmailChatbotApp could not be imported from email_main.py")
-@patch('email_main.ClaudeAPIClient')
-@patch('email_main.vector_memory') # Assuming triage fetches emails via vector_memory
-@patch('email_main.classify_query_type')
-@patch('email_main.preference_detector')
+@patch('gmail_chatbot.email_main.ClaudeAPIClient')
+@patch('gmail_chatbot.email_main.vector_memory')
+@patch('gmail_chatbot.email_main.classify_query_type')
+@patch('gmail_chatbot.email_main.preference_detector')
 def test_process_message_triage(mock_pref_detector, mock_classify, mock_vec_mem, mock_claude, mock_dependencies):
     """Test process_message for a triage scenario."""
     mock_claude_client_instance = mock_claude.return_value
@@ -197,10 +197,10 @@ def test_process_message_triage(mock_pref_detector, mock_classify, mock_vec_mem,
 
 
 @pytest.mark.skipif(GmailChatbotApp is None, reason="GmailChatbotApp could not be imported from email_main.py")
-@patch('email_main.ClaudeAPIClient')
-@patch('email_main.classify_query_type') # To ensure it's patched even if not central to this test
-@patch('email_main.preference_detector')
-@patch('email_main.vector_memory') # For find_relevant_preferences
+@patch('gmail_chatbot.email_main.ClaudeAPIClient')
+@patch('gmail_chatbot.email_main.classify_query_type')
+@patch('gmail_chatbot.email_main.preference_detector')
+@patch('gmail_chatbot.email_main.vector_memory')
 def test_process_message_preference_capture(mock_vec_mem, mock_pref_detector, mock_classify, mock_claude, mock_dependencies):
     """Test process_message for a preference capture scenario."""
     mock_claude_client_instance = mock_claude.return_value
@@ -239,12 +239,12 @@ def test_process_message_preference_capture(mock_vec_mem, mock_pref_detector, mo
 
 
 @pytest.mark.skipif(GmailChatbotApp is None, reason="GmailChatbotApp could not be imported from email_main.py")
-@patch('email_main.ClaudeAPIClient') # Patched as it's a common dependency
-@patch('email_main.enhanced_memory') # For app.enhanced_memory_store
-@patch('email_main.vector_memory') # For app.memory_store (used for preferences)
-@patch('email_main.classify_query_type')
-@patch('email_main.preference_detector')
-@patch('email_main.MemoryKind') # To allow referencing MemoryKind.NOTE
+@patch('gmail_chatbot.email_main.ClaudeAPIClient')
+@patch('gmail_chatbot.email_main.enhanced_memory')
+@patch('gmail_chatbot.email_main.vector_memory')
+@patch('gmail_chatbot.email_main.classify_query_type')
+@patch('gmail_chatbot.email_main.preference_detector')
+@patch('gmail_chatbot.email_main.MemoryKind')
 def test_process_message_notebook_lookup(mock_memory_kind, mock_pref_detector, mock_classify, mock_vec_mem, mock_enhanced_mem, mock_claude, mock_dependencies):
     """Test process_message for a notebook_lookup scenario."""
     # mock_claude_client_instance = mock_claude.return_value # Potentially used for formatting or if no notes found

@@ -18,9 +18,9 @@ if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
 # Import modules to test
-from email_main import GmailChatbotApp
-from prompt_templates import NOTEBOOK_NO_RESULTS_TEMPLATES
-from email_config import CLAUDE_API_KEY_ENV
+from gmail_chatbot.email_main import GmailChatbotApp
+from gmail_chatbot.prompt_templates import NOTEBOOK_NO_RESULTS_TEMPLATES
+from gmail_chatbot.email_config import CLAUDE_API_KEY_ENV
 
 
 @pytest.fixture
@@ -31,12 +31,12 @@ def mock_deps(monkeypatch):
     gmail_client = MagicMock()
     claude_client = MagicMock()
 
-    monkeypatch.setattr('email_main.GmailAPIClient', lambda *a, **k: gmail_client)
-    monkeypatch.setattr('email_main.ClaudeAPIClient', lambda *a, **k: claude_client)
-    monkeypatch.setattr('email_main.EmailVectorMemoryStore', lambda *a, **k: memory_store)
-    monkeypatch.setattr('email_main.EnhancedMemoryStore', MagicMock(return_value=MagicMock()))
-    monkeypatch.setattr('email_main.PreferenceDetector', MagicMock(return_value=MagicMock()))
-    monkeypatch.setattr('email_main.MemoryActionsHandler', MagicMock(return_value=MagicMock()))
+    monkeypatch.setattr('gmail_chatbot.email_main.GmailAPIClient', lambda *a, **k: gmail_client)
+    monkeypatch.setattr('gmail_chatbot.email_main.ClaudeAPIClient', lambda *a, **k: claude_client)
+    monkeypatch.setattr('gmail_chatbot.email_main.EmailVectorMemoryStore', lambda *a, **k: memory_store)
+    monkeypatch.setattr('gmail_chatbot.email_main.EnhancedMemoryStore', MagicMock(return_value=MagicMock()))
+    monkeypatch.setattr('gmail_chatbot.email_main.PreferenceDetector', MagicMock(return_value=MagicMock()))
+    monkeypatch.setattr('gmail_chatbot.email_main.MemoryActionsHandler', MagicMock(return_value=MagicMock()))
     
     app = GmailChatbotApp()
     app.memory_store = memory_store
@@ -73,7 +73,7 @@ def test_notebook_guardrail_entity_extraction(mock_deps, query, expected_entity,
     memory_store = mock_deps['memory_store']
     
     # Mock the classifier to always return notebook_lookup
-    monkeypatch.setattr('email_main.classify_query_type', 
+    monkeypatch.setattr('gmail_chatbot.email_main.classify_query_type',
                          lambda q: ("notebook_lookup", 0.8, {"notebook_lookup": 0.8}))
     
     # Setup - notebook lookup returns empty results
@@ -98,7 +98,7 @@ def test_notebook_guardrail_empty_results(mock_deps, monkeypatch):
     claude_client = mock_deps['claude_client']
     
     # Mock the classifier to always return notebook_lookup
-    monkeypatch.setattr('email_main.classify_query_type', 
+    monkeypatch.setattr('gmail_chatbot.email_main.classify_query_type',
                          lambda q: ("notebook_lookup", 0.8, {"notebook_lookup": 0.8}))
     
     # Setup - notebook lookup returns empty results
@@ -126,7 +126,7 @@ def test_notebook_guardrail_with_results(mock_deps, monkeypatch):
     claude_client = mock_deps['claude_client']
     
     # Mock the classifier to always return notebook_lookup
-    monkeypatch.setattr('email_main.classify_query_type', 
+    monkeypatch.setattr('gmail_chatbot.email_main.classify_query_type',
                          lambda q: ("notebook_lookup", 0.8, {"notebook_lookup": 0.8}))
     
     # Setup - notebook lookup returns non-empty results
