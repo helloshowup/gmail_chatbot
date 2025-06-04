@@ -84,10 +84,18 @@ def handle_triage_query(
             )
             response = postprocess_claude_response(response)
         else:
-            response = (
-                "I checked for urgent items and also performed a quick search based "
-                "on your message, but didn't find anything specific that needs immediate attention."
-            )
+            last_reply = app.get_last_assistant_reply() or ""
+            search_prompt = "Should I check your inbox"
+            if search_prompt.lower() in last_reply.lower():
+                response = (
+                    "I already looked for urgent items recently and didn't find anything new."
+                )
+            else:
+                response = (
+                    "I checked for urgent items and also performed a quick search based "
+                    "on your message, but didn't find anything specific that needs immediate attention. "
+                    "Should I check your inbox directly for more recent updates?"
+                )
     else:
         response = (
             "I checked for urgent items, but there's nothing specific in the action list right now, "
