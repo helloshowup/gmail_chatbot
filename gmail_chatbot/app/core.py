@@ -217,9 +217,9 @@ class GmailChatbotApp:
                 f"Found {CLAUDE_API_KEY_ENV} in environment variables."
             )
 
-        # Define path for the ML model
+        # Define path for the ML model relative to the project root
         MODEL_PATH = (
-            Path(__file__).resolve().parent
+            Path(__file__).resolve().parents[1]
             / "ml_classifier"
             / "classifier_model.joblib"
         )
