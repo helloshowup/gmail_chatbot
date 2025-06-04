@@ -60,15 +60,19 @@ def handle_triage_query(
                 response_parts.append(f"  ...and {len(items) - 4} more.")
             response_parts.append("")
 
-        delegation_candidates = app.memory_actions_handler.get_delegation_candidates(
-            action_items, request_id=request_id
+        delegation_candidates = (
+            app.memory_actions_handler.get_delegation_candidates(
+                action_items, request_id=request_id
+            )
         )
         if delegation_candidates:
             response_parts.append("\n**Potential tasks for your VA:**")
             for item in delegation_candidates[:3]:
                 response_parts.append(f"- {item.get('subject', 'No Subject')}")
         response = "\n".join(response_parts)
-    elif app.memory_actions_handler.is_vector_search_available(request_id=request_id):
+    elif app.memory_actions_handler.is_vector_search_available(
+        request_id=request_id
+    ):
         logging.info(
             f"[{request_id}] No action items for triage, trying vector search for relevant emails."
         )
@@ -84,12 +88,12 @@ def handle_triage_query(
             )
             response = postprocess_claude_response(response)
         else:
-            last_reply = app.get_last_assistant_reply() or ""
             search_prompt = "Should I check your inbox"
-            if search_prompt.lower() in last_reply.lower():
-                response = (
-                    "I already looked for urgent items recently and didn't find anything new."
-                )
+            recent_info = app.has_recent_assistant_phrase(
+                "items that might need your attention"
+            ) or app.has_recent_assistant_phrase(search_prompt)
+            if recent_info:
+                response = "I already looked for urgent items recently and didn't find anything new."
             else:
                 response = (
                     "I checked for urgent items and also performed a quick search based "
@@ -102,4 +106,3 @@ def handle_triage_query(
             "and semantic search is unavailable to find related emails."
         )
     return response
-
