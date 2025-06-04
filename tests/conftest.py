@@ -2,6 +2,7 @@ import sys
 import types
 import os
 import contextlib
+import pytest
 
 # Mark that tests are running so application modules avoid altering sys.stdout/stderr
 os.environ.setdefault("PYTEST_RUNNING", "1")
@@ -21,6 +22,24 @@ for mod_name in ['anthropic', 'joblib', 'numpy']:
             stub.__version__ = '0.0'
         sys.modules[mod_name] = stub
 from unittest.mock import MagicMock
+
+
+class DummyClaudeClient:
+    """Simple Claude client stub used for tests."""
+
+    prep_model = "prep-model"
+
+    def __init__(self, *a, **k):
+        self.client = True
+
+    def process_query(self, *a, **k):
+        return "from:test@example.com"
+
+    def chat(self, *a, **k):
+        return MagicMock(content="Ack")
+
+    def evaluate_vector_match(self, *a, **k):
+        return "Found results"
 
 # Minimal stubs for Google API modules
 if 'google' not in sys.modules:
@@ -98,6 +117,33 @@ try:
 except Exception:
     pass
 
+from unittest.mock import MagicMock
+
+
+@pytest.fixture(autouse=True)
+def patch_external_clients(monkeypatch):
+    """Patch heavy external client classes used during app initialization."""
+    class DummyGmailClient:
+        def __init__(self, *a, **k):
+            self.service = MagicMock()
+
+        def search_emails(self, *a, **k):
+            return ([{"id": "1"}], "Found results")
+
+    monkeypatch.setattr(
+        "gmail_chatbot.app.core.GmailAPIClient",
+        DummyGmailClient,
+    )
+    monkeypatch.setattr(
+        "gmail_chatbot.app.core.ClaudeAPIClient",
+        DummyClaudeClient,
+    )
+    monkeypatch.setattr(
+        "gmail_chatbot.memory_handler.MemoryActionsHandler.perform_autonomous_memory_enrichment",
+        lambda *a, **k: None,
+    )
+    yield
+
 # Provide a basic streamlit stub with attribute-style session_state
 if 'streamlit' not in sys.modules:
     st_stub = types.ModuleType('streamlit')
@@ -115,7 +161,44 @@ if 'streamlit' not in sys.modules:
     st_stub.title = lambda *a, **k: None
     st_stub.chat_message = contextlib.nullcontext
     st_stub.chat_input = lambda *a, **k: None
-    st_stub.sidebar = types.SimpleNamespace()
+    class Sidebar:
+        def header(self, *a, **k):
+            pass
+
+        def toggle(self, *a, **k):
+            pass
+
+        def number_input(self, *a, **k):
+            return 0
+
+        def title(self, *a, **k):
+            pass
+
+        def checkbox(self, *a, **k):
+            return False
+
+        def button(self, *a, **k):
+            return False
+
+        def file_uploader(self, *a, **k):
+            return None
+
+        def subheader(self, *a, **k):
+            pass
+
+        def code(self, *a, **k):
+            pass
+
+        def error(self, *a, **k):
+            pass
+
+        def markdown(self, *a, **k):
+            pass
+
+        def caption(self, *a, **k):
+            pass
+
+    st_stub.sidebar = Sidebar()
     sys.modules['streamlit'] = st_stub
 
 # Ensure Anthropic API key placeholder exists for app initialization

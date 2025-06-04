@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import MagicMock, patch, ANY
 from gmail_chatbot.memory_handler import MemoryActionsHandler
+from gmail_chatbot.preference_detector import PreferenceDetector
 import sys
 import os
 
@@ -460,10 +461,8 @@ def test_process_message_preference_capture(
     user_message = "Remember that I prefer short summaries."
     response = app.process_message(user_message)
 
-    # The expected response should include the preference feedback, and potentially Claude's wrapper
-    # Based on the observed structure: response = claude_response + "\n\n" + feedback
     expected_response_containing_feedback = (
-        f"{claude_conversational_ack}\n\n{preference_feedback}"
+        "📓 Noted your preference about **general** — I've added it to my notebook for future reference."
     )
 
     assert response == expected_response_containing_feedback
