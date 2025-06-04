@@ -354,8 +354,8 @@ def test_email_search_confirmation_yes():
     original_user_message = app.pending_email_context["original_message"]
     acknowledgement = "👍 Starting the search now..."
     found_emails, search_results_text = app.gmail_client.search_emails(
-        search_query_override=gmail_search_string,
-        user_query=original_user_message,
+        query=gmail_search_string,
+        original_user_query=original_user_message,
         system_message=app.system_message,
         request_id="req2",
     )
@@ -374,8 +374,8 @@ def test_email_search_confirmation_yes():
 
     # Assertions matching expected flow
     app.gmail_client.search_emails.assert_called_once_with(
-        search_query_override="from:boss subject:urgent",
-        user_query="Find urgent emails from my boss",
+        query="from:boss subject:urgent",
+        original_user_query="Find urgent emails from my boss",
         system_message="sys",
         request_id=ANY,
     )
