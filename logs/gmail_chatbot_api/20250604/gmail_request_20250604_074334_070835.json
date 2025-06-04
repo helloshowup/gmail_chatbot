@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-06-04T07:43:34.070835",
+  "interaction_type": "gmail_request",
+  "query": "Autonomous fetch for Excel High School",
+  "request": {
+    "gmail_query": "newer_than:7d",
+    "original_user_query": "Autonomous fetch for Excel High School",
+    "request_id": "896a8a03-d254-44bb-9760-891dc2591500_client_Excel_High_School"
+  },
+  "response": null,
+  "error": null
+}

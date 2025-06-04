@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-06-04T07:43:35.791278",
+  "interaction_type": "gmail_request",
+  "query": "Autonomous fetch for Further Learner",
+  "request": {
+    "gmail_query": "newer_than:7d",
+    "original_user_query": "Autonomous fetch for Further Learner",
+    "request_id": "d43f6fab-c2d9-45f4-b709-3c1c280c0c07_client_Further_Learner"
+  },
+  "response": null,
+  "error": null
+}
