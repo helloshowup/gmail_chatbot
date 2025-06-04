@@ -886,7 +886,8 @@ class GmailChatbotApp:
                 if entity
                 else message
             )
-            # Prepare context for potential follow-up, but default to searching now
+            # Reuse confirmation context but proceed with the search immediately
+
             self.pending_email_context = {
                 "gmail_query": search_query,
                 "original_message": message,
@@ -895,40 +896,61 @@ class GmailChatbotApp:
 
             logging.info(
                 f"[{request_id}] Notebook miss for query: '{message[:50]}...'. "
-                f"Searching Gmail with query: '{search_query}'"
+                f"Auto searching Gmail with: '{search_query}'"
             )
 
-            emails, gmail_text = self.gmail_client.search_emails(
+            emails, search_results_text = self.gmail_client.search_emails(
                 query=search_query,
                 original_user_query=message,
                 system_message=self.system_message,
                 request_id=request_id,
             )
-            if gmail_text and "error" in gmail_text.lower() and st:
-                st.session_state.last_gmail_error = gmail_text
+            if (
+                search_results_text
+                and "error" in search_results_text.lower()
+                and st
+            ):
+                st.session_state.last_gmail_error = search_results_text
 
+            final_parts = [response]
             if emails:
+                logging.info(
+                    f"[{request_id}] Found {len(emails)} emails from auto search."
+                )
                 self.memory_actions_handler.store_emails_in_memory(
-                    emails=emails, query=message, request_id=request_id
+                    emails=emails,
+                    query=message,
+                    request_id=request_id,
                 )
-                append_text = gmail_text or (
-                    f"I found {len(emails)} email(s) related to your query."
+                email_ids = [e.get("id") for e in emails if e.get("id")]
+                self.memory_actions_handler.record_interaction_in_memory(
+                    query=message,
+                    response=search_results_text
+                    or f"Found {len(emails)} emails.",
+                    request_id=request_id,
+                    email_ids=email_ids,
+                    client=None,
                 )
-                response = f"{response}\n\n{append_text}"
-            elif gmail_text:
-                response = f"{response}\n\n{gmail_text}"
+                if search_results_text:
+                    final_parts.append(search_results_text)
+                else:
+                    final_parts.append(
+                        f"I found {len(emails)} email(s) matching `{search_query}`."
+                    )
+            else:
+                logging.info(
+                    f"[{request_id}] No emails found for auto search query: '{search_query[:50]}'"
+                )
+                if search_results_text:
+                    final_parts.append(search_results_text)
+                else:
+                    final_parts.append(
+                        f"I searched Gmail for `{search_query}` but couldn't find any matching emails."
+                    )
 
+            response = "\n\n".join(filter(None, final_parts))
+            self.pending_email_context = None
 
-        # Append a brief notebook overview when no notebook results were found
-        if not search_results:
-            try:
-                overview = self.get_notebook_overview(request_id)
-                if overview:
-                    response = f"{response}\n\n{overview}"
-            except Exception as e:  # pragma: no cover - defensive
-                logging.error(
-                    f"[{request_id}] Failed to append notebook overview: {e}"
-                )
 
         # Log the notebook search (hit or miss) via MemoryActionsHandler
         self.memory_actions_handler.record_interaction_in_memory(
