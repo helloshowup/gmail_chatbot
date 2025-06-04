@@ -48,6 +48,11 @@ from gmail_chatbot.query_classifier import (
 from gmail_chatbot.handlers import handle_triage_query
 from .handlers import handle_email_search_query
 
+# Pattern to detect Gmail search syntax in Claude chat responses
+EMAIL_SEARCH_HINT_RE = re.compile(
+    r"(from:|to:|subject:|after:|before:|label:|is:|has:|in:)", re.IGNORECASE
+)
+
 # Configure stdout/stderr for UTF-8 to properly handle emojis in console output
 # Store original stdout/stderr to avoid issues during shutdown
 original_stdout = sys.stdout
@@ -995,12 +1000,42 @@ class GmailChatbotApp:
             response
         )  # Ensure consistent post-processing
 
+        search_text = self._maybe_search_from_response(
+            response, message, request_id
+        )
+        if search_text:
+            response = f"{response}\n\n{search_text}"
+
         # Record the general chat interaction via MemoryActionsHandler
         # This assumes record_interaction_in_memory can handle general chats without email_ids or client
         self.memory_actions_handler.record_interaction_in_memory(
             query=message, response=response, request_id=request_id
         )
         return response
+
+    def _maybe_search_from_response(
+        self, response: str, original_query: str, request_id: str
+    ) -> Optional[str]:
+        """Trigger a Gmail search if Claude's chat response contains Gmail syntax."""
+        if not self.gmail_client:
+            return None
+        if not EMAIL_SEARCH_HINT_RE.search(response):
+            return None
+        gmail_query = self.gmail_client._extract_gmail_search_query(response)
+        logging.info(
+            f"[{request_id}] Detected Gmail query in chat response: {gmail_query}"
+        )
+        emails, search_results_text = self.gmail_client.search_emails(
+            gmail_query,
+            original_user_query=original_query,
+            system_message=self.system_message,
+            request_id=request_id,
+        )
+        if emails:
+            self.memory_actions_handler.store_emails_in_memory(
+                emails=emails, query=original_query, request_id=request_id
+            )
+        return search_results_text
 
     def handle_pending_email_menu(
         self, message_lower: str, request_id: str
