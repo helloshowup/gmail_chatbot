@@ -7,6 +7,7 @@ import traceback
 import io
 import time
 import json
+import uuid
 from pathlib import Path
 from gmail_chatbot.agentic_planner import generate_plan
 from gmail_chatbot.agentic_executor import (
@@ -447,6 +448,13 @@ if "batch_mode" not in st.session_state:
 st.session_state.batch_mode = st.sidebar.checkbox(
     "Batch Mode", value=st.session_state.batch_mode, key="batch_mode_checkbox"
 )
+
+if st.sidebar.button("Show Notebook Summary"):
+    if st.session_state.get("bot"):
+        summary = st.session_state.bot.get_notebook_overview(str(uuid.uuid4()))
+        st.sidebar.info(summary)
+    else:
+        st.sidebar.warning("Bot not initialized.")
 
 log_file = st.sidebar.file_uploader(
     "Upload log file for review", type="txt", key="log_uploader"
