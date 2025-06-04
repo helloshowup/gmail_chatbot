@@ -41,7 +41,8 @@ if 'google' not in sys.modules:
     flow_module.InstalledAppFlow = MagicMock()
     google_auth_oauthlib = types.ModuleType('google_auth_oauthlib')
     google_auth_oauthlib.flow = flow_module
-    sys.modules['google_auth_oauthlib'] = google_auth_oauthlib
+    google_auth_oauthlib_module = google_auth_oauthlib
+    sys.modules['google_auth_oauthlib'] = google_auth_oauthlib_module
     sys.modules['google_auth_oauthlib.flow'] = flow_module
 
 
@@ -59,7 +60,7 @@ if 'google' not in sys.modules:
     googleapiclient_module = types.ModuleType('googleapiclient')
     googleapiclient_module.discovery = discovery_module
     googleapiclient_module.errors = errors_module
-    sys.modules['google_auth_oauthlib'] = google_auth_oauthlib
+    sys.modules['google_auth_oauthlib'] = google_auth_oauthlib_module
     sys.modules['google_auth_oauthlib.flow'] = flow_module
     sys.modules['googleapiclient'] = googleapiclient_module
     sys.modules['googleapiclient.discovery'] = discovery_module
