@@ -106,6 +106,9 @@ INFO_ON_PATTERN = re.compile(
 SEARCH_GMAIL_PATTERN = re.compile(
     r"\bsearch\s+gmail\s+for\s+(?P<query>.+)", re.IGNORECASE
 )
+TODAYS_EMAIL_PATTERN = re.compile(
+    r"\b(today'?s|todays)\s+email\b", re.IGNORECASE
+)
 
 def classify_query_type_regex(query: str) -> Tuple[QueryType, float, Dict[str, float]]:
     """Classify user query using regex pattern matching.
@@ -121,6 +124,10 @@ def classify_query_type_regex(query: str) -> Tuple[QueryType, float, Dict[str, f
     # Direct Gmail search command
     if SEARCH_GMAIL_PATTERN.search(query):
         return "email_search", 0.95, {"email_search": 0.95}
+
+    # Explicit request for today's email
+    if TODAYS_EMAIL_PATTERN.search(query):
+        return "email_search", 0.9, {"email_search": 0.9}
 
     # First check if the query matches any of our compiled direct lookup patterns
     if (
@@ -218,7 +225,7 @@ def classify_query_type_regex(query: str) -> Tuple[QueryType, float, Dict[str, f
     category, confidence = top_category
 
     # Boost or override to email_search for low scoring matches
-    if scores.get("email_search", 0) > 0.05:
+    if scores.get("email_search", 0) >= 0.03:
         if category != "email_search":
             logging.info("[REGEX] Overriding to email_search...")
         category = "email_search"
