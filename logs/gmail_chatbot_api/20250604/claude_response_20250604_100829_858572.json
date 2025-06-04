@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-06-04T10:08:29.858572",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_100824_973895.json"
+  },
+  "response": {
+    "content": "Based on your request, I'll search for emails you received today (June 4, 2025). Let me create the appropriate search query.\n\n`after:2025/06/03 before:2025/06/05 to:me`\n\nThis search will show all emails that were sent to you today (June 4, 2025). Would you like me to execute this search in your inbox to see the results?",
+    "tokens": {
+      "input_tokens": 1551,
+      "output_tokens": 95,
+      "request_id": "35426af9-4249-45e7-96e2-bb55f5bbd5af",
+      "is_error": false
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_100824_973895.json"
+  },
+  "error": null
+}

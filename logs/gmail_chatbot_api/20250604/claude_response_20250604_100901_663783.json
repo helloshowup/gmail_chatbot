@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T10:09:01.663783",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_100850_099685.json"
+  },
+  "response": {
+    "content": "# Emails Received Today (June 4, 2025)\n\nHere are the emails you received today (June 4, 2025):\n\n1. **Kepu Gas New Order** (7:45 AM)  \n   From: Salt River Logistics  \n   *Confirmation of your gas cylinder order for delivery today between 12pm-5pm*\n\n2. **Drive efficiency with cross-org workflows** (6:30 AM)  \n   From: monday.com  \n   *Marketing email about workflow features*\n\n3. **Your meeting recap - Bryce Hepburn and Jamie Sundelson** (5:43 AM)  \n   From: Fred from Fireflies  \n   *Recap of your ...",
+    "tokens": {
+      "input_tokens": 11704,
+      "output_tokens": 250
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_100850_099685.json"
+  },
+  "error": null
+}

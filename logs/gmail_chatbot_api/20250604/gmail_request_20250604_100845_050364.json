@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-06-04T10:08:45.050364",
+  "interaction_type": "gmail_request",
+  "query": "which emails did i receive today?",
+  "request": {
+    "gmail_query": "after:2025/06/03 before:2025/06/05 to:me",
+    "original_user_query": "which emails did i receive today?",
+    "request_id": "f5b6d96d-761d-4536-80e7-3c33350df061"
+  },
+  "response": null,
+  "error": null
+}
