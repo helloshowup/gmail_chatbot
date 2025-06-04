@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys
 
 try:
     _ = 1  # Dummy operation to ensure try block has content
@@ -103,8 +102,6 @@ except ImportError:
 
 # Try to import vector libraries with proper fallbacks
 try:
-    import faiss
-    import numpy as np
     from langchain_community.vectorstores import FAISS
 
     # Force FAISS to CPU-only mode as per user request / configuration
