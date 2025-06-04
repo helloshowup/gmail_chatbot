@@ -42,7 +42,8 @@ Adherence to these standards is crucial for maintaining code quality, readabilit
         -   If Gmail API calls encounter `ssl.SSLError`, the operation should be skipped or retried with clear logging and user feedback.
 -   **Modularity & Single Responsibility:**
     -   Modules and classes should have a single, well-defined responsibility.
-    -   Break down functions/methods longer than ~30-40 lines into smaller, manageable units.
+    -   Break down functions/methods longer than ~30-40 lines into smaller, manageable units. The guidance on [blog.oll.is](https://blog.oll.is) suggests aiming for ~20-30 lines per function.
+    -   When a module's size approaches 300-500 lines, split it into submodules. This follows the same blog's recommendation that modules remain within ~300-500 lines.
 -   **Readability:**
     -   Write clear, concise, and self-documenting code.
     -   Use descriptive names for variables, functions, and classes.
