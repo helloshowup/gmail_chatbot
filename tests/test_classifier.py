@@ -22,6 +22,7 @@ from gmail_chatbot.query_classifier import classify_query_type
         ("Show me what hit my inbox yesterday", "email_search"),
         ("Check my inbox for new messages", "email_search"),
         ("Catch me up on what I missed in my inbox", "email_search"),
+        ("Can you check todays email?", "email_search"),
         
         # Guard-rail heuristic should catch these
         ("Did I get any emails today?", "email_search"),
