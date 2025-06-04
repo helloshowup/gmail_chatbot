@@ -20,12 +20,10 @@ print(f"[{time.time():.3f}] Current sys.path[0]: {sys.path[0]}")
 
 try:
     print(f"[{time.time():.3f}] Attempting to import google.auth.transport.requests...")
-    import google.auth.transport.requests
     print(f"[{time.time():.3f}] Successfully imported google.auth.transport.requests")
 
     print(f"[{time.time():.3f}] Attempting to import GmailAPIClient from gmail_chatbot.email_gmail_api...")
     # This will execute all module-level code in email_gmail_api.py
-    from gmail_chatbot.email_gmail_api import GmailAPIClient
     print(f"[{time.time():.3f}] Successfully imported GmailAPIClient")
 
 except KeyboardInterrupt:
