@@ -51,6 +51,10 @@ def load_env() -> None:
 
 # Claude API configuration
 CLAUDE_DEFAULT_MODEL = "claude-3-7-sonnet-20250219"
+CLAUDE_PREP_MODEL_ENV = "CLAUDE_PREP_MODEL"
+CLAUDE_PREP_MODEL = os.getenv(
+    CLAUDE_PREP_MODEL_ENV, "claude-3-5-haiku-20250612"
+)
 CLAUDE_MAX_TOKENS = 4096
 
 # UI Configuration
