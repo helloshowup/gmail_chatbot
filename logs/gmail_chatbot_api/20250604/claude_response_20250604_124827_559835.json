@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T12:48:27.559835",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_124817_228453.json"
+  },
+  "response": {
+    "content": "# Email Information for Bryce Hepburn\n\n\ud83d\udcd3 Based on the emails in your inbox, I can provide the following information about you:\n\n## Personal Details\n- Name: Bryce Hepburn\n- Email addresses: hello@showup.courses, bryce@brycehepburn.co.za\n- Phone: +27 63 455 7895\n- Address: 12 Bellevliet Road, Observatory, Cape Town, 7925\n\n## Professional Information\n- Role: Director at Show Up Africa\n- Website: http://showupafrica.com\n\n## Recent Activities\n- Gas delivery ordered from Kepu Gas (2 x 9kg cylinders) s...",
+    "tokens": {
+      "input_tokens": 11911,
+      "output_tokens": 328
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_124817_228453.json"
+  },
+  "error": null
+}

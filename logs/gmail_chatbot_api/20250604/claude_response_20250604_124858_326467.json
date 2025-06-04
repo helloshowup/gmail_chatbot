@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T12:48:58.326467",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_124843_497552.json"
+  },
+  "response": {
+    "content": "# Email Analysis: Names, Dates, and Key Topics\n\nHere's an extract of the names, dates, and key topics from the provided email data:\n\n## Names\n\ud83d\udcd3 Key individuals:\n- Bryce Hepburn (you - Director at Show Up Africa)\n- Jamie Sundelson (meeting participant)\n- Charlie Buehler-Hoard (Basecamp communication)\n- Alicia Loe (Basecamp communication)\n- Rod Colburn (forwarded emails)\n- Multiple recipients in mass emails (Brian McLaren, Doug Pagitt, etc.)\n\n## Dates\n\ud83d\udcd3 Key dates:\n- June 4, 2025 (Today - multiple ...",
+    "tokens": {
+      "input_tokens": 11918,
+      "output_tokens": 469
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_124843_497552.json"
+  },
+  "error": null
+}

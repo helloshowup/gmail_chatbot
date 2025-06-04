@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T12:49:05.815067",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_124858_336230.json"
+  },
+  "response": {
+    "content": "# Email Summary\n\n\ud83d\udcd3 Based on the information in your inbox notes, here's a concise summary:\n\n## Key People\n- You (Bryce Hepburn) - Director at Show Up Africa\n- Jamie Sundelson - Recent meeting participant (June 4, 7:30 AM SAST)\n- Charlie Buehler-Hoard & Alicia Loe - Basecamp contacts\n- Rod Colburn - Forwards you content regularly\n\n## Important Items\n- **Gas Delivery**: Expected today (June 4) between 12-5pm at your Observatory address\n- **ElevatEd Course**: Demo credentials shared (cognia1@visit....",
+    "tokens": {
+      "input_tokens": 1603,
+      "output_tokens": 255
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_124858_336230.json"
+  },
+  "error": null
+}

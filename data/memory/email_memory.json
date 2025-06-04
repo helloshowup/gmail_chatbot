@@ -1277,20 +1277,20 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "query:which emails did i receive today?",
       "query: search Gmail for information about Bryce?",
       "query:Autonomously fetched for Excel High School",
-      "query:tell me about bryce",
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
-      "autonomously_fetched",
       "client:Further Learner",
+      "query:Autonomously fetched for Hoorah Digital",
       "query:yes. ",
-      "query:which emails did i receive today?"
+      "query:tell me about bryce"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-04T07:43:34.390403",
-    "last_accessed": "2025-06-04T10:09:01.702810",
+    "last_accessed": "2025-06-04T12:47:58.786521",
     "access_count": 4
   },
   "19737751c3678d61": {
@@ -1301,20 +1301,20 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "query:which emails did i receive today?",
       "query: search Gmail for information about Bryce?",
       "query:Autonomously fetched for Excel High School",
-      "query:tell me about bryce",
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
-      "autonomously_fetched",
       "client:Further Learner",
+      "query:Autonomously fetched for Hoorah Digital",
       "query:yes. ",
-      "query:which emails did i receive today?"
+      "query:tell me about bryce"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-04T07:43:34.390403",
-    "last_accessed": "2025-06-04T10:09:01.702810",
+    "last_accessed": "2025-06-04T12:47:58.790602",
     "access_count": 4
   },
   "197374b53c5c2e2a": {
@@ -1325,20 +1325,20 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "query:which emails did i receive today?",
       "query: search Gmail for information about Bryce?",
       "query:Autonomously fetched for Excel High School",
-      "query:tell me about bryce",
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
-      "autonomously_fetched",
       "client:Further Learner",
+      "query:Autonomously fetched for Hoorah Digital",
       "query:yes. ",
-      "query:which emails did i receive today?"
+      "query:tell me about bryce"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-04T07:43:34.390403",
-    "last_accessed": "2025-06-04T10:09:01.702810",
+    "last_accessed": "2025-06-04T12:47:58.838653",
     "access_count": 4
   },
   "1973711db3210794": {
@@ -1349,19 +1349,19 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:tell me about bryce",
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
       "autonomously_fetched",
-      "client:Further Learner",
-      "query:yes. ",
+      "query:Autonomously fetched for Further Learner",
       "query: search Gmail for information about Bryce?",
-      "query:Autonomously fetched for Excel High School"
+      "query:Autonomously fetched for Excel High School",
+      "client:Further Learner",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:yes. ",
+      "query:tell me about bryce"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-04T07:43:34.390403",
-    "last_accessed": "2025-06-04T10:02:25.908052",
+    "last_accessed": "2025-06-04T12:47:58.843373",
     "access_count": 3
   },
   "19736f3cc6577b2c": {
@@ -1504,20 +1504,20 @@
     "summary": "No Summary",
     "client": "Hoorah Digital",
     "tags": [
+      "client:Hoorah Digital",
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner",
+      "query:which emails did i receive today?",
       "query: search Gmail for information about Bryce?",
       "query:Autonomously fetched for Excel High School",
-      "client:Hoorah Digital",
-      "query:tell me about bryce",
-      "query:Autonomously fetched for Further Learner",
       "query:Autonomously fetched for Hoorah Digital",
-      "autonomously_fetched",
       "query:yes. ",
-      "query:which emails did i receive today?"
+      "query:tell me about bryce"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-04T07:43:50.021875",
-    "last_accessed": "2025-06-04T10:09:01.702810",
+    "last_accessed": "2025-06-04T12:47:58.781474",
     "access_count": 4
   },
   "19739a29f6d50372": {
@@ -1552,19 +1552,98 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:tell me about bryce",
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
       "autonomously_fetched",
-      "client:Further Learner",
-      "query:yes. ",
+      "query:Autonomously fetched for Further Learner",
+      "query:which emails did i receive today?",
       "query:Autonomously fetched for Excel High School",
-      "query:which emails did i receive today?"
+      "client:Further Learner",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:yes. ",
+      "query:tell me about bryce"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-04T09:57:06.903303",
-    "last_accessed": "2025-06-04T10:09:01.702810",
+    "last_accessed": "2025-06-04T12:47:58.777374",
     "access_count": 3
+  },
+  "1973a872b06d9a4b": {
+    "subject": "Report domain: showup.courses Submitter: google.com Report-ID: 12212093571496290161",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Tue, 03 Jun 2025 16:59:59 -0700",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "query:Autonomously fetched for Excel High School",
+      "autonomously_fetched",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-04T12:47:48.139159",
+    "last_accessed": "2025-06-04T12:47:58.756489",
+    "access_count": 1
+  },
+  "1973a8356bc30883": {
+    "subject": "\ud83d\ude38 Microsoft teaches AI magic",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Wed, 04 Jun 2025 10:36:14 +0000 (UTC)",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "query:Autonomously fetched for Excel High School",
+      "client:Further Learner",
+      "autonomously_fetched",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-04T12:47:48.143711",
+    "last_accessed": "2025-06-04T12:47:58.761776",
+    "access_count": 1
+  },
+  "1973a4e0301a3493": {
+    "subject": "Fwd: Richard Rohr\u2019s Daily Meditation: Inviting Further Conversion",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Wed, 4 Jun 2025 05:37:46 -0400",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "query:Autonomously fetched for Excel High School",
+      "client:Further Learner",
+      "autonomously_fetched",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-04T12:47:49.841918",
+    "last_accessed": "2025-06-04T12:47:58.766397",
+    "access_count": 1
+  },
+  "1973a1fc0d362753": {
+    "subject": "Re: Kepu Gas New Order",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Wed, 4 Jun 2025 10:47:28 +0200",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "query:Autonomously fetched for Excel High School",
+      "client:Further Learner",
+      "autonomously_fetched",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-04T12:47:49.922477",
+    "last_accessed": "2025-06-04T12:47:58.771964",
+    "access_count": 1
   }
 }

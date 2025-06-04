@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-06-04T12:48:12.855719",
+  "interaction_type": "gmail_request",
+  "query": "bryce",
+  "request": {
+    "gmail_query": "after:2025/06/01 before:2025/06/05",
+    "original_user_query": "bryce",
+    "request_id": null
+  },
+  "response": null,
+  "error": null
+}
