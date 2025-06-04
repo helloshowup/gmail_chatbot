@@ -14,6 +14,8 @@
 - Added robust chat initialization guard-rail to Streamlit app to prevent premature user interaction
 - Implemented detailed step-by-step initialization diagnostics in chat_app_st.py to provide clear error information
 - Added Continue/Stop prompt when autonomous step limit is reached
+- INFO level logs for agentic step execution now written to
+  `logs/gmail_chatbot/` for troubleshooting
 
 ### Changed
 
