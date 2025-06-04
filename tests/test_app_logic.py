@@ -728,3 +728,47 @@ def test_get_action_items_structured():
     assert isinstance(result, list)
     assert result == sample_items
     memory_store.get_action_items.assert_called_once()
+
+
+@patch.object(GmailChatbotApp, "__init__", lambda self: None)
+@patch("gmail_chatbot.app.core.classify_query_type")
+@patch("gmail_chatbot.preference_detector.classify_query_type")
+def test_brand_preference_saved_and_recalled(
+    mock_pref_classify, mock_classify
+):
+    """Stating a brand should be saved and injected in later chats."""
+    mock_pref_classify.return_value = ("preference_update", 0.9, {})
+
+    app = GmailChatbotApp()
+    app.claude_client = MagicMock()
+    app.memory_store = MagicMock()
+    app.memory_actions_handler = MagicMock()
+    app.memory_actions_handler.get_pending_proactive_summaries.return_value = (
+        []
+    )
+    app.chat_history = []
+    app.system_message = "sys"
+    app.preference_detector = PreferenceDetector(app.memory_store)
+
+    # First message saves the preference
+    app.claude_client.chat.return_value = "ack"
+    first_response = app.process_message(
+        "ShowUp or showup.courses is my brand"
+    )
+    assert "Noted" in first_response
+    app.memory_store.remember_user_preference.assert_called_once()
+
+    # Second message should recall the stored preference
+    mock_classify.return_value = ("general_chat", 0.9, {})
+    app.preference_detector.process_message = MagicMock(
+        return_value=(False, None)
+    )
+    app.memory_store.find_relevant_preferences.return_value = [
+        {"label": "brand", "content": "ShowUp or showup.courses is my brand"}
+    ]
+    app.claude_client.chat.return_value = "Your brand is ShowUp."
+
+    second_response = app.process_message("What's my brand?")
+    system_used = app.claude_client.chat.call_args[0][2]
+    assert "ShowUp or showup.courses is my brand" in system_used
+    assert "ShowUp" in second_response
