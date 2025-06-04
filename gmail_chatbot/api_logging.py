@@ -394,15 +394,3 @@ def log_gmail_response(request_log_path: str,
         traceback.print_exc()
         # Fail fast - raise the exception to make errors visible
         raise
-    response_data = {
-        "email_count": email_count,
-        "emails": simplified_metadata,
-        "related_request": request_log_path
-    }
-    
-    return log_api_interaction(
-        interaction_type="gmail_response",
-        request_data={"related_request": request_log_path},
-        response_data=response_data,
-        error=error
-    )
