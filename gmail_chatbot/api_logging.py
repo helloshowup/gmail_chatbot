@@ -26,7 +26,8 @@ try:
     # Get the project root directory
     try:
         from pathlib import Path
-        project_root = Path(__file__).resolve().parents[2]
+        # Determine the project root (one level above the package)
+        project_root = Path(__file__).resolve().parents[1]
         logs_dir_base = project_root / "logs"
         fallback_logs_dir = logs_dir_base / "gmail_chatbot_api"
         logger.debug("Determined fallback logs directory: %s", fallback_logs_dir)

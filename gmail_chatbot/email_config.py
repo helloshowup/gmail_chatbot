@@ -22,7 +22,8 @@ GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 
 # File paths
 BASE_DIR = Path(__file__).resolve().parent
-PROJECT_DIR = Path(__file__).resolve().parents[2]
+# The project root is one level above this module's package
+PROJECT_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_DIR / "data"
 LOGS_DIR = BASE_DIR / "logs"
 GLOBAL_LOGS_DIR = PROJECT_DIR / "logs"

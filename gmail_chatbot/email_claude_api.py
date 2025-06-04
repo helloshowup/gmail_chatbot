@@ -39,7 +39,8 @@ class ClaudeAPIClient:
         """
         try:
             # Get the project root directory for better error messages
-            project_root = Path(__file__).resolve().parents[2]
+            # Determine project root for locating the .env file
+            project_root = Path(__file__).resolve().parents[1]
             env_path = project_root / ".env"
             
             self.api_key = os.environ.get(CLAUDE_API_KEY_ENV)
