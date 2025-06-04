@@ -129,7 +129,8 @@ from gmail_chatbot.memory_writers import (
 )
 
 # Set up the logs directory path
-LOGS_DIR = Path(__file__).resolve().parents[3] / "logs" / "gmail_chatbot"
+# Store logs under the project root instead of outside the repository
+LOGS_DIR = Path(__file__).resolve().parents[2] / "logs" / "gmail_chatbot"
 os.makedirs(LOGS_DIR, exist_ok=True)
 
 # Provide a placeholder for tests that patch this attribute
