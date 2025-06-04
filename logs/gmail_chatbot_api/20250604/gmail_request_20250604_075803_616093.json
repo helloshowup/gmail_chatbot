@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-06-04T07:58:03.616093",
+  "interaction_type": "gmail_request",
+  "query": "bryce and then update your notebook",
+  "request": {
+    "gmail_query": "after:2025/06/01 before:2025/06/05",
+    "original_user_query": "bryce and then update your notebook",
+    "request_id": null
+  },
+  "response": null,
+  "error": null
+}

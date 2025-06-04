@@ -1,0 +1,194 @@
+{
+  "timestamp": "2025-06-04T07:57:51.088784",
+  "interaction_type": "gmail_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\gmail_request_20250604_075746_275362.json"
+  },
+  "response": {
+    "email_count": 10,
+    "emails": [
+      {
+        "id": "19739777cf28d5b7",
+        "threadId": "19739777cf28d5b7",
+        "labelIds": [
+          "UNREAD",
+          "Label_39",
+          "IMPORTANT",
+          "CATEGORY_UPDATES"
+        ],
+        "snippet": "Jamie Sundelson (hilightcoach@gmail.com) invited Fireflies to your meeting To record and take notes Bryce Hepburn and Jamie Sundelson Jun 4th at 7:30 AM SAST View meeting recap In this meeting See more",
+        "subject": "Your meeting recap - Bryce Hepburn and Jamie Sundelson",
+        "from": "Fred from Fireflies <fred@fireflies.ai>",
+        "to": "hilightcoach@gmail.com",
+        "date": "Wed, 04 Jun 2025 05:43:40 +0000 (UTC)",
+        "truncated": true,
+        "full_length": 38076,
+        "body_preview": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n  <head>\r\n    <meta charset=\"UTF-8\" />\r\n    <link\r\n      href=\"https://fonts.googleapis.com/css2?family=Poppins:wgh..."
+      },
+      {
+        "id": "197394f9f61e8e61",
+        "threadId": "197394f9f61e8e61",
+        "labelIds": [
+          "Label_8093445936986359043",
+          "UNREAD",
+          "IMPORTANT",
+          "Label_43",
+          "STARRED",
+          "CATEGORY_PERSONAL",
+          "INBOX"
+        ],
+        "snippet": "Your Morning Update: 74% of emails summarized, 0 emails need attention, 14 emails archived. Wednesday 4th, June 2025 Your Morning Update Wednesday 4th, June 2025 Your Morning Update Read full brief",
+        "subject": "Morning Brief | June 04, 2025",
+        "from": "Cora Briefs <briefs@cora.computer>",
+        "to": "hello@showup.courses",
+        "date": "Wed, 4 Jun 2025 05:00:07 +0000",
+        "truncated": true,
+        "full_length": 29812,
+        "body_preview": "<!DOCTYPE html>\r\n<html>\r\n<head>\r\n  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n  <meta name=\"viewport\" content=\"width=device-..."
+      },
+      {
+        "id": "19737751c3678d61",
+        "threadId": "1971c3eadde60675",
+        "labelIds": [
+          "IMPORTANT",
+          "Label_41",
+          "Label_36",
+          "CATEGORY_UPDATES"
+        ],
+        "snippet": "Ping with Alicia Loe + Bryce Hepburn + Charlie Buehler-Hoard You&#39;ve got 3 new Pings\u2026 11:16pm Hi! So we can&#39;t add the ElevatEd Launch course to the Standard Demo account because prospective",
+        "subject": "Alicia sent you a Ping\u2026",
+        "from": "\"Alicia Loe (Basecamp)\" <notifications@3.basecamp.com>",
+        "to": "hello@showup.courses",
+        "date": "Tue, 03 Jun 2025 20:21:50 +0000",
+        "truncated": false,
+        "full_length": 1224,
+        "body_preview": "You've got 3 new Pings\u2026\r\n(Alicia Loe + Bryce Hepburn + Charlie Buehler-Hoard)\r\n\r\n- 11:16pm\r\n  Hi! So we can't add the ElevatEd Launch course to the St..."
+      },
+      {
+        "id": "197374b53c5c2e2a",
+        "threadId": "197374b53c5c2e2a",
+        "labelIds": [
+          "Label_31",
+          "CATEGORY_SOCIAL",
+          "INBOX"
+        ],
+        "snippet": "Begin forwarded message: From: Adam Kinzinger from Adam Kinzinger&#39;s Substack &lt;adamkinzinger@substack.com&gt; Date: June 3, 2025 at 11:45:58 EDT To: rocketrod208@me.com Subject: Ukraine&#39;s",
+        "subject": "Fwd: Ukraine's Counteroffensive 2.0: Russia Is Bleeding, and Putin Knows It",
+        "from": "Rod Colburn <rocketrod208@me.com>",
+        "to": "Larry Colburn <larry@larrycolburn.com>, Alicia Mannes <akmannes@gmail.com>, Alli Malafronte <amalafronte1623@icloud.com>, Alvin Poblacion <cycal3@gmail.com>, Amanda Hambrick Ashcraft <amandahashcraft@gmail.com>, Autumn Lunsford <autumnelunsford@gmail.com>, Barb Prowant <barbara@prowantlaw.com>, Benjamin Corey <ben@benjaminlcorey.com>, Bogale Addis <addis.bogale@ucollege.edu>, Brandon Pfeiffer <brandonjp@gmail.com>, Brian McLaren <mclaren.brian@gmail.com>, Britain Miethe <britain@votecommongood.com>, Bryan Berghoef <bryan.berghoef@gmail.com>, Bryce Hepburn <hello@showup.courses>, Carole Colburn <colburncs39@icloud.com>, Charles Busch <buschcharlesp@gmail.com>, Christine Gilman <cmbkarch@gmail.com>, Christy Berghoef <christyberghoef@gmail.com>, Cornel Carmen Rusu <carpathian_air@yahoo.com>, Cornel Rusu <cornel.rusu@gmail.com>, Dan Deitrich <dan.deitrich@gmail.com>, Danny Bryant <danny@stmarysnashville.com>, Darla Torkelsen <dtorkelsen87@gmail.com>, Dean Maddock <dgmaddock@mindspring.com>, Dmitry Petrov <dmytro.m.petrov@gmail.com>, Doug Pagitt <doug@dougpagitt.com>, Dunja Pechstein <dpechstein@icloud.com>, Earl Sigsworth <earlsigsworth@gmail.com>, Edward Ammon <edammon@gmail.com>, Eric Stevens <ericstevensconsulting@gmail.com>, Frank Schaeffer <frankaschaeffer@aol.com>, Fred Herron <fredh1871@gmail.com>, Genesis Be <genesisbe@gmail.com>, George Gibson <gegibson@ucollege.edu>, Grace McLaren <mclaren.grace@gmail.com>, Greg Cook <greg.cook@icloud.com>, Gretchen Sigsworth <gretchensigsworth@gmail.com>, Hannah Collazo <hannahjcollazo@gmail.com>, Hans Von Stiegel <hans@ariyacapital.com>, Harold Mills <harymills@gmail.com>, Hillel Gross <hillel.gross@gmail.com>, Howard Greene <howardjgreene@gmail.com>, Howie Klein <howieklein@aol.com>, Jacqui Lewis <jlewis@middlechurch.org>, Jane Cook <casacookj@mac.com>, Japhet de Oliveira <japhet@icloud.com>, Jay Murdock <murdock@boulder.church>, Jen Pavlovitz <jenpavlovitz@gmail.com>, Jim Fazio <jim@fazio4.com>, Joel Facchinello <jfacchinello91@gmail.com>, Joel Weir <weir.joel@gmail.com>, John Janka <johnjanka527@gmail.com>, John Noltner <apeaceofmymind1@gmail.com>, John Pavlovitz <johndpav@gmail.com>, Josh Facchinello <joshfacchinello@gmail.com>, Julijana Kojic <ejulijana@hotmail.com>, Karen Van Ornam <teacherlady114@gmail.com>, Katie Owens <katiebirdowens@outlook.com>, Keisha McKenzie <keisha@mackenzian.com>, Keith Mannes <manneskeith@gmail.com>, Kevin Kuns <kevinkuns@gmail.com>, Kevin Sweeney <kevin@kevinsweeneynow.com>, Kylie Dalton <daltonkylie@aol.com>, Linda Haley <lolahaley@sbcglobal.net>, Lisa Briggs <lbriggspeachyre@aol.com>, Lynne Dalton <lynnedalton29@gmail.com>, Madelyn Mills <madelynmills@gmail.com>, Madison Dalton <madison.anndalton@gmail.com>, Marc Schelske <marc@marcalanschelske.com>, Marciana Popescu <popescu@fordham.edu>, Mark Scandrette <markscandrette@gmail.com>, Meah Pace <meahpace@yahoo.com>, Melissa Hefferlin <melissahefferlin@gmail.com>, Michael Toy <michael@toyland.org>, Michael Waters <pastormwaters@gmail.com>, Michele Dunne <mdunne@franciscanaction.org>, Mike Aufderhar <mike@aufderhar.com>, Monte Sahlin <montessahlin@gmail.com>, Monte Torkelsen <monte.torkelsen@gmail.com>, Natalie Antonich <antonichnatalie@gmail.com>, Nate French <buckeyenathan@gmail.com>, Nick Laparra <hello@nicklaparra.com>, Patrick Carolan <carolanp65@gmail.com>, Paul Johnson <pjtunes@mac.com>, Rachel Fetty <ralfetty@gmail.com>, Ralf Candelaria <candelariarafael3@gmail.com>, ken mihelich <kenmihelich@gmail.com>, Alan Reinach <ajreinach@churchstate.org>, Reverend Vince Anderson <reverendvince@me.com>, Rob Schenck <rob.tdbi@gmail.com>, Rod De Luca <caldeluca@aol.com>, Roxy Bruno <rxnbruno@gmail.com>, Russell Anwar <russ.anwar@gmail.com>, Ryerse Robb <robb@votecommongood.com>, Sabin Popescu <sabin25_99@yahoo.com>, Samir Selmanovic <samirselmanovicnyc@gmail.com>, Shane Claiborne <circusrevolution@gmail.com>, Sheila Mills <shemills@gmail.com>, Shelley Pagitt <shelleypagitt@gmail.com>, Spencer Downing <spencer.downing@gmail.com>, Stacey Graham <sagraham@aol.com>, Stephen Paolini <paolinistephen007@gmail.com>, Tara Maddock <Tara.maddock@gmail.com>, Tim Dalton <timothydalton@bellsouth.net>, Tim timmyroland <tbgilman@gmail.com>, Vanessa Ryerse <vryerse@gmail.com>, Vesna Selmanovic <vesnaselmanovic@gmail.com>, Zach Read <hello@rhymereason.co>, kb jones <kellybjones76@gmail.com>, Rein Jan van West <arcticwild@gmail.com>",
+        "date": "Tue, 3 Jun 2025 15:35:42 -0400",
+        "truncated": false,
+        "full_length": 197,
+        "body_preview": "Begin forwarded message: From: Adam Kinzinger from Adam Kinzinger&#39;s Substack &lt;adamkinzinger@substack.com&gt; Date: June 3, 2025 at 11:45:58 EDT..."
+      },
+      {
+        "id": "1973711db3210794",
+        "threadId": "1973711db3210794",
+        "labelIds": [
+          "CATEGORY_PROMOTIONS",
+          "Label_27",
+          "Label_2804642248423042328",
+          "Label_30"
+        ],
+        "snippet": "Plus: AI and speech disorders | Braille device | Mergers &amp; moves | Marketing intel Created for bryce@brycehepburn.co.za | Web Version June 3, 2025 CONNECT WITH ISTE LinkedIn Facebook X Edtech news",
+        "subject": "AILit Framework envisions AI literacy as core school skill",
+        "from": "ISTE Solutions Network SmartBrief <iste@smartbrief.com>",
+        "to": "bryce@brycehepburn.co.za",
+        "date": "Tue, 3 Jun 2025 13:33:06 -0500 (CDT)",
+        "truncated": true,
+        "full_length": 2215,
+        "body_preview": "ISTE Solutions Network SmartBrief\r\nJune 3, 2025\r\nhttps://r.smartbrief.com/resp/tOhiCYjHdRDFuKBcCigzacBWcNPpXd\r\n\r\n\r\n\t\tTODAY'S HEADLINES\r\n\t\r\nFRESH INTEL..."
+      },
+      {
+        "id": "19736f3cc6577b2c",
+        "threadId": "19736935534279ef",
+        "labelIds": [
+          "Label_40",
+          "IMPORTANT",
+          "CATEGORY_PERSONAL",
+          "INBOX"
+        ],
+        "snippet": "Reply to new messages Upwork You have unread messages for Weight Loss Course Buildout CA Chelsea A. 7:58 PM CAT, 3 Jun 2025 I am unfortunately booked until 12 until 6/17 and 6/18. I could schedule for",
+        "subject": "You have unread messages about the job Weight Loss Course Buildout",
+        "from": "\"Chelsea A. via Upwork\" <room_10265045109435532182816177569242@upwork.com>",
+        "to": "hello@showup.courses",
+        "date": "Tue, 03 Jun 2025 18:00:28 +0000",
+        "truncated": true,
+        "full_length": 1890,
+        "body_preview": "\r\n\r\nYou have unread messages for Weight Loss Course Buildout: https://www.upwork.com/ab/messages/rooms/room_57a1a977d4a2596de3f9698676e4aa4a?companyRe..."
+      },
+      {
+        "id": "19736d81ebc098af",
+        "threadId": "19736935534279ef",
+        "labelIds": [
+          "IMPORTANT",
+          "CATEGORY_PERSONAL"
+        ],
+        "snippet": "Reply to new messages Upwork You have unread messages for Weight Loss Course Buildout CA Chelsea A. 7:17 PM CAT, 3 Jun 2025 Okay, she is a no show so I can meet between now and 11:30 PST (it is 10:17",
+        "subject": "You have unread messages about the job Weight Loss Course Buildout",
+        "from": "\"Chelsea A. via Upwork\" <room_10265045109435532182816177569242@upwork.com>",
+        "to": "hello@showup.courses",
+        "date": "Tue, 03 Jun 2025 17:30:16 +0000",
+        "truncated": true,
+        "full_length": 1841,
+        "body_preview": "\r\n\r\nYou have unread messages for Weight Loss Course Buildout: https://www.upwork.com/ab/messages/rooms/room_57a1a977d4a2596de3f9698676e4aa4a?companyRe..."
+      },
+      {
+        "id": "19736d6bb7a9c9bf",
+        "threadId": "19736d6bb7a9c9bf",
+        "labelIds": [
+          "UNREAD",
+          "IMPORTANT",
+          "Label_33",
+          "CATEGORY_UPDATES"
+        ],
+        "snippet": "Your AI workflow should change with your problem. Here&#39;s how I do it. \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c",
+        "subject": "The Three Ways I Work With LLMs",
+        "from": "Every <hello@every.to>",
+        "to": "\"'Bryce Hepburn'\" <hello@showup.courses>",
+        "date": "Tue, 03 Jun 2025 17:28:49 +0000",
+        "truncated": true,
+        "full_length": 56450,
+        "body_preview": "<!DOCTYPE html>\r\n<!-- Set the language of your main document. This helps screenreaders use the proper language profile, pronunciation, and accent. -->..."
+      },
+      {
+        "id": "19736ca58b06f6cb",
+        "threadId": "19736935534279ef",
+        "labelIds": [
+          "IMPORTANT",
+          "CATEGORY_PERSONAL"
+        ],
+        "snippet": "Reply to new messages Upwork You have unread messages for Weight Loss Course Buildout CA Chelsea A. 7:11 PM CAT, 3 Jun 2025 yes Bryce Hepburn 6:44 PM CAT, 3 Jun 2025 Is this the student? I can enrol",
+        "subject": "You have unread messages about the job Weight Loss Course Buildout",
+        "from": "\"Chelsea A. via Upwork\" <room_10265045109435532182816177569242@upwork.com>",
+        "to": "hello@showup.courses",
+        "date": "Tue, 03 Jun 2025 17:15:16 +0000",
+        "truncated": true,
+        "full_length": 2191,
+        "body_preview": "\r\n\r\nYou have unread messages for Weight Loss Course Buildout: https://www.upwork.com/ab/messages/rooms/room_57a1a977d4a2596de3f9698676e4aa4a?companyRe..."
+      },
+      {
+        "id": "19736c3c1b663a9c",
+        "threadId": "1973618f0284ab80",
+        "labelIds": [
+          "UNREAD",
+          "IMPORTANT",
+          "Label_31",
+          "CATEGORY_PERSONAL"
+        ],
+        "snippet": "Beautiful, Samir! On Tue, Jun 3, 2025 at 12:03 PM Bryan Berghoef &lt;bryan.berghoef@gmail.com&gt; wrote: Awesome stuff, Samir! Congrats and looking forward to more goodness on the way. Bryan On Tue,",
+        "subject": "Re: I have some beautiful news to share!",
+        "from": "Christine Berghoef <christyberghoef@gmail.com>",
+        "to": "Bryan Berghoef <bryan.berghoef@gmail.com>",
+        "date": "Tue, 3 Jun 2025 13:07:55 -0400",
+        "truncated": true,
+        "full_length": 14259,
+        "body_preview": "Beautiful, Samir!\r\n\r\nOn Tue, Jun 3, 2025 at 12:03\u202fPM Bryan Berghoef <bryan.berghoef@gmail.com>\r\nwrote:\r\n\r\n> Awesome stuff, Samir! Congrats and looking..."
+      }
+    ],
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\gmail_request_20250604_075746_275362.json",
+    "request_id": null
+  },
+  "error": null
+}

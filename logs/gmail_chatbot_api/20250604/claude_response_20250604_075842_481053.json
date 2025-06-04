@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T07:58:42.481053",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_075836_361042.json"
+  },
+  "response": {
+    "content": "\ud83d\udcd3 Here's a concise summary of the information from your inbox notes:\n\n### Key People\n- Jamie Sundelson - Meeting participant (Fireflies recap)\n- Chelsea A. - Upwork freelancer on Weight Loss Course Buildout\n- Alicia Loe - Basecamp communicator\n- Charlie Buehler-Hoard - Mentioned in Basecamp\n- Felissa J Schwartz - Customer mentioned in Upwork conversation\n\n### Active Projects\n- Weight Loss Course Buildout (with Chelsea A.)\n- ElevatEd Launch Course (issue with adding to Standard Demo account)\n- De...",
+    "tokens": {
+      "input_tokens": 1599,
+      "output_tokens": 262
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_075836_361042.json"
+  },
+  "error": null
+}

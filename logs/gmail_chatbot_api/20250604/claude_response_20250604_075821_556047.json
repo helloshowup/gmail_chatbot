@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T07:58:21.556047",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_075808_067362.json"
+  },
+  "response": {
+    "content": "Based on the email data you've provided, I'll analyze Bryce Hepburn's recent emails and update the notebook with relevant information.\n\n\ud83d\udcd3 **NOTEBOOK UPDATE: BRYCE HEPBURN (June 4, 2025)**\n\n**Professional Activities:**\n- Running ShowUp Courses (email: hello@showup.courses)\n- Also has email: bryce@brycehepburn.co.za\n- Working on a Weight Loss Course Buildout project on Upwork with freelancer Chelsea A.\n- Had a meeting with Jamie Sundelson on June 4, 2025 (7:30 AM SAST) - recorded by Fireflies.ai\n\n...",
+    "tokens": {
+      "input_tokens": 11588,
+      "output_tokens": 500
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_075808_067362.json"
+  },
+  "error": null
+}
