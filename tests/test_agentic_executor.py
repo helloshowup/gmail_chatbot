@@ -2,7 +2,7 @@ import sys
 import types
 import unittest
 import contextlib
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, ANY
 import os
 from datetime import datetime
 
@@ -89,6 +89,7 @@ class TestAgenticExecutorFlow(unittest.TestCase):
         self.claude_client = MagicMock()
         self.claude_client.process_email_content.return_value = "entity list"
         self.claude_client.chat.return_value = "summary text"
+        self.claude_client.prep_model = "prep-model"
 
         memory_store = MagicMock()
         memory_store.memory_entries = []
@@ -124,7 +125,12 @@ class TestAgenticExecutorFlow(unittest.TestCase):
             "output_key": "entities",
         }
         res2 = execute_step(step2, res1["updated_agentic_state"])
-        self.claude_client.process_email_content.assert_called_once()
+        self.claude_client.process_email_content.assert_called_once_with(
+            ANY,
+            "extract",
+            "sys",
+            model=self.claude_client.prep_model,
+        )
         self.assertIn("entities", res2["updated_agentic_state"]["accumulated_results"])
 
         step3 = {
@@ -133,7 +139,12 @@ class TestAgenticExecutorFlow(unittest.TestCase):
             "output_key": "summary",
         }
         res3 = execute_step(step3, res2["updated_agentic_state"])
-        self.claude_client.chat.assert_called_once()
+        self.claude_client.chat.assert_called_once_with(
+            ANY,
+            [],
+            "sys",
+            model=self.claude_client.prep_model,
+        )
         self.assertEqual(res3["updated_agentic_state"]["accumulated_results"]["summary"], "summary text")
 
         step4 = {

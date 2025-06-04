@@ -107,6 +107,7 @@ class TestGmailAPIClientSSLErrors(unittest.TestCase):
             json.dump(mock_secret_content, f)
 
         self.mock_claude_client = MagicMock()
+        self.mock_claude_client.prep_model = "prep-model"
         self.mock_system_message = "Test system message"
     
     def tearDown(self):
