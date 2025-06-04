@@ -525,10 +525,12 @@ class MemoryActionsHandler:
                 # or if it expects a query processed by Claude first.
                 # For autonomous tasks, direct Gmail query construction is often preferred.
                 emails = self.gmail_client.search_emails(
-                    query_string=query,
-                    max_results=25, # Limit results per client for this autonomous task
-                    request_id=f"{request_id}_enrich_{client_name.replace(' ','_')}"
+                    query=query,
+                    request_id=(
+                        f"{request_id}_enrich_{client_name.replace(' ', '_')}"
+                    ),
                 )
+                emails = emails[:25]
 
                 if emails:
                     logger.info(f"[{request_id}] Found {len(emails)} emails for client {client_name}. Storing them.")
@@ -539,11 +541,15 @@ class MemoryActionsHandler:
                         # and if it's needed for `store_emails_in_memory` to do vector indexing.
                         # Assuming `search_emails` can provide `body` or `store_emails_in_memory` handles its absence.
                         if 'body' not in email_data or not email_data['body']:
-                            # Attempt to fetch full email if body is missing for vectorization
-                            full_email_details = self.gmail_client.get_email_details(email_data['id'], request_id=request_id)
+                            # Fetch full email if body is missing for vectorization
+                            full_email_details = self.gmail_client.get_email_by_id(
+                                email_data['id'], request_id=request_id
+                            )
                             if full_email_details:
                                 email_data['body'] = full_email_details.get('body', '')
-                                email_data['summary'] = full_email_details.get('summary', email_data.get('summary','')) # Update summary if better one is fetched
+                                email_data['summary'] = full_email_details.get(
+                                    'summary', email_data.get('summary', '')
+                                )  # Update summary if better one is fetched
 
                     self.store_emails_in_memory(emails, f"enrichment_task_for_{client_name}", request_id)
                     results_summary.append(f"- Client {client_name}: Stored {len(emails)} emails from the last 3 months.")

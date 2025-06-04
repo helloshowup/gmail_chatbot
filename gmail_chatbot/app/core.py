@@ -654,8 +654,8 @@ class GmailChatbotApp:
                     f"[{request_id}] user-initiated search_emails using: {gmail_search_string}"
                 )
                 emails, search_response_text = self.gmail_client.search_emails(
-                    search_query_override=query_text,  # Use the specific query from the menu
-                    user_query=original_user_message,  # Original context for Claude if needed by search_emails
+                    query=query_text,  # Use the specific query from the menu
+                    original_user_query=original_user_message,
                     system_message=self.system_message,
                     request_id=request_id,
                 )
@@ -1213,8 +1213,8 @@ class GmailChatbotApp:
                     )
                     emails, search_results_text = (
                         self.gmail_client.search_emails(
-                            search_query_override=gmail_search_string,
-                            user_query=original_user_message,
+                            query=gmail_search_string,
+                            original_user_query=original_user_message,
                             system_message=self.system_message,
                             request_id=request_id,
                         )
@@ -1610,8 +1610,8 @@ class GmailChatbotApp:
                         )
                         emails, search_results_text = (
                             self.gmail_client.search_emails(
-                                search_query_override=gmail_search_string,
-                                user_query=original_user_message,
+                                query=gmail_search_string,
+                                original_user_query=original_user_message,
                                 system_message=self.system_message,
                                 request_id=request_id,
                             )
