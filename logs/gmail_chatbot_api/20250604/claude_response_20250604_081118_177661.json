@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T08:11:18.177661",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_081109_792015.json"
+  },
+  "response": {
+    "content": "# Bryce Hepburn's Emails - June 4, 2025\n\n\ud83d\udcd3 Based on my notes and the emails you've received recently, here's a summary of your key communications:\n\n## Recent Activity\n1. **Meeting with Jamie Sundelson** - A Fireflies recap from a meeting held this morning at 7:30 AM SAST\n2. **Morning Brief** - Your daily email summary from Cora Briefs (74% of emails summarized)\n3. **Upwork Project: Weight Loss Course Buildout** \n   - Ongoing conversation with Chelsea A. about scheduling and course setup\n   - Cli...",
+    "tokens": {
+      "input_tokens": 11583,
+      "output_tokens": 263
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_081109_792015.json"
+  },
+  "error": null
+}

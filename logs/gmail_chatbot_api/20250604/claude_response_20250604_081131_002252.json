@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T08:11:31.002252",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_081118_186256.json"
+  },
+  "response": {
+    "content": "# Email Analysis: Names, Dates, and Key Topics\n\n## Names Extracted\n- **Bryce Hepburn** - The primary user/email owner\n- **Jamie Sundelson** - Meeting participant (from Fireflies recap)\n- **Alicia Loe** - Basecamp contact discussing ElevatEd Launch course\n- **Charlie Buehler-Hoard** - Basecamp contact\n- **Chelsea A.** - Upwork freelancer for Weight Loss Course Buildout\n- **Rod Colburn** - Email forwarder in conversation thread\n- **Felissa J Schwartz** - Buyer name mentioned in Upwork message\n\n## ...",
+    "tokens": {
+      "input_tokens": 11590,
+      "output_tokens": 479
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_081118_186256.json"
+  },
+  "error": null
+}

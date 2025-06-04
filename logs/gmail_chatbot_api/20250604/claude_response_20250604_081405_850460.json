@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-06-04T08:14:05.850460",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_081402_819934.json"
+  },
+  "response": {
+    "content": "I understand you'd like me to search Gmail for you. I'd be happy to help, but I need some more specific information about what you're looking for. \n\nFor example, would you like me to:\n- Find recent emails from a specific person?\n- Search for emails about a particular topic?\n- Look for messages within a certain date range?\n- Find emails with attachments?\n\nIf you could provide a bit more detail about what you're searching for, I can construct an appropriate Gmail search query for you.",
+    "tokens": {
+      "input_tokens": 1555,
+      "output_tokens": 113,
+      "request_id": "478d9963-c829-4093-b965-b7f87ec30157",
+      "is_error": false
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_081402_819934.json"
+  },
+  "error": null
+}

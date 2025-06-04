@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T08:12:23.710878",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_081217_941904.json"
+  },
+  "response": {
+    "content": "\ud83d\udcd3 Based on my notebook entries about Bryce Hepburn:\n\nBryce appears to be a professional who:\n- Recently took over his own position as of June 1, 2025 (as per our pretend scenario)\n- Uses email for professional communications\n- May work with clients (as mentioned in your instructions)\n\nI don't have extensive details about Bryce's specific role, clients, or personal information in my current notebook entries. To build a more comprehensive profile, I could search your inbox directly for more inform...",
+    "tokens": {
+      "input_tokens": 1585,
+      "output_tokens": 167
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_081217_941904.json"
+  },
+  "error": null
+}

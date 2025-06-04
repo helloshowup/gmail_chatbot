@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T08:11:38.892216",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_081131_008271.json"
+  },
+  "response": {
+    "content": "\ud83d\udcd3 Here's a concise summary of the information:\n\n## Key People\n- **Bryce Hepburn** - Email owner/primary user\n- **Jamie Sundelson** - Meeting participant\n- **Alicia Loe & Charlie Buehler-Hoard** - Basecamp contacts for ElevatEd Launch course\n- **Chelsea A.** - Upwork freelancer working on Weight Loss Course\n- **Rod Colburn & Felissa J Schwartz** - Other contacts in conversations\n\n## Primary Business Activities\n- **Course Development Projects:**\n  - Weight Loss Course buildout (Upwork project with...",
+    "tokens": {
+      "input_tokens": 1613,
+      "output_tokens": 316
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_081131_008271.json"
+  },
+  "error": null
+}
