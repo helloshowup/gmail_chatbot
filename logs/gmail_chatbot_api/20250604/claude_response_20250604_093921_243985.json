@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T09:39:21.243985",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_093910_628871.json"
+  },
+  "response": {
+    "content": "I'll search for information about Bryce Hepburn in the provided email data. Let me format a proper Gmail search query first:\n\n`from:bryce OR to:bryce OR subject:bryce OR \"bryce hepburn\"`\n\nBased on the email data provided, here's what I can tell you about Bryce Hepburn:\n\n\ud83d\udcd3 About Bryce Hepburn:\n- Email addresses: hello@showup.courses and bryce@brycehepburn.co.za\n- Professional role: Appears to be involved in course development and educational content\n- Current projects:\n  - Working on a \"Weight Lo...",
+    "tokens": {
+      "input_tokens": 11772,
+      "output_tokens": 380
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_093910_628871.json"
+  },
+  "error": null
+}
