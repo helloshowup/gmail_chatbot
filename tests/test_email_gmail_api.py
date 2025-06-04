@@ -153,7 +153,12 @@ class TestGmailAPIClientSSLErrors(unittest.TestCase):
 
             # Import the class and constants to be tested/used from within the patch context
             # to ensure we are using the potentially reloaded module where 'build' is patched.
-            from email_gmail_api import GmailAPIClient, DATA_DIR, GMAIL_TOKEN_FILE, GMAIL_CLIENT_SECRET_FILE
+            from gmail_chatbot.email_gmail_api import (
+                GmailAPIClient,
+                DATA_DIR,
+                GMAIL_TOKEN_FILE,
+                GMAIL_CLIENT_SECRET_FILE,
+            )
 
             # Attempt to instantiate the client. If DATA_DIR.mkdir was the issue at import,
             # this might now proceed further.
@@ -206,7 +211,11 @@ class TestGmailAPIClientSSLErrors(unittest.TestCase):
             mock_google_request.return_value = specific_request_instance # Ensure Request() returns our specific mock
 
             # Import GmailAPIClient and relevant constants within the patch context
-            from email_gmail_api import GmailAPIClient, DATA_DIR, GMAIL_TOKEN_FILE
+            from gmail_chatbot.email_gmail_api import (
+                GmailAPIClient,
+                DATA_DIR,
+                GMAIL_TOKEN_FILE,
+            )
 
             with self.assertRaisesRegex(ValueError, "SSL Error refreshing credentials.*Simulated SSL Error during refresh"):
                 client = GmailAPIClient(

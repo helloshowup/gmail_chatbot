@@ -8,8 +8,8 @@ import time
 import json
 from pathlib import Path
 import dotenv
-from agentic_planner import generate_plan
-from agentic_executor import (
+from gmail_chatbot.agentic_planner import generate_plan
+from gmail_chatbot.agentic_executor import (
     execute_step,
     summarize_and_log_agentic_results,  # Added for agentic execution
     handle_step_limit_reached,
