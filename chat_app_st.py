@@ -44,7 +44,7 @@ st.title("✉️ Gmail Claude Chatbot Assistant")
 default_agentic_state_values = {
     "current_step_index": 0,
     "executed_call_count": 0,
-    "accumulated_results": [],
+    "accumulated_results": {},
     "error_messages": []
 }
 if "agentic_mode_enabled" not in st.session_state:
