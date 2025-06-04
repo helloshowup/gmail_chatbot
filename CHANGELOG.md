@@ -32,6 +32,10 @@
 - Made fallback messages more user-friendly with explicit action suggestions
 - Updated logger usage to use module-level loggers for better traceability
 
+### Changed
+
+- Removed unused imports across the codebase to satisfy ruff linting
+
 ### Fixed
 
 - Corrected email search logic in `_autonomous_memory_enrichment_task` in `email_main.py` by removing erroneous code and restoring proper client-based Gmail API calls and memory storage.
@@ -44,6 +48,8 @@
 - Removed duplicate imports for logging and os in email_main.py
 - Fixed incorrect function call from logging_shutdown() to shutdown_logging() in email_main.py
 - Corrected `sys.path` configuration in `query_classifier.py` to ensure the `ml_query_classifier` module is found, enabling ML-based query classification.
+- Updated default `CLAUDE_PREP_MODEL` to `claude-3-haiku-20240307` to avoid model-not-found errors
+- Added graceful handling for Anthropic `NotFoundError` when the configured model slug is invalid
 
 ## [0.9.0] - 2025-05-15
 
