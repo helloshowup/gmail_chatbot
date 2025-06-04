@@ -29,14 +29,25 @@ def mock_deps(monkeypatch):
     os.environ[CLAUDE_API_KEY_ENV] = "test-key"
     memory_store = MagicMock()
     gmail_client = MagicMock()
+    gmail_client.search_emails.return_value = ([], "No emails found.")
     claude_client = MagicMock()
 
     monkeypatch.setattr('gmail_chatbot.email_main.GmailAPIClient', lambda *a, **k: gmail_client)
+    monkeypatch.setattr('gmail_chatbot.app.core.GmailAPIClient', lambda *a, **k: gmail_client)
     monkeypatch.setattr('gmail_chatbot.email_main.ClaudeAPIClient', lambda *a, **k: claude_client)
+    monkeypatch.setattr('gmail_chatbot.app.core.ClaudeAPIClient', lambda *a, **k: claude_client)
+    monkeypatch.setattr('gmail_chatbot.app.core.classify_query_type', lambda q, classifier=None: ("notebook_lookup", 0.8, {"notebook_lookup": 0.8}))
     monkeypatch.setattr('gmail_chatbot.email_main.EmailVectorMemoryStore', lambda *a, **k: memory_store)
+    monkeypatch.setattr('gmail_chatbot.app.core.EmailVectorMemoryStore', lambda *a, **k: memory_store)
     monkeypatch.setattr('gmail_chatbot.email_main.EnhancedMemoryStore', MagicMock(return_value=MagicMock()))
-    monkeypatch.setattr('gmail_chatbot.email_main.PreferenceDetector', MagicMock(return_value=MagicMock()))
-    monkeypatch.setattr('gmail_chatbot.email_main.MemoryActionsHandler', MagicMock(return_value=MagicMock()))
+    monkeypatch.setattr('gmail_chatbot.app.core.EnhancedMemoryStore', MagicMock(return_value=MagicMock()))
+    pref_mock = MagicMock()
+    pref_mock.process_message.return_value = (False, None)
+    monkeypatch.setattr('gmail_chatbot.email_main.PreferenceDetector', MagicMock(return_value=pref_mock))
+    monkeypatch.setattr('gmail_chatbot.app.core.PreferenceDetector', MagicMock(return_value=pref_mock))
+    mah_mock = MagicMock()
+    monkeypatch.setattr('gmail_chatbot.email_main.MemoryActionsHandler', MagicMock(return_value=mah_mock))
+    monkeypatch.setattr('gmail_chatbot.app.core.MemoryActionsHandler', MagicMock(return_value=mah_mock))
     
     app = GmailChatbotApp()
     app.memory_store = memory_store
@@ -46,6 +57,7 @@ def mock_deps(monkeypatch):
     app.memory_actions_handler.query_memory.side_effect = (
         lambda message, request_id=None: memory_store.search_notebook(message)
     )
+    app.memory_actions_handler.store_emails_in_memory = MagicMock()
     app.memory_actions_handler.record_interaction_in_memory = MagicMock()
     app.memory_actions_handler.get_pending_proactive_summaries.return_value = []
     
@@ -78,17 +90,26 @@ def test_notebook_guardrail_entity_extraction(mock_deps, query, expected_entity,
     
     # Setup - notebook lookup returns empty results
     memory_store.search_notebook.return_value = []
-    
+
     # Execute
     response = app.process_message(query, "test-123")
     
-    # Verify the response contains expected entity if any
     if expected_entity:
         assert expected_entity in response
         assert "don't have notes on" in response
+        expected_query = (
+            f"from:{expected_entity} OR to:{expected_entity} OR subject:{expected_entity}"
+        )
     else:
-        # For queries without entity, should use generic template
-        assert response == NOTEBOOK_NO_RESULTS_TEMPLATES['generic']
+        assert response.startswith(NOTEBOOK_NO_RESULTS_TEMPLATES["generic"])
+        expected_query = query
+
+    mock_deps["gmail_client"].search_emails.assert_called_with(
+        query=expected_query,
+        original_user_query=query,
+        system_message=app.system_message,
+        request_id="test-123",
+    )
         
 def test_notebook_guardrail_empty_results(mock_deps, monkeypatch):
     """Test that the guard-rail prevents hallucination when notebook search returns no results."""
@@ -110,13 +131,15 @@ def test_notebook_guardrail_empty_results(mock_deps, monkeypatch):
     
     # Execute
     response = app.process_message(test_query, request_id)
-    
+
     # Verify - should return the guard-rail message, not call Claude
     expected_text = NOTEBOOK_NO_RESULTS_TEMPLATES['with_entity'].format(entity="John")
     assert "John" in response
     assert "don't have notes" in response
     # Claude should not be called with no notebook results
     assert not claude_client.generate_response.called
+    mock_deps["gmail_client"].search_emails.assert_called_once()
+    assert not app.memory_actions_handler.store_emails_in_memory.called
     
 def test_notebook_guardrail_with_results(mock_deps, monkeypatch):
     """Test that the guard-rail allows Claude to respond when notebook search returns results."""
@@ -141,9 +164,10 @@ def test_notebook_guardrail_with_results(mock_deps, monkeypatch):
     
     # Execute
     response = app.process_message(test_query, request_id)
-    
-    # Verify - should call Claude with the notebook entry
+
+    # Verify - results returned from notebook without invoking Claude
     assert "don't have notes" not in response
-    assert claude_client.generate_response.called
+    assert not claude_client.generate_response.called
+    mock_deps["gmail_client"].search_emails.assert_not_called()
 
 
