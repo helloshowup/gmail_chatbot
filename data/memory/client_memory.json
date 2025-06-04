@@ -2,7 +2,7 @@
   "further_learner": {
     "name": "Further Learner",
     "first_seen": "2025-05-31T06:24:01.464410",
-    "interactions": 46,
+    "interactions": 49,
     "info": {
       "status": "active"
     },
@@ -11,7 +11,7 @@
   "excel_high_school": {
     "name": "Excel High School",
     "first_seen": "2025-05-31T06:24:01.464410",
-    "interactions": 2,
+    "interactions": 3,
     "info": {
       "status": "active"
     },

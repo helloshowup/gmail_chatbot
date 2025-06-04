@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-06-04T15:50:23.960385",
+  "interaction_type": "gmail_request",
+  "query": "plan how you will update the notebook about bryce hepburn",
+  "request": {
+    "gmail_query": "after:2025/06/01 before:2025/06/05",
+    "original_user_query": "plan how you will update the notebook about bryce hepburn",
+    "request_id": "a7ef2d61-42c9-48ce-8739-074dd75c96d0"
+  },
+  "response": null,
+  "error": null
+}

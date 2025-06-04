@@ -1301,21 +1301,22 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:Autonomously fetched for Hoorah Digital",
-      "query:which emails did i receive today?",
-      "autonomously_fetched",
-      "query:yes. ",
       "query:tell me about bryce",
+      "client:Further Learner",
       "query:Autonomously fetched for Further Learner",
-      "query: search Gmail for information about Bryce?",
+      "query:yes. ",
+      "query:Autonomously fetched for Hoorah Digital",
       "query:Autonomously fetched for Excel High School",
-      "client:Further Learner"
+      "query:which emails did i receive today?",
+      "query: search Gmail for information about Bryce?",
+      "autonomously_fetched",
+      "query:plan how you will update the notebook about bryce hepburn"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-04T07:43:34.390403",
-    "last_accessed": "2025-06-04T13:09:02.756470",
-    "access_count": 4
+    "last_accessed": "2025-06-04T16:06:44.422017",
+    "access_count": 5
   },
   "197374b53c5c2e2a": {
     "subject": "Fwd: Ukraine's Counteroffensive 2.0: Russia Is Bleeding, and Putin Knows It",
@@ -1325,21 +1326,22 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:Autonomously fetched for Hoorah Digital",
-      "query:which emails did i receive today?",
-      "autonomously_fetched",
-      "query:yes. ",
       "query:tell me about bryce",
+      "client:Further Learner",
       "query:Autonomously fetched for Further Learner",
-      "query: search Gmail for information about Bryce?",
+      "query:yes. ",
+      "query:Autonomously fetched for Hoorah Digital",
       "query:Autonomously fetched for Excel High School",
-      "client:Further Learner"
+      "query:which emails did i receive today?",
+      "query: search Gmail for information about Bryce?",
+      "autonomously_fetched",
+      "query:plan how you will update the notebook about bryce hepburn"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-04T07:43:34.390403",
-    "last_accessed": "2025-06-04T13:09:02.756470",
-    "access_count": 4
+    "last_accessed": "2025-06-04T16:06:44.422017",
+    "access_count": 5
   },
   "1973711db3210794": {
     "subject": "AILit Framework envisions AI literacy as core school skill",
@@ -1349,20 +1351,21 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:Autonomously fetched for Hoorah Digital",
-      "autonomously_fetched",
-      "query:yes. ",
       "query:tell me about bryce",
+      "client:Further Learner",
       "query:Autonomously fetched for Further Learner",
-      "query: search Gmail for information about Bryce?",
+      "query:yes. ",
+      "query:Autonomously fetched for Hoorah Digital",
       "query:Autonomously fetched for Excel High School",
-      "client:Further Learner"
+      "query: search Gmail for information about Bryce?",
+      "autonomously_fetched",
+      "query:plan how you will update the notebook about bryce hepburn"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-04T07:43:34.390403",
-    "last_accessed": "2025-06-04T13:09:02.756470",
-    "access_count": 3
+    "last_accessed": "2025-06-04T16:06:44.422017",
+    "access_count": 4
   },
   "19736f3cc6577b2c": {
     "subject": "You have unread messages about the job Weight Loss Course Buildout",
@@ -1372,21 +1375,22 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query: search Gmail for information about Bryce?",
-      "query:Autonomously fetched for Excel High School",
       "query:tell me about bryce",
-      "query:Autonomously fetched for Further Learner",
-      "query:Autonomously fetched for Hoorah Digital",
-      "autonomously_fetched",
+      "query:plan how you will update the notebook about bryce hepburn",
       "client:Further Learner",
       "query:yes. ",
-      "query:which emails did i receive today?"
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Excel High School",
+      "query:which emails did i receive today?",
+      "query: search Gmail for information about Bryce?",
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-04T07:43:34.406913",
-    "last_accessed": "2025-06-04T10:09:01.702810",
-    "access_count": 4
+    "last_accessed": "2025-06-04T15:50:28.674103",
+    "access_count": 5
   },
   "19736d81ebc098af": {
     "subject": "You have unread messages about the job Weight Loss Course Buildout",
@@ -1552,20 +1556,21 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
-      "query:Autonomously fetched for Hoorah Digital",
-      "autonomously_fetched",
-      "query:which emails did i receive today?",
-      "query:yes. ",
       "query:tell me about bryce",
+      "client:Further Learner",
       "query:Autonomously fetched for Further Learner",
+      "query:yes. ",
+      "query:Autonomously fetched for Hoorah Digital",
       "query:Autonomously fetched for Excel High School",
-      "client:Further Learner"
+      "query:which emails did i receive today?",
+      "autonomously_fetched",
+      "query:plan how you will update the notebook about bryce hepburn"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-04T09:57:06.903303",
-    "last_accessed": "2025-06-04T13:09:02.743802",
-    "access_count": 3
+    "last_accessed": "2025-06-04T16:06:44.422017",
+    "access_count": 4
   },
   "1973a872b06d9a4b": {
     "subject": "Report domain: showup.courses Submitter: google.com Report-ID: 12212093571496290161",
@@ -1614,17 +1619,18 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
+      "query:plan how you will update the notebook about bryce hepburn",
       "query:Autonomously fetched for Hoorah Digital",
-      "autonomously_fetched",
-      "query:Autonomously fetched for Further Learner",
       "query:Autonomously fetched for Excel High School",
-      "client:Further Learner"
+      "client:Further Learner",
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-04T12:47:49.841918",
-    "last_accessed": "2025-06-04T13:09:02.738151",
-    "access_count": 1
+    "last_accessed": "2025-06-04T16:06:44.406771",
+    "access_count": 2
   },
   "1973a1fc0d362753": {
     "subject": "Re: Kepu Gas New Order",
@@ -1634,16 +1640,99 @@
     "summary": "No Summary",
     "client": "Further Learner",
     "tags": [
+      "query:plan how you will update the notebook about bryce hepburn",
       "query:Autonomously fetched for Hoorah Digital",
-      "autonomously_fetched",
-      "query:Autonomously fetched for Further Learner",
       "query:Autonomously fetched for Excel High School",
-      "client:Further Learner"
+      "client:Further Learner",
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner"
     ],
     "requires_action": false,
     "action_type": null,
     "first_seen": "2025-06-04T12:47:49.922477",
-    "last_accessed": "2025-06-04T13:09:02.743802",
+    "last_accessed": "2025-06-04T16:06:44.406771",
+    "access_count": 2
+  },
+  "1973b2118b2f6508": {
+    "subject": "Lesson 2 Step 13_... - Is next \"session\" correct here?",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Wed, 04 Jun 2025 06:28:33 -0700",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "query:plan how you will update the notebook about bryce hepburn",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Excel High School",
+      "client:Further Learner",
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-04T15:49:46.553656",
+    "last_accessed": "2025-06-04T16:06:44.388880",
+    "access_count": 2
+  },
+  "1973b1c2e2712312": {
+    "subject": "Re: Kepu Gas New Order",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Wed, 4 Jun 2025 15:23:11 +0200",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "query:plan how you will update the notebook about bryce hepburn",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Excel High School",
+      "client:Further Learner",
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-04T15:49:46.811567",
+    "last_accessed": "2025-06-04T16:06:44.405764",
+    "access_count": 2
+  },
+  "1973b052454fd2d6": {
+    "subject": "Monthly Anthropic API Spend Exceeding Thresholds",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Wed, 04 Jun 2025 12:58:01 +0000 (UTC)",
+    "summary": "No Summary",
+    "client": "Further Learner",
+    "tags": [
+      "query:plan how you will update the notebook about bryce hepburn",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Excel High School",
+      "client:Further Learner",
+      "autonomously_fetched",
+      "query:Autonomously fetched for Further Learner"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-04T15:49:47.032505",
+    "last_accessed": "2025-06-04T16:06:44.406771",
+    "access_count": 2
+  },
+  "1973b3a4ba87ddba": {
+    "subject": "[Action Advised] Update Essential Contacts and Advisory Notification configurations in Google Cloud console",
+    "sender": "Unknown Sender",
+    "recipient": "Unknown Recipient",
+    "date": "Wed, 04 Jun 2025 06:56:05 -0700",
+    "summary": "No Summary",
+    "client": "Excel High School",
+    "tags": [
+      "client:Excel High School",
+      "query:Autonomously fetched for Hoorah Digital",
+      "query:Autonomously fetched for Excel High School",
+      "autonomously_fetched"
+    ],
+    "requires_action": false,
+    "action_type": null,
+    "first_seen": "2025-06-04T16:06:38.350182",
+    "last_accessed": "2025-06-04T16:06:44.388880",
     "access_count": 1
   }
 }

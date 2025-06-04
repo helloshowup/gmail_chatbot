@@ -1393,5 +1393,30 @@
     "response": "I understand. I won't search your Gmail for information about Bryce.\n\nSince I don't have any notes or previous information stored in my notebook about Bryce Hepburn yet, I can't provide a summary. As we continue working together, I'll build up my notebook with relevant information from your emails and interactions, which will allow me to provide more helpful summaries in the future.\n\nIs there something else I can help you with today?",
     "email_ids": [],
     "client": null
+  },
+  "995dc6b58eeb18a45025cd24c60eb61d": {
+    "timestamp": "2025-06-04T15:50:28.674103",
+    "query": "plan how you will update the notebook about bryce hepburn",
+    "response": "Error processing email content: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-3-5-haiku-20250612'}}",
+    "email_ids": [
+      "1973b2118b2f6508",
+      "1973b1c2e2712312",
+      "1973b052454fd2d6",
+      "1973a4e0301a3493",
+      "1973a1fc0d362753",
+      "19739e6f5788b113",
+      "19737751c3678d61",
+      "197374b53c5c2e2a",
+      "1973711db3210794",
+      "19736f3cc6577b2c"
+    ],
+    "client": null
+  },
+  "d4e83bca16dfdf8da1f99ded9f011f2b": {
+    "timestamp": "2025-06-04T15:50:28.684106",
+    "query": "plan how you will update the notebook about bryce hepburn",
+    "response": "\ud83d\udcd3 I don't have notes on this topic yet. Would you like me to search your Gmail for relevant information?\n\nError processing email content: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-3-5-haiku-20250612'}}",
+    "email_ids": [],
+    "client": null
   }
 }
