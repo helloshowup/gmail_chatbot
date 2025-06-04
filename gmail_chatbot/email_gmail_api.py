@@ -18,7 +18,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 from gmail_chatbot.email_config import GMAIL_SCOPES, GMAIL_CLIENT_SECRET_FILE, GMAIL_TOKEN_FILE, \
-    DATA_DIR, LOGS_DIR, MAX_EMAILS_PER_SEARCH, MAX_EMAIL_BODY_CHARS
+    DATA_DIR, MAX_EMAILS_PER_SEARCH, MAX_EMAIL_BODY_CHARS
 from gmail_chatbot.email_claude_api import ClaudeAPIClient
 from gmail_chatbot.api_logging import log_gmail_request, log_gmail_response
 

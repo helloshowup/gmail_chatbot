@@ -14,6 +14,7 @@ from gmail_chatbot.agentic_executor import (
     summarize_and_log_agentic_results,  # Added for agentic execution
     handle_step_limit_reached,
 )
+from gmail_chatbot.email_config import CLAUDE_API_KEY_ENV, load_env
 
 # Module-level logger
 logger = logging.getLogger(__name__)
@@ -39,7 +40,6 @@ sys.excepthook = log_exception_to_file
 st.set_page_config(page_title="Gmail Chatbot", layout="wide")
 
 # from email_main import GmailChatbotApp # MOVED
-from gmail_chatbot.email_config import CLAUDE_API_KEY_ENV, load_env
 
 st.title("✉️ Gmail Claude Chatbot Assistant")
 
@@ -284,9 +284,12 @@ def initialize_chatbot() -> bool:
                     st.session_state["initialization_steps"].append(str("✓ Vector search loaded and available."))
                 else:
                     error_detail = "Vector search component reported as unavailable."
-                    if hasattr(st.session_state.bot, 'get_vector_search_error_message') and callable(st.session_state.bot.get_vector_search_error_message):
+                    if hasattr(st.session_state.bot, 'get_vector_search_error_message') and callable(
+                        st.session_state.bot.get_vector_search_error_message
+                    ):
                         msg = st.session_state.bot.get_vector_search_error_message()
-                        if msg: error_detail = str(msg) # Ensure string
+                        if msg:
+                            error_detail = str(msg)  # Ensure string
                     st.session_state["initialization_steps"].append(str(f"✗ Vector search failed: {error_detail}"))
                     # Vector search failure is non-critical for degraded mode.
                     # Store warning for UI display.

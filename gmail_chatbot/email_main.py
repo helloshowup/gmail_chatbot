@@ -1,6 +1,5 @@
 """Backward compatibility wrapper for GmailChatbotApp."""
 
-import logging
 
 from gmail_chatbot.app.core import (
     GmailChatbotApp,

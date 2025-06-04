@@ -1,20 +1,19 @@
 import unittest
-from unittest.mock import patch, MagicMock, mock_open, ANY  # Restore ANY
+from unittest.mock import patch, MagicMock  # Restore ANY
 import os  # Restore os
 import sys  # Restore sys
 import ssl  # For ssl.SSLError
 import logging  # For disabling/enabling logger in tests
 import json  # For creating mock client_secret file
-import pickle  # For mocking credential loading/saving
 from pathlib import Path  # For type checking in mocks
 import types
 
 try:
     from google.oauth2.credentials import Credentials  # type: ignore
-    import google.auth.exceptions  # type: ignore
-    import google.auth.transport.requests  # type: ignore
-    import google_auth_oauthlib.flow  # type: ignore
-    import googleapiclient.discovery  # type: ignore
+    import google.auth.exceptions as _  # type: ignore # noqa: F401
+    import google.auth.transport.requests as _  # type: ignore # noqa: F401
+    import google_auth_oauthlib.flow as _  # type: ignore # noqa: F401
+    import googleapiclient.discovery as _  # type: ignore # noqa: F401
 except ModuleNotFoundError:
     # Create minimal stub modules so that patch() calls work without the real packages
     class Credentials:
@@ -155,9 +154,6 @@ class TestGmailAPIClientSSLErrors(unittest.TestCase):
             # to ensure we are using the potentially reloaded module where 'build' is patched.
             from gmail_chatbot.email_gmail_api import (
                 GmailAPIClient,
-                DATA_DIR,
-                GMAIL_TOKEN_FILE,
-                GMAIL_CLIENT_SECRET_FILE,
             )
 
             # Attempt to instantiate the client. If DATA_DIR.mkdir was the issue at import,
@@ -365,7 +361,8 @@ class TestGmailAPIClientSSLErrors(unittest.TestCase):
 
 class TestLastGmailErrorFlag(unittest.TestCase):
     def setUp(self):
-        import sys, types
+        import sys
+        import types
         if 'streamlit' not in sys.modules:
             st_stub = types.ModuleType('streamlit')
             st_stub.session_state = {}

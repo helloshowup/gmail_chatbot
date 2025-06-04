@@ -11,7 +11,7 @@ from datetime import datetime
 from gmail_chatbot.email_memory import EmailMemoryStore
 
 # Import the vector database
-from gmail_chatbot.email_vector_db import vector_db, VECTOR_LIBS_AVAILABLE
+from gmail_chatbot.email_vector_db import vector_db
 
 # Set up logging
 logger = logging.getLogger(__name__)
