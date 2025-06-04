@@ -347,7 +347,7 @@ Do these results seem relevant to the query? If yes, summarize key info. If no, 
             )
             
             # Clean up the response using the postprocessor
-            from query_classifier import postprocess_claude_response
+            from gmail_chatbot.query_classifier import postprocess_claude_response
             cleaned_response = postprocess_claude_response(evaluated_response)
             
             logging.info(f"[{request_id}] Vector results evaluation complete")

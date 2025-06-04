@@ -4,7 +4,10 @@ from unittest.mock import MagicMock
 from datetime import date, datetime
 
 # Import the modules under test
-from memory_writers import store_professional_context, format_research_payload
+from gmail_chatbot.memory_writers import (
+    store_professional_context,
+    format_research_payload,
+)
 
 
 class TestMemoryWriters(unittest.TestCase):

@@ -16,8 +16,8 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from enhanced_memory import EnhancedMemoryStore
-from memory_models import MemoryEntry, MemoryKind, MemorySource
+from gmail_chatbot.enhanced_memory import EnhancedMemoryStore
+from gmail_chatbot.memory_models import MemoryEntry, MemoryKind, MemorySource
 
 
 class TestEnhancedMemoryStore(unittest.TestCase):

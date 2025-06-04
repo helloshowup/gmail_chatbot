@@ -75,8 +75,11 @@ else:
             expander=lambda *a, **k: contextlib.nullcontext(),
         )
 
-from agentic_executor import execute_step, handle_step_limit_reached
-import agentic_executor
+from gmail_chatbot.agentic_executor import (
+    execute_step,
+    handle_step_limit_reached,
+)
+import gmail_chatbot.agentic_executor as agentic_executor
 
 class TestAgenticExecutorFlow(unittest.TestCase):
     def setUp(self):

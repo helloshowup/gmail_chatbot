@@ -1,7 +1,7 @@
 # agentic_executor.py
 import streamlit as st
 from typing import Dict, Any, Optional
-from memory_writers import store_professional_context
+from gmail_chatbot.memory_writers import store_professional_context
 
 # Define a type for the result of execute_step for clarity
 ExecuteStepResult = Dict[str, Any]

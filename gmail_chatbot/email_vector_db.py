@@ -755,7 +755,7 @@ This should be indexed and retrievable by semantic or keyword search.""",
 
 def reindex_all_emails():
     """Rebuild the FAISS index from scratch using all emails in memory."""
-    from email_memory_vector import vector_memory
+    from gmail_chatbot.email_memory_vector import vector_memory
     
     logger.info("Starting complete vector reindexing...")
     

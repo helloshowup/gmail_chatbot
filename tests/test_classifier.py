@@ -11,7 +11,7 @@ if str(parent_dir) not in sys.path:
     sys.path.insert(0, str(parent_dir))
 
 # Import query_classifier
-from query_classifier import classify_query_type
+from gmail_chatbot.query_classifier import classify_query_type
 
 
 @pytest.mark.parametrize(

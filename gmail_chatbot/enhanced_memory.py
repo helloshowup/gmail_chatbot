@@ -10,14 +10,14 @@ from typing import Dict, List, Any, Optional, Union
 from datetime import datetime
 
 # Import the memory models and disk store
-from memory_models import MemoryEntry, MemoryKind, MemorySource
-from disk_store import DiskStore, DiskStoreError
+from gmail_chatbot.memory_models import MemoryEntry, MemoryKind, MemorySource
+from gmail_chatbot.disk_store import DiskStore, DiskStoreError
 
 # Import constants
 
 # Import vector database if available
 try:
-    from email_vector_db import vector_db, VECTOR_LIBS_AVAILABLE
+    from gmail_chatbot.email_vector_db import vector_db, VECTOR_LIBS_AVAILABLE
 except ImportError:
     VECTOR_LIBS_AVAILABLE = False
     vector_db = None
