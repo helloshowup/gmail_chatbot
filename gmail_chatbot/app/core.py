@@ -46,6 +46,7 @@ from gmail_chatbot.query_classifier import (
     postprocess_claude_response,
 )
 from gmail_chatbot.handlers import handle_triage_query
+from .handlers import handle_email_search_query
 
 # Configure stdout/stderr for UTF-8 to properly handle emojis in console output
 # Store original stdout/stderr to avoid issues during shutdown
@@ -694,107 +695,6 @@ class GmailChatbotApp:
 
         return response
 
-    def _handle_email_search_query(
-        self, message: str, message_lower: str, request_id: str
-    ) -> str:
-        """Handles queries classified as 'email_search'."""
-        logging.info(
-            f"[{request_id}] Handling 'email_search' query: {message[:50]}..."
-        )
-        response = ""
-
-        if self._is_simple_inbox_query(message_lower):
-            logging.info(
-                f"[{request_id}] Query '{message[:50]}' identified as simple inbox query. Offering menu."
-            )
-
-            today_str = date.today().strftime("%Y/%m/%d")
-            yesterday = date.today() - timedelta(days=1)
-            yesterday_str = yesterday.strftime("%Y/%m/%d")
-
-            menu_options_map = {
-                "1": {
-                    "type": "search_emails",
-                    "query": "is:unread",
-                    "description": "Recent unread emails",
-                },
-                "2": {
-                    "type": "search_emails",
-                    "query": f"is:unread after:{yesterday_str}",
-                    "description": "Unread since yesterday",
-                },
-                "3": {
-                    "type": "search_emails",
-                    "query": f"is:important after:{today_str}",
-                    "description": "Important today",
-                },
-                "4": {
-                    "type": "search_emails",
-                    "query": "is:starred",
-                    "description": "Starred emails",
-                },
-            }
-
-            response_parts = [
-                "Okay, I can check your emails. What specifically are you interested in?"
-            ]
-            for key_num, val_details in menu_options_map.items():
-                response_parts.append(
-                    f"{key_num}. {val_details['description']}"
-                )
-            response_parts.append(
-                "\\nPlease enter the number of your choice, or ask something else."
-            )
-            response = "\\n".join(response_parts)
-
-            self.pending_email_context = {
-                "type": "email_menu",
-                "options": menu_options_map,
-                "original_message": message,
-            }
-            logging.info(
-                f"[{request_id}] Set pending_email_context for email menu. Options: {{k: v['description'] for k, v in menu_options_map.items()}}"
-            )
-        else:
-            logging.info(
-                f"[{request_id}] Query '{message[:50]}' is complex email_search. Using standard Claude-assisted search flow."
-            )
-            query_suggestion_from_claude = self.claude_client.process_query(
-                user_query=message,
-                system_message=self.system_message,
-                request_id=request_id,
-            )
-
-            if query_suggestion_from_claude.startswith("ASK_USER:"):
-                response = query_suggestion_from_claude.replace(
-                    "ASK_USER:", ""
-                ).strip()
-                self.pending_email_context = (
-                    None  # No confirmation needed, Claude is asking a question
-                )
-                logging.info(
-                    f"[{request_id}] Claude needs clarification for email search: {response}"
-                )
-            elif query_suggestion_from_claude.startswith("ERROR:"):
-                response = f"I encountered an issue trying to understand your email search: {query_suggestion_from_claude.replace('ERROR:', '').strip()}"
-                self.pending_email_context = None  # Error, clear context
-                logging.error(
-                    f"[{request_id}] Claude returned an error for email search: {query_suggestion_from_claude}"
-                )
-            else:
-                # This is the proposed Gmail query string
-                self.pending_email_context = {
-                    "gmail_query": query_suggestion_from_claude,
-                    "original_message": message,
-                    "type": "gmail_query_confirmation",
-                }
-                response = f"Okay, I can search for that. To confirm, do you want me to search Gmail for: `{query_suggestion_from_claude}`? (yes/no)"
-                logging.info(
-                    f"[{request_id}] Email search needs confirmation for query: '{query_suggestion_from_claude}'. Set pending_email_context."
-                )
-        return response
-
-
     def _handle_catch_up_query(self, request_id: str) -> str:
         """Handles queries classified as 'catch_up'."""
         logging.info(
@@ -1326,8 +1226,8 @@ class GmailChatbotApp:
         ):
             response = handle_triage_query(self, message, request_id, scores)
         elif query_type == "email_search":
-            response = self._handle_email_search_query(
-                message, message_lower, request_id
+            response = handle_email_search_query(
+                self, message, message_lower, request_id
             )
         elif query_type == "notebook_lookup":
             response = self._handle_notebook_lookup_query(message, request_id)
@@ -1754,8 +1654,8 @@ class GmailChatbotApp:
                 )
 
             elif query_type == "email_search":
-                response = self._handle_email_search_query(
-                    message, message_lower, request_id
+                response = handle_email_search_query(
+                    self, message, message_lower, request_id
                 )
 
             elif query_type == "notebook_lookup":
