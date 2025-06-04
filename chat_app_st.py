@@ -408,7 +408,12 @@ if prompt := st.chat_input("Ask me about your inbox:"):
         if not st.session_state.get("agentic_plan"):
             with st.spinner("Bot is thinking..."):
                 plan = generate_plan(prompt, st.session_state)
-            if plan:
+            if plan is None:
+                assistant_reply = st.session_state.bot.process_message(prompt)
+                with st.chat_message("assistant"):
+                    st.markdown(assistant_reply)
+                st.session_state.bot.chat_history.append({"role": "assistant", "content": assistant_reply})
+            else:
                 st.session_state.agentic_plan = plan
                 st.session_state.agentic_state = default_agentic_state_values.copy()
                 plan_str = json.dumps(plan, indent=2)
