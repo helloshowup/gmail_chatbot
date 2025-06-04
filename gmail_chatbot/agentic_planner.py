@@ -2,14 +2,14 @@
 from typing import List, Dict, Any, Optional
 
 # Define type aliases for clarity
-PlanStep = Dict[str, Any]
-Plan = List[PlanStep]
+plan_step = Dict[str, Any]
+plan = List[plan_step]
 
 # --- Predefined Plan Structures/Templates ---
 # These could be expanded significantly
 # Each function would generate a specific sequence of steps
 
-def _generate_search_summarize_log_plan(search_query: str, log_target: str = "default_notebook") -> Plan:
+def _generate_search_summarize_log_plan(search_query: str, log_target: str = "default_notebook") -> plan:
     return [
         {
             "step_id": "search_inbox_initial",
@@ -42,7 +42,7 @@ def _generate_search_summarize_log_plan(search_query: str, log_target: str = "de
     ]
 
 # --- Main Planner Function ---
-def generate_plan(user_query: str, current_session_state: dict) -> Optional[Plan]:
+def generate_plan(user_query: str, current_session_state: dict) -> Optional[plan]:
     """
     Generates a multi-step plan based on the user's query using heuristics.
     """

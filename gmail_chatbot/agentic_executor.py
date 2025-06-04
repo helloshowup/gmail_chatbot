@@ -5,7 +5,7 @@ from typing import Dict, Any, Optional
 from gmail_chatbot.memory_writers import store_professional_context
 
 # Define a type for the result of execute_step for clarity
-ExecuteStepResult = Dict[str, Any]
+execute_step_result = Dict[str, Any]
 
 # Module level logger
 logger = logging.getLogger(__name__)
@@ -140,7 +140,7 @@ ACTION_HANDLERS = {
     # Add more real action handlers here
 }
 
-def execute_step(step_details: Dict[str, Any], agentic_state: Dict[str, Any]) -> ExecuteStepResult:
+def execute_step(step_details: Dict[str, Any], agentic_state: Dict[str, Any]) -> execute_step_result:
     # --- Original code reinstated (with one toast modification) ---
     action_type = step_details.get("action_type")
     parameters = step_details.get("parameters", {})
