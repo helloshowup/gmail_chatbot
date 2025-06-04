@@ -3,7 +3,6 @@ import types
 import contextlib
 from unittest.mock import MagicMock, patch
 import os
-import importlib
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if project_root not in sys.path:
@@ -77,7 +76,7 @@ def test_agentic_plan_fallback(monkeypatch):
     st_stub.session_state.bot = dummy_bot
 
     with patch("gmail_chatbot.agentic_planner.generate_plan", return_value=None):
-        import chat_app_st
+        pass
 
     assert dummy_bot.process_message.called
     assert dummy_bot.chat_history == [

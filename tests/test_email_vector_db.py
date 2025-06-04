@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 import os
 import sys
 
@@ -10,7 +10,7 @@ project_root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
 if project_root_dir not in sys.path:
     sys.path.insert(0, project_root_dir)
 
-from gmail_chatbot.email_vector_db import EmailVectorDB, EMBEDDING_MODEL_NAME, DEFAULT_CACHE_DIR, VECTOR_LIBS_AVAILABLE
+from gmail_chatbot.email_vector_db import EmailVectorDB
 from gmail_chatbot.email_memory_vector import EmailVectorMemoryStore
 
 class TestEmailVectorDBErrorHandling(unittest.TestCase):

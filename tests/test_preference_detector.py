@@ -1,4 +1,3 @@
-import pytest
 from unittest.mock import MagicMock, patch
 
 from gmail_chatbot.preference_detector import PreferenceDetector

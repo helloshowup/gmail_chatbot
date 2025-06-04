@@ -66,7 +66,7 @@ else:
     )
     tk = None # Define tk as None to prevent NameErrors if parts of the code not guarded by GUI_AVAILABLE try to access tk
 
-from gmail_chatbot.email_config import UI_TITLE, UI_WIDTH, UI_HEIGHT, UI_THEME_COLOR, LOGS_DIR
+from gmail_chatbot.email_config import UI_TITLE, UI_WIDTH, UI_HEIGHT, UI_THEME_COLOR
 
 # Check if vector memory is available - use conditional import
 try:
