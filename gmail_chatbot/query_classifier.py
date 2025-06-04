@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 # Classification confidence thresholds - single source of truth
 THRESHOLDS = {
     # Main confidence threshold for general classification
-    'GENERAL': 0.35,
+    'GENERAL': 0.25,
     # Lower threshold for queries that should still be attempted even with low confidence
     'LOOKUP_LENIENT': 0.30,  
     # Absolute minimum threshold below which all queries are treated as ambiguous
@@ -100,7 +100,12 @@ def calculate_pattern_match_scores(query: str, patterns_dict: Dict[str, List[str
 TELL_ME_ABOUT_PATTERN = re.compile(r"^\s*tell\s+me\s+about\s+(.+)", re.IGNORECASE)
 WHO_IS_PATTERN = re.compile(r"^\s*who\s+is\s+(.+)", re.IGNORECASE)
 WHAT_IS_PATTERN = re.compile(r"^\s*what\s+(is|are)\s+(.+)", re.IGNORECASE)
-INFO_ON_PATTERN = re.compile(r"^.*?(information|details|notes)\s+on\s+(.+)", re.IGNORECASE)
+INFO_ON_PATTERN = re.compile(
+    r"^.*?(information|details|notes)\s+on\s+(.+)", re.IGNORECASE
+)
+SEARCH_GMAIL_PATTERN = re.compile(
+    r"\bsearch\s+gmail\s+for\s+(?P<query>.+)", re.IGNORECASE
+)
 
 def classify_query_type_regex(query: str) -> Tuple[QueryType, float, Dict[str, float]]:
     """Classify user query using regex pattern matching.
@@ -113,9 +118,17 @@ def classify_query_type_regex(query: str) -> Tuple[QueryType, float, Dict[str, f
     Returns:
         Tuple of (classification, confidence_score, all_scores)
     """
+    # Direct Gmail search command
+    if SEARCH_GMAIL_PATTERN.search(query):
+        return "email_search", 0.95, {"email_search": 0.95}
+
     # First check if the query matches any of our compiled direct lookup patterns
-    if TELL_ME_ABOUT_PATTERN.match(query) or WHO_IS_PATTERN.match(query) or \
-       WHAT_IS_PATTERN.match(query) or INFO_ON_PATTERN.match(query):
+    if (
+        TELL_ME_ABOUT_PATTERN.match(query)
+        or WHO_IS_PATTERN.match(query)
+        or WHAT_IS_PATTERN.match(query)
+        or INFO_ON_PATTERN.match(query)
+    ):
         return "notebook_lookup", 0.8, {"notebook_lookup": 0.8}
         
     # Define patterns for each category
