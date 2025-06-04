@@ -99,6 +99,7 @@ def handle_email_search_query(
             user_query=message,
             system_message=app.system_message,
             request_id=request_id,
+            model=app.claude_client.prep_model,
         )
 
         if query_suggestion_from_claude.startswith("ASK_USER:"):
