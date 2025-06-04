@@ -119,7 +119,10 @@ Agentic features use structured prompt templates and few-shot tool examples, all
 If you encounter authentication errors with Gmail API:
 
 1. Delete the `token.json` file in the project-root `data/` directory
-2. Restart the application and go through the authentication flow again
+2. Confirm that `data/client_secret.json` exists and is correctly named
+3. Restart the application and go through the authentication flow again
+
+Missing or misnamed credentials can prevent the OAuth authorization window from appearing.
 
 ### API Key Issues
 
