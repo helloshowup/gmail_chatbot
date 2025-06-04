@@ -571,6 +571,36 @@ class GmailChatbotApp:
                 return message.get("content")
         return None
 
+    def has_recent_assistant_phrase(
+        self, phrase: str, lookback: int = 3
+    ) -> bool:
+        """Check if the last few assistant replies contain ``phrase``.
+
+        Parameters
+        ----------
+        phrase:
+            Phrase to search for (case-insensitive).
+        lookback:
+            Number of assistant messages to inspect from the end of
+            ``chat_history``.
+
+        Returns
+        -------
+        bool
+            ``True`` if ``phrase`` was found in the recent assistant replies.
+        """
+        remaining = lookback
+        for message in reversed(self.chat_history):
+            if message.get("role") != "assistant":
+                continue
+            content = message.get("content", "").lower()
+            if phrase.lower() in content:
+                return True
+            remaining -= 1
+            if remaining <= 0:
+                break
+        return False
+
     def _is_simple_inbox_query(self, message_lower: str) -> bool:
         """Checks if a query is a simple request for inbox contents, suitable for a menu."""
         generic_inbox_phrases = [
