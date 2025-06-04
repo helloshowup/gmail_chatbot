@@ -174,6 +174,14 @@ class MemoryActionsHandler:
             response = self.get_delegation_tasks()
             if response: return response
 
+        # Check for saved note listings
+        notes_triggers = ["list notes", "show notes", "my notes"]
+        if any(term in query_lower for term in notes_triggers):
+            logger.info(f"[{request_id}] Identified as notes listing query.")
+            response = self.list_saved_notes()
+            if response:
+                return response
+
         if not response:
             logger.info(f"[{request_id}] User memory query '{message[:50]}' did not match any specific handlers in MemoryActionsHandler.")
 
@@ -506,6 +514,24 @@ class MemoryActionsHandler:
                 f"- Subject: {item.get('subject', 'N/A')} (Action: {item.get('action_type', 'N/A')}, Client: {item.get('client', 'General')})"
             )
         return "\n".join(response_parts)
+
+    def list_saved_notes(self) -> str:
+        """Return a list of notes stored in the memory entries."""
+        notes = [
+            e for e in self.memory_store.memory_entries
+            if e.get("type") == "note" or e.get("kind") == "note"
+        ]
+        if not notes:
+            return "No saved notes found."
+
+        lines = ["Saved Notes:"]
+        for idx, note in enumerate(notes, 1):
+            content = note.get("content", "")
+            date = note.get("date") or note.get("ts", "")
+            if isinstance(date, str) and len(date) > 10:
+                date = date[:10]
+            lines.append(f"{idx}. {content} ({date})")
+        return "\n".join(lines)
 
     def run_autonomous_enrichment(self, request_id: str) -> str:
         """Perform autonomous multi-step memory enrichment.

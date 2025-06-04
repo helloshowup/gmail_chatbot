@@ -429,6 +429,34 @@ class EnhancedMemoryStore:
             except Exception as ve:
                 logger.warning(f"Failed to add preference to vector db: {ve}")
                 # Continue without vector DB - it's not critical
+
+    def save_note_from_text(self, content: str,
+                            tags: Optional[List[str]] = None) -> bool:
+        """Save a plain text note in ``memory_entries`` via ``add_memory_entry``.
+
+        Parameters
+        ----------
+        content:
+            The note text to store.
+        tags:
+            Optional list of tags for the note.
+
+        Returns
+        -------
+        bool
+            ``True`` if the note was saved successfully, ``False`` otherwise.
+        """
+        logger.info("Saving note from text: %s", content[:50])
+
+        entry = MemoryEntry(
+            kind=MemoryKind.NOTE,
+            content=content,
+            source=MemorySource.USER,
+            tags=tags or [],
+        ).to_dict()
+
+        # ``add_memory_entry`` already handles exceptions and returns ``bool``
+        return self.add_memory_entry(entry)
     
     def add_interaction_memory(self, content: str, tags: Optional[List[str]] = None, 
                                 meta: Optional[Dict[str, Any]] = None) -> None:

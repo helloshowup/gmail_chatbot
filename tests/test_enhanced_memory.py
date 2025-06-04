@@ -18,6 +18,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from gmail_chatbot.enhanced_memory import EnhancedMemoryStore
 from gmail_chatbot.memory_models import MemoryEntry, MemoryKind, MemorySource
+from gmail_chatbot.memory_handler import MemoryActionsHandler
+from unittest.mock import MagicMock
 
 
 class TestEnhancedMemoryStore(unittest.TestCase):
@@ -230,6 +232,34 @@ class TestEnhancedMemoryStore(unittest.TestCase):
         self.assertEqual(interaction_memory[0]["kind"], "interaction")
         self.assertEqual(interaction_memory[0]["meta"]["query"], "What emails do I have from Excel High School?")
         self.assertEqual(interaction_memory[0]["meta"]["client"], "Excel High School")
+
+    def test_note_creation_and_listing(self):
+        """Test creating a note and listing it via MemoryActionsHandler."""
+        note_text = "Remember to review the contract"
+        success = self.memory_store.save_note_from_text(note_text)
+        self.assertTrue(success)
+
+        notes_path = self.test_memory_path / "memory_entries.json"
+        self.assertTrue(notes_path.exists())
+
+        with open(notes_path, "r") as f:
+            entries = json.load(f)
+
+        self.assertEqual(len(entries), 1)
+        self.assertEqual(entries[0]["content"], note_text)
+        self.assertIn(entries[0]["kind"], ["note", "NOTE"])
+
+        handler = MemoryActionsHandler(
+            memory_store=self.memory_store,
+            gmail_client=MagicMock(),
+            claude_client=MagicMock(),
+            system_message="sys",
+            preference_detector=MagicMock(),
+        )
+
+        listing = handler.list_saved_notes()
+        self.assertIn("Saved Notes:", listing)
+        self.assertIn(note_text, listing)
     
     def test_keyword_search(self):
         """Test keyword search functionality."""

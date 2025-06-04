@@ -1429,6 +1429,22 @@ class GmailChatbotApp:
         if confirm_response:
             return proactive_response_part + confirm_response
 
+        note_cmds = ["create note", "create notes", "remember this", "note this"]
+        for cmd in note_cmds:
+            if message_lower.startswith(cmd):
+                text = message[len(cmd):].strip()
+                if not text:
+                    text = self.get_last_assistant_reply() or ""
+                if not text:
+                    response = "I couldn't find text to save as a note."
+                else:
+                    if self.enhanced_memory_store.save_note_from_text(text):
+                        response = "\U0001F4D3 Saved that note."  # notebook emoji
+                    else:
+                        response = "Couldn't save the note due to an error."
+                self.chat_history.append({"role": "assistant", "content": response})
+                return proactive_response_part + response
+
         # Check for explicit preference memory instructions
         memory_triggers = [
             "remember that",
