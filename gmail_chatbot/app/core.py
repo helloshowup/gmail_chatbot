@@ -201,6 +201,7 @@ class GmailChatbotApp:
 
         # Context tracking for pending queries
         self.pending_email_context = None  # Store pending query context (original message + search string) for confirmation
+        self.pending_notebook_context = None  # Track follow-ups when notebook has no results
 
         # Check for Anthropic API key
         if not os.environ.get(CLAUDE_API_KEY_ENV):
@@ -809,9 +810,21 @@ class GmailChatbotApp:
             else:
                 response = NOTEBOOK_NO_RESULTS_TEMPLATES["generic"]
 
-            self.pending_notebook_context = (
-                follow_up  # Store context for potential follow-up
+
+            # Store context for potential follow-up
+            self.pending_notebook_context = follow_up
+
+            search_query = (
+                f"from:{entity} OR to:{entity} OR subject:{entity}"
+                if entity
+                else message
             )
+            # Reuse existing confirmation flow for Gmail searches
+            self.pending_email_context = {
+                "gmail_query": search_query,
+                "original_message": message,
+                "type": "gmail_query_confirmation",
+            }
 
             logging.info(
                 f"[{request_id}] Notebook miss for query: '{message[:50]}...'. "
