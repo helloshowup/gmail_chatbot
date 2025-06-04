@@ -36,8 +36,13 @@ def _generate_search_summarize_log_plan(search_query: str, log_target: str = "de
             "step_id": "log_to_notebook",
             "description": f"Step 4: Log the summary to '{log_target}'.",
             "action_type": "log_to_notebook",
-            "parameters": {"input_data_key": "final_summary", "notebook_id": log_target, "section_title": f"Findings for '{search_query}'"},
-            "output_key": "logging_confirmation"
+            "parameters": {
+                "input_data_key": "final_summary",
+                "notebook_id": log_target,
+                "section_title": f"Findings for '{search_query}'",
+                "overwrite_if_exists": False,
+            },
+            "output_key": "logging_confirmation",
         }
     ]
 

@@ -4,6 +4,7 @@ import unittest
 import contextlib
 from unittest.mock import MagicMock
 import os
+from datetime import datetime
 
 # Ensure project root is on path for direct test execution
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -91,7 +92,13 @@ class TestAgenticExecutorFlow(unittest.TestCase):
 
         memory_store = MagicMock()
         memory_store.memory_entries = []
-        memory_store.add_memory_entry = MagicMock(return_value=True)
+        def add_entry(entry):
+            memory_store.memory_entries.append(entry)
+            return True
+
+        memory_store.add_memory_entry = MagicMock(side_effect=add_entry)
+        memory_store.memory_entries_store = MagicMock()
+        memory_store.memory_entries_store.save = MagicMock()
 
         bot = types.SimpleNamespace(
             gmail_client=self.gmail_client,
@@ -168,6 +175,58 @@ class TestAgenticExecutorFlow(unittest.TestCase):
         if pending["action"] == "send_email":
             st_stub.session_state.bot.gmail_client.send_email(**pending["parameters"])
         self.gmail_client.send_email.assert_called_once_with(to="c@d.com", subject="Hello", body="World")
+
+    def test_log_to_notebook_skipped_if_duplicate(self):
+        today = datetime.now().date()
+        existing = {
+            "id": f"prof_context_{today.isoformat()}",
+            "title": "Old",
+            "content": "old text",
+            "type": "professional_context",
+            "date": datetime.combine(today, datetime.min.time()).isoformat(),
+            "tags": ["professional_context"],
+        }
+        mem_store = st_stub.session_state.bot.enhanced_memory_store
+        mem_store.memory_entries = [existing]
+
+        step = {
+            "action_type": "log_to_notebook",
+            "parameters": {"input_data_key": "summary", "section_title": "Notes"},
+            "output_key": "log",
+        }
+        state = {"accumulated_results": {"summary": "new"}}
+        res = execute_step(step, state)
+        self.assertEqual(res["status"], "skipped")
+        mem_store.add_memory_entry.assert_not_called()
+
+    def test_log_to_notebook_overwrite(self):
+        today = datetime.now().date()
+        existing = {
+            "id": f"prof_context_{today.isoformat()}",
+            "title": "Old",
+            "content": "old text",
+            "type": "professional_context",
+            "date": datetime.combine(today, datetime.min.time()).isoformat(),
+            "tags": ["professional_context"],
+        }
+        mem_store = st_stub.session_state.bot.enhanced_memory_store
+        mem_store.memory_entries = [existing]
+        mem_store.memory_entries_store.save.reset_mock()
+
+        step = {
+            "action_type": "log_to_notebook",
+            "parameters": {
+                "input_data_key": "summary",
+                "section_title": "Notes",
+                "overwrite_if_exists": True,
+            },
+            "output_key": "log",
+        }
+        state = {"accumulated_results": {"summary": "new info"}}
+        res = execute_step(step, state)
+        self.assertEqual(res["status"], "success")
+        mem_store.memory_entries_store.save.assert_called_once()
+        self.assertEqual(len(mem_store.memory_entries), 1)
 
 if __name__ == "__main__":
     unittest.main()

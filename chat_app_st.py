@@ -155,6 +155,9 @@ def run_agentic_plan() -> None:
             progress_bar.progress((idx + 1) / len(plan))
             return
 
+        if execution_result.get("status") == "skipped":
+            st.info(execution_result.get("message", "Step skipped"))
+
         agentic_state["current_step_index"] = idx + 1
         st.session_state.agentic_state = agentic_state
         progress_bar.progress(agentic_state["current_step_index"] / len(plan))
