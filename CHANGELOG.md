@@ -16,6 +16,13 @@
 - Added Continue/Stop prompt when autonomous step limit is reached
 - INFO level logs for agentic step execution now written to
   `logs/gmail_chatbot/` for troubleshooting
+- `CLAUDE_PREP_MODEL` environment variable to configure a cheaper model for
+  preparatory steps.
+- `ClaudeAPIClient` methods accept an optional `model` argument and expose a
+  `prep_model` attribute for inexpensive preprocessing.
+- Internal summarization and query-parsing calls route to the prep model while
+  user-facing chat continues using the default model.
+- Unit tests updated to validate model selection logic.
 
 ### Changed
 
