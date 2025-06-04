@@ -33,7 +33,7 @@ A Claude-powered chatbot that interacts with your Gmail account. This tool allow
 
    ```env
    ANTHROPIC_API_KEY=your_key_here
-   CLAUDE_PREP_MODEL=claude-3-5-haiku-20250612
+   CLAUDE_PREP_MODEL=claude-3-haiku-20240307
    ```
    The application automatically loads this `.env` file at startup via `gmail_chatbot.email_config.load_env()`.
    `CLAUDE_PREP_MODEL` selects the Claude model used to prep email history.
