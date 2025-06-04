@@ -51,6 +51,71 @@ Adherence to these standards is crucial for maintaining code quality, readabilit
     -   If a function, class, or method body is intentionally empty, use the `pass` statement.
 -   **Logging:** Implement descriptive logging to aid in debugging and monitoring application behavior.
 
+#### 3.x Naming Consistency Enforcement
+
+Consistent naming is non-negotiable. AI-generated code, quick hacks, and copy-pasted snippets will introduce drift unless you lock in rules and catch deviations automatically. Follow these practices:
+
+1. **Centralize Naming Rules (Don’t Assume Everyone Knows):**
+   - Create a visible doc or comment block at the top of `config.py` (or a standalone `NAMING.md`) that states your conventions:
+     - **Variables & Functions:** `snake_case` (e.g., `get_email_thread`)
+     - **Classes:** `PascalCase` (e.g., `EmailFetcher`)
+     - **Constants:** `ALL_CAPS` (e.g., `MAX_RETRIES = 3`)
+     - **Private/Internal Variables:** Prefix an underscore (e.g., `_auth_token`)
+   - Every reviewer and AI prompt must reference these exact rules.
+
+2. **Embed Linter Checks as Gatekeepers:**
+   - Configure **pylint** or **ruff** to fail on naming violations:
+     - Flag camelCase for variables/functions
+     - Flag lowercase for classes
+     - Enforce maximum length if needed (e.g., six words max)
+   - Add a CI job that runs `ruff . --select N806,N815,N818` (or equivalent) to reject merges with naming drift.
+
+3. **Annotate AI Prompts Explicitly—No Wiggle Room:**
+   - Whenever you ask an AI to generate or refactor code, include a prefix in the prompt:
+     ```
+     “Use these naming rules without exception:
+      • snake_case for variables/functions
+      • PascalCase for class names
+      • ALL_CAPS for constants”
+     ```
+   - If the AI ignores it, treat the output as a draft—refuse to merge until it’s refactored.
+
+4. **Post-Generation Automated Refactoring:**
+   - Immediately run an automated rename tool (e.g., `autopep8` or your IDE’s batch rename) on any AI-generated file.
+   - Example command:
+     ```bash
+     black . && ruff --fix .
+     ```
+   - If the refactor breaks logic, review manually—but don’t skip this step.
+
+5. **Name “Registry” for Critical Globals:**
+   - If you have global or shared constants/settings (e.g., in `settings.py`), group them under a single section:
+     ```python
+     # settings.py
+     # ======================================================
+     #  NAMING REGISTRY: global constants and flags
+     MAX_EMAIL_FETCH = 50
+     DEFAULT_SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+     ```
+   - This makes it impossible to accidentally scatter critical names elsewhere.
+
+6. **Regular Audits—Catch Drift Early:**
+   - Schedule a weekly script that scans for naming violations:
+     ```bash
+     find . -name "*.py" | xargs ruff --select N806,N815,N818
+     ```
+   - Fail fast: if violations exist, open an issue or send a Slack alert.
+
+7. **Code Review Checklist Item:**
+   - Add “✔️ Naming matches conventions” as a mandatory checkbox on pull requests. No exceptions. If it doesn’t match, the reviewer must request changes.
+
+**Why This Matters:**  
+- **AI Will Drift:** Even if an AI starts with perfect naming, follow-up edits and patching frequently break conventions.  
+- **Human Laziness:** It’s easier to accept whatever the AI spits out than to rename things. If you don’t automate checks, drift becomes the norm.  
+- **Long-Term Maintainability:** One bad name can cascade confusion across dozens of imports. Enforcing naming from Day 1 saves hours of “where did this come from?” later.
+
+Stick to these steps and you’ll keep naming consistent—AI-generated or human-written. Any deviation is a red flag and must be corrected before merging.
+
 ## 4. Dependencies & Environment
 
 -   **Python:** The project is developed in Python.
