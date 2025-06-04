@@ -104,3 +104,12 @@ Adherence to these standards is crucial for maintaining code quality, readabilit
 -   **Tool Usage:** When using tools (e.g., `edit_file`, `run_command`), ensure your actions align with the project's structure, coding standards, and testing procedures outlined herein.
 -   **Memory Utilization:** Actively use and refer to project-specific memories provided during our interactions to maintain continuity and adhere to established patterns or decisions.
 -   **Clarification:** If any instruction in this document or a user request is ambiguous, seek clarification before proceeding.
+
+## 9. Streamlit Development Guidelines
+
+- Structure Streamlit apps so the UI (e.g., `chat_app_st.py`) is thin and imports reusable utilities from modules like `utils/llm.py` or `utils/prompt.py`.
+- Preserve conversation context using `st.session_state`; persist this data externally for multi-user or long-term sessions.
+- Use asynchronous API calls and `st.write_stream` to keep the UI responsive.
+- Apply `st.cache_resource` or `st.cache_data` for expensive operations, and include rate limiting when invoking LLM or Gmail APIs.
+- Leverage observability tools such as LangSmith to debug agent reasoning.
+- Prompt templates and few-shot examples should guide tool usage, and self-correction loops can improve reliability.

@@ -87,6 +87,14 @@ pip install -r requirements-lite.txt
 - "Find any emails mentioning the client meeting scheduled for tomorrow"
 - "Search for emails with the subject containing 'quarterly report'"
 
+## Streamlit Usage & Best Practices
+
+The main application `chat_app_st.py` demonstrates Streamlit chat widgets such as `st.chat_message` and `st.chat_input` for conversational interaction. Prompt parameters can be tuned via UI controls like sliders, and responses stream back through `st.write_stream` to keep the interface responsive.
+
+Short-term conversation state lives in `st.session_state`; for long-term or multi-user deployments, store history in external persistence (e.g., an EFS volume or database). When running at scale, containerize the app and place it behind a load balancer, applying caching and rate limiting to avoid hitting API quotas.
+
+Agentic features use structured prompt templates and few-shot tool examples, allowing the chatbot to reason about tasks and self-correct when necessary.
+
 ## Privacy and Security
 
 - All email content is processed locally on your machine
