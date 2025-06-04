@@ -213,6 +213,17 @@ pytest -q
 If heavy optional dependencies such as FAISS are not available, some tests will
 be skipped automatically.
 
+## Code Formatting and Linting
+
+Format code with [black](https://github.com/psf/black) and run
+[ruff](https://github.com/astral-sh/ruff) to lint:
+
+```bash
+black .
+
+ruff .
+```
+
 ## License
 
 This project is for personal use only.
