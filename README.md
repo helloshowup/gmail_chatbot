@@ -8,6 +8,8 @@ A Claude-powered chatbot that interacts with your Gmail account. This tool allow
 - Email content analysis and summarization
 - Information extraction from email threads
 - Streamlit-based web interface
+- Tkinter-based GUI provided by the `gui` package (with `email_gui.py` kept as a
+  wrapper for backward compatibility)
 - Secure OAuth2 authentication with Gmail API
 - Claude API integration for intelligent processing
 - Vector-based email memory with optional GPU-accelerated search
@@ -71,8 +73,9 @@ pip install -r requirements-lite.txt
 
 ## Usage
 
-1. Launch the application using `run_gmail_chatbot.bat`
-   (or run `streamlit run chat_app_st.py` after activating your environment)
+1. Launch the application using `run_gmail_chatbot.bat`,
+   `python -m gmail_chatbot.cli` for the CLI,
+   or run `streamlit run chat_app_st.py` for the web UI
 2. First-time users will be prompted to authorize the application to access their Gmail account
 3. Enter natural language queries in the chat interface to interact with your emails
 
