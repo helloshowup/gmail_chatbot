@@ -7,7 +7,6 @@ import io
 import time
 import json
 from pathlib import Path
-import dotenv
 from gmail_chatbot.agentic_planner import generate_plan
 from gmail_chatbot.agentic_executor import (
     execute_step,
@@ -36,10 +35,7 @@ sys.excepthook = log_exception_to_file
 st.set_page_config(page_title="Gmail Chatbot", layout="wide")
 
 # from email_main import GmailChatbotApp # MOVED
-from gmail_chatbot.email_config import CLAUDE_API_KEY_ENV
-import time
-from pathlib import Path
-import dotenv
+from gmail_chatbot.email_config import CLAUDE_API_KEY_ENV, load_env
 
 st.title("✉️ Gmail Claude Chatbot Assistant")
 
@@ -172,13 +168,18 @@ def initialize_chatbot() -> bool:
     """Attempts to initialize the chatbot application, returns True on success, False on failure."""
     st.session_state["initialization_steps"] = [] # Initialize early, done before any potential failure point
 
-    # Load .env file before checking for the API key
-    dotenv_path = Path(__file__).resolve().parent / ".env"
-    if dotenv_path.exists():
-        dotenv.load_dotenv(dotenv_path)
-        st.session_state["initialization_steps"].append(str(f"✓ .env file loaded from {dotenv_path}"))
+    env_path = Path(__file__).resolve().parent / ".env"
+    load_env()
+    if env_path.exists():
+        st.session_state["initialization_steps"].append(
+            str(f"✓ .env file loaded from {env_path}")
+        )
     else:
-        st.session_state["initialization_steps"].append(str(f"⚠️ .env file not found at {dotenv_path}. Some features might not work."))
+        st.session_state["initialization_steps"].append(
+            str(
+                f"⚠️ .env file not found at {env_path}. Some features might not work."
+            )
+        )
         # This might not be critical enough to stop, depending on what's in .env, but API key check below is.
 
     # Check for Anthropic API key before attempting to initialize
