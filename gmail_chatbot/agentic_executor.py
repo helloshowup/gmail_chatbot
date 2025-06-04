@@ -1,10 +1,14 @@
 # agentic_executor.py
+import logging
 import streamlit as st
 from typing import Dict, Any, Optional
 from gmail_chatbot.memory_writers import store_professional_context
 
 # Define a type for the result of execute_step for clarity
 ExecuteStepResult = Dict[str, Any]
+
+# Module level logger
+logger = logging.getLogger(__name__)
 
 # --- Tool/Action Implementations (Placeholders for now, to be made real) ---
 
@@ -141,9 +145,13 @@ def execute_step(step_details: Dict[str, Any], agentic_state: Dict[str, Any]) ->
     action_type = step_details.get("action_type")
     parameters = step_details.get("parameters", {})
     output_key = step_details.get("output_key")
-    step_description = step_details.get('description', 'Unnamed step')
-    step_id = step_details.get('step_id', 'N/A') # Get step_id for logging
-    print(f"DEBUG EXECUTOR [START execute_step for {step_id}]: Received agentic_state: {agentic_state}")
+    step_description = step_details.get("description", "Unnamed step")
+    step_id = step_details.get("step_id", "N/A")
+    logger.info("Starting step %s (%s)", step_id, action_type)
+    print(
+        f"DEBUG EXECUTOR [START execute_step for {step_id}]: "
+        f"Received agentic_state: {agentic_state}"
+    )
 
     # The following st.toast was suspected of causing issues and remains commented out.
     # st.toast(f"Executing: {step_description}", icon="⚙️") 
@@ -152,7 +160,11 @@ def execute_step(step_details: Dict[str, Any], agentic_state: Dict[str, Any]) ->
 
     handler = ACTION_HANDLERS.get(action_type)
     if not handler:
-        error_message = f"No handler found for action_type: '{action_type}' in step '{step_id} - {step_description}'"
+        error_message = (
+            f"No handler found for action_type: '{action_type}' in step "
+            f"'{step_id} - {step_description}'"
+        )
+        logger.info("Parsing error: %s", error_message)
         print(f"ERROR EXECUTOR: {error_message}")
         return {
             "status": "failure",
@@ -186,6 +198,19 @@ def execute_step(step_details: Dict[str, Any], agentic_state: Dict[str, Any]) ->
                  updated_agentic_state["accumulated_results"] = {} # Reset if it's not a dict
             updated_agentic_state["accumulated_results"][output_key] = step_output_data
             print(f"DEBUG EXECUTOR: Stored output for step {step_id} under key '{output_key}'.")
+
+        state_summary = {
+            "executed_call_count": updated_agentic_state.get("executed_call_count"),
+            "current_step_index": updated_agentic_state.get("current_step_index"),
+            "result_keys": list(updated_agentic_state.get("accumulated_results", {}).keys()),
+        }
+        logger.info(
+            "Finished step %s (%s) status=%s summary=%s",
+            step_id,
+            action_type,
+            status,
+            state_summary,
+        )
         
         print(f"DEBUG EXECUTOR: Step '{step_id} - {step_description}' result: {status}. Message: {message}")
         return {
@@ -195,7 +220,11 @@ def execute_step(step_details: Dict[str, Any], agentic_state: Dict[str, Any]) ->
             "requires_user_input": result.get("requires_user_input", False)
         }
     except Exception as e:
-        error_message = f"Exception during execution of step '{step_id} - {step_description}' ({action_type}): {e}"
+        error_message = (
+            f"Exception during execution of step '{step_id} - {step_description}'"
+            f" ({action_type}): {e}"
+        )
+        logger.info("Parsing error: %s", error_message)
         print(f"ERROR EXECUTOR: {error_message}")
         import traceback
         traceback.print_exc() # Print full traceback to console
