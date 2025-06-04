@@ -347,7 +347,10 @@ class GmailAPIClient:
             # Process email data through Claude if system_message is provided
             if system_message and self.claude:
                 claude_response = self.claude.process_email_content(
-                    email_data, original_user_query, system_message
+                    email_data,
+                    original_user_query,
+                    system_message,
+                    model=self.claude.prep_model,
                 )
                 return email_data, claude_response
             else:
@@ -417,10 +420,18 @@ class GmailAPIClient:
             
             # Process email data through Claude for user-friendly response
             if user_query:
-                response = self.claude.process_email_content(email_info, user_query, self.system_message)
+                response = self.claude.process_email_content(
+                    email_info,
+                    user_query,
+                    self.system_message,
+                    model=self.claude.prep_model,
+                )
             else:
                 response = self.claude.process_email_content(
-                    email_info, "Summarize this email and extract key information", self.system_message
+                    email_info,
+                    "Summarize this email and extract key information",
+                    self.system_message,
+                    model=self.claude.prep_model,
                 )
             
             return email_info, response

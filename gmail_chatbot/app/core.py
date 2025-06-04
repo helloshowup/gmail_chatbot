@@ -988,6 +988,7 @@ class GmailChatbotApp:
                 user_query=reasoning_prompt,
                 system_message=modified_system_message,
                 request_id=f"{request_id}_reasoning",
+                model=self.claude_client.prep_model,
             )
             if vector_reasoning.startswith("VECTOR_SEARCH:"):
                 extracted_terms = vector_reasoning.replace(
@@ -1576,6 +1577,7 @@ class GmailChatbotApp:
                     f"Summarize this user preference into a single clear sentence for memory storage: {message}",
                     self.system_message,
                     request_id=request_id,
+                    model=self.claude_client.prep_model,
                 )
                 # Use original message as fallback if summary generation fails
                 content = (

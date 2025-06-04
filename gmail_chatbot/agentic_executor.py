@@ -51,7 +51,12 @@ def _execute_extract_entities(parameters: Dict[str, Any], agentic_state: Dict[st
         return {"status": "failure", "message": "Claude client not available"}
 
     try:
-        entities = claude_client.process_email_content(input_data, extraction_prompt, system_message)
+        entities = claude_client.process_email_content(
+            input_data,
+            extraction_prompt,
+            system_message,
+            model=claude_client.prep_model,
+        )
         return {"status": "success", "data": entities, "message": "Entities extracted"}
     except Exception as e:  # pragma: no cover - defensive
         return {"status": "failure", "message": f"Entity extraction failed: {e}"}
@@ -71,7 +76,12 @@ def _execute_summarize_text(parameters: Dict[str, Any], agentic_state: Dict[str,
 
     try:
         prompt = f"Please provide a concise summary of the following information:\n{input_data}"
-        summary = claude_client.chat(prompt, [], system_message)
+        summary = claude_client.chat(
+            prompt,
+            [],
+            system_message,
+            model=claude_client.prep_model,
+        )
         return {"status": "success", "data": summary, "message": "Text summarized"}
     except Exception as e:  # pragma: no cover - defensive
         return {"status": "failure", "message": f"Summarization failed: {e}"}
