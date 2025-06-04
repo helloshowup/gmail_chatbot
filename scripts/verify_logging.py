@@ -21,10 +21,11 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 
-# Add parent directory to path to allow imports
-script_dir = Path(os.path.dirname(os.path.abspath(__file__)))
-if str(script_dir) not in sys.path:
-    sys.path.insert(0, str(script_dir))
+# Add project root directory to path to allow imports
+script_dir = Path(__file__).resolve().parent
+project_root = script_dir.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 # Import API logging functions
 from api_logging import (

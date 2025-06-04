@@ -2,8 +2,10 @@ import os
 import sys
 from unittest.mock import MagicMock
 
-# Add parent directory to path
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Add project root directory to path
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(script_dir)
+sys.path.insert(0, project_root)
 
 # Import modules to test
 from gmail_chatbot.email_main import GmailChatbotApp
