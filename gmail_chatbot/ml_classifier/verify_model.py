@@ -27,13 +27,13 @@ def verify_model_exists():
     
     if not model_path.exists():
         logger.error(f"ML classifier model not found at {model_path}")
-        logger.error("Run 'python train_classifier.py' to generate the model")
+        logger.error("Run 'python update_classifier.py' to generate the model")
         sys.exit(1)
         
     # Check if file is not empty
     if model_path.stat().st_size < 1000:  # Reasonable minimum size for a valid model
         logger.error("ML classifier model appears to be invalid (too small)")
-        logger.error("Run 'python train_classifier.py' to regenerate the model")
+        logger.error("Run 'python update_classifier.py' to regenerate the model")
         sys.exit(1)
         
     logger.info(f"ML classifier model verified at {model_path}")
