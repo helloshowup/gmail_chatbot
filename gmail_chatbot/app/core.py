@@ -128,6 +128,7 @@ from gmail_chatbot.memory_writers import (
     store_professional_context,
     format_research_payload,
 )
+from gmail_chatbot.task_chain_parser import parse_task_chain
 
 # Set up the logs directory path
 # Store logs under the project root instead of outside the repository
@@ -1077,8 +1078,6 @@ class GmailChatbotApp:
                     return response
 
                 try:
-                    from gmail_chatbot.task_chain_parser import parse_task_chain
-
                     plan = parse_task_chain(last_assistant_msg)
                 except Exception as e:  # pragma: no cover - defensive
                     logging.error(
@@ -1815,6 +1814,17 @@ class GmailChatbotApp:
                     f"[{request_id}] Claude proposed TASK_CHAIN plan: {response_str[:80]}"
                 )
 
+                try:
+                    plan = parse_task_chain(response_str)
+                    logging.info(
+                        f"[{request_id}] Parsed TASK_CHAIN into {len(plan)} step(s)"
+                    )
+                except Exception as e:  # pragma: no cover - defensive
+                    logging.error(
+                        f"[{request_id}] Failed to parse TASK_CHAIN: {e}"
+                    )
+                    plan = []
+
                 if "enrich" in response_str.lower() and any(
                     term in response_str.lower()
                     for term in ["inbox", "memory", "notebook", "email"]
@@ -1827,7 +1837,10 @@ class GmailChatbotApp:
                         self.memory_actions_handler.perform_autonomous_memory_enrichment(
                             request_id=request_id
                         )
-                        response_str = "I've initiated an autonomous memory enrichment process based on the current context. You can continue interacting."
+                        response_str = (
+                            "I've initiated an autonomous memory enrichment process "
+                            "based on the current context. You can continue interacting."
+                        )
                     else:
                         logging.info(
                             f"[{request_id}] Pausing after 3 autonomous searches, asking user for confirmation"
@@ -1835,14 +1848,47 @@ class GmailChatbotApp:
                         self.pending_email_context = {
                             "original_message": message,
                             "gmail_query": "TASK_CHAIN",
+                            "plan": plan,
+                            "type": "task_chain_confirmation",
                         }
-                        response_str += f"\n\nI've done {self.autonomous_task_counter} steps. Would you like me to keep going?"
-                else:  # Other TASK_CHAIN types, ask for confirmation
-                    self.pending_email_context = {
-                        "original_message": message,
-                        "gmail_query": "TASK_CHAIN",
-                    }
-                    response_str += "\n\nWould you like me to proceed with this multi-step task?"
+                        response_str += (
+                            f"\n\nI've done {self.autonomous_task_counter} steps. "
+                            "Would you like me to keep going?"
+                        )
+                else:
+                    if plan and st and st.session_state.get("agentic_mode_enabled"):
+                        st.session_state.agentic_plan = plan
+                        st.session_state.agentic_state = {
+                            "current_step_index": 0,
+                            "executed_call_count": 0,
+                            "accumulated_results": {},
+                            "error_messages": [],
+                        }
+                        logging.info(
+                            f"[{request_id}] Executing parsed plan automatically"
+                        )
+                        try:  # Delayed import to avoid circular dependency
+                            from chat_app_st import run_agentic_plan  # type: ignore
+
+                            run_agentic_plan()
+                        except Exception as e:  # pragma: no cover - defensive
+                            logging.error(
+                                f"[{request_id}] Error running agentic plan: {e}"
+                            )
+                        response_str = "Okay, I'm starting that task chain."
+                    else:
+                        self.pending_email_context = {
+                            "original_message": message,
+                            "gmail_query": "TASK_CHAIN",
+                            "plan": plan,
+                            "type": "task_chain_confirmation",
+                        }
+                        logging.info(
+                            f"[{request_id}] Parsed plan queued for confirmation"
+                        )
+                        response_str += (
+                            "\n\nWould you like me to proceed with this multi-step task?"
+                        )
         return response_str
 
     def get_email_by_id(
