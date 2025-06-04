@@ -1,5 +1,6 @@
 # agentic_executor.py
 import logging
+from datetime import datetime, date
 import streamlit as st
 from typing import Dict, Any, Optional
 from gmail_chatbot.memory_writers import store_professional_context
@@ -80,6 +81,7 @@ def _execute_log_to_notebook(parameters: Dict[str, Any], agentic_state: Dict[str
     input_data_key = parameters.get("input_data_key")
     notebook_id = parameters.get("notebook_id", "default_notebook")
     section_title = parameters.get("section_title", "Agentic Log")
+    overwrite_if_exists = parameters.get("overwrite_if_exists", False)
 
     input_data = agentic_state.get("accumulated_results", {}).get(input_data_key)
     if input_data is None:
@@ -92,6 +94,44 @@ def _execute_log_to_notebook(parameters: Dict[str, Any], agentic_state: Dict[str
         return {"status": "failure", "message": "No memory store available for logging."}
 
     try:
+        entry_date = date.today()
+        existing_entry = None
+        for entry in getattr(memory_store, "memory_entries", []):
+            if entry.get("type") == "professional_context":
+                try:
+                    if datetime.fromisoformat(entry.get("date")).date() == entry_date:
+                        existing_entry = entry
+                        break
+                except Exception:
+                    continue
+
+        if existing_entry and not overwrite_if_exists:
+            message = (
+                f"Professional context already logged for {entry_date}"
+            )
+            return {
+                "status": "skipped",
+                "reason": "already_logged",
+                "message": message,
+            }
+
+        if existing_entry and overwrite_if_exists:
+            try:
+                memory_store.memory_entries = [
+                    e
+                    for e in memory_store.memory_entries
+                    if e is not existing_entry
+                ]
+                if hasattr(memory_store, "memory_entries_store"):
+                    memory_store.memory_entries_store.save(memory_store.memory_entries)
+            except Exception as exc:  # pragma: no cover - defensive
+                return {
+                    "status": "failure",
+                    "message": (
+                        f"Failed to overwrite existing entry: {exc}"
+                    ),
+                }
+
         store_professional_context(memory_store, section_title, str(input_data))
         confirmation_message = (
             f"Content from '{input_data_key}' logged to notebook '{notebook_id}' under section '{section_title}'."
