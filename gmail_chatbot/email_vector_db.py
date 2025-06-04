@@ -817,6 +817,6 @@ if __name__ == "__main__":
         print("\nEmail Vector Database Status:")
         for key, value in status.items():
             print(f"  {key}: {value}")
-        print("\nTo rebuild the index: python email_vector_db.py --reindex")
-        print("To run tests: python email_vector_db.py --test")
+        print("\nTo rebuild the index: python -m gmail_chatbot.email_vector_db --reindex")
+        print("To run tests: python -m gmail_chatbot.email_vector_db --test")
 

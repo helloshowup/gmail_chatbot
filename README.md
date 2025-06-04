@@ -14,6 +14,7 @@ A Claude-powered chatbot that interacts with your Gmail account. This tool allow
 - Claude API integration for intelligent processing
 - Vector-based email memory with optional GPU-accelerated search
 - Machine learning classifier for understanding query intent
+- Modular codebase organized under the `gmail_chatbot` package
 
 ## Prerequisites
 
@@ -153,7 +154,7 @@ The Gmail Chatbot now supports GPU-accelerated vector search using FAISS for sig
 To rebuild the vector index (e.g., after adding many new emails):
 
 ```bash
-python email_vector_db.py --reindex
+python -m gmail_chatbot.email_vector_db --reindex
 ```
 
 This will create a new FAISS index using all emails in memory, optimized for your hardware.
@@ -163,7 +164,7 @@ This will create a new FAISS index using all emails in memory, optimized for you
 To check if GPU acceleration is active:
 
 ```bash
-python email_vector_db.py
+python -m gmail_chatbot.email_vector_db
 ```
 
 The output will display `GPU acceleration: True` if successfully enabled.

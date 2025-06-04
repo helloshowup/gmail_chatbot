@@ -38,7 +38,7 @@ The classifier can be retrained with new data as it becomes available in the log
 
 ```bash
 # Run from the ml_classifier directory
-python train_classifier.py
+python update_classifier.py
 ```
 
 This will:
@@ -55,7 +55,7 @@ For incremental improvements using unlabeled data:
 
 ```bash
 # Run from the ml_classifier directory
-python train_classifier.py --semi-supervised
+python update_classifier.py --semi-supervised
 ```
 
 This will:
