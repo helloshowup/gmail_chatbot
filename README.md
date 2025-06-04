@@ -105,6 +105,10 @@ Short-term conversation state lives in `st.session_state`; for long-term or mult
 
 Agentic features use structured prompt templates and few-shot tool examples, allowing the chatbot to reason about tasks and self-correct when necessary.
 
+## Using TASK_CHAIN
+
+When the assistant proposes a plan starting with `TASK_CHAIN:` it outlines a series of steps to run. Review the plan and confirm if you want the chatbot to execute it. If **agentic mode** is enabled in the sidebar the steps run automatically; otherwise reply `yes` to begin or `no` to skip. All Claude and Gmail API calls are saved as JSON logs under `logs/gmail_chatbot_api/<DATE>/`.
+
 ## Privacy and Security
 
 - All email content is processed locally on your machine
@@ -130,6 +134,12 @@ If you see Claude API errors:
 
 1. Verify your API key in the `.env` file
 2. Check that your Claude API subscription is active
+
+### Agentic Mode and TASK_CHAIN
+
+- Enable **agentic mode** in the sidebar if you want plans to run automatically.
+- When a plan starting with `TASK_CHAIN:` is proposed, reply `yes` to execute or `no` to cancel.
+- Check `logs/gmail_chatbot_api/<DATE>/` for JSON logs of Claude and Gmail API calls when debugging.
 
 ## GPU Acceleration
 
