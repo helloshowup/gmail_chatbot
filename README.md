@@ -165,6 +165,42 @@ python email_vector_db.py
 
 The output will display `GPU acceleration: True` if successfully enabled.
 
+### Utility Scripts
+
+Helper scripts are stored in the `scripts/` directory:
+
+- **`fix_token.py`** – Regenerates the Gmail OAuth token if it becomes
+  corrupted.
+  Run with:
+
+  ```bash
+  python scripts/fix_token.py
+  ```
+
+- **`minimal_import_test.py`** – Quickly verifies that core imports work
+  without requiring optional dependencies.
+  Run with:
+
+  ```bash
+  python scripts/minimal_import_test.py
+  ```
+
+- **`verify_logging.py`** – Checks that API logging creates the expected
+  log files.
+  Run with:
+
+  ```bash
+  python scripts/verify_logging.py
+  ```
+
+- **`test_guardrail_direct.py`** – Executes a simple guardrail test
+  against the chatbot logic.
+  Run with:
+
+  ```bash
+  python scripts/test_guardrail_direct.py
+  ```
+
 ### Running Tests
 
 After installing the required dependencies you can run the unit tests with

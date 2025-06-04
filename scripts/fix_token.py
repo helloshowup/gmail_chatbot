@@ -7,8 +7,9 @@ from pathlib import Path
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
-# Configure paths
-BASE_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
+# Configure paths relative to the project root
+# This script lives in `scripts/` so the project root is one directory up
+BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 GMAIL_CLIENT_SECRET_FILE = "client_secret.json"
 GMAIL_TOKEN_FILE = "token.json"
