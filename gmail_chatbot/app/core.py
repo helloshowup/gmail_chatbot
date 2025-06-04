@@ -649,6 +649,10 @@ class GmailChatbotApp:
                     f"[{request_id}] Executing email search from menu. Query: '{query_text}', Original user msg: '{original_user_message[:50]}'"
                 )
 
+                gmail_search_string = query_text
+                logging.critical(
+                    f"[{request_id}] user-initiated search_emails using: {gmail_search_string}"
+                )
                 emails, search_response_text = self.gmail_client.search_emails(
                     search_query_override=query_text,  # Use the specific query from the menu
                     user_query=original_user_message,  # Original context for Claude if needed by search_emails
@@ -1025,6 +1029,10 @@ class GmailChatbotApp:
         logging.info(
             f"[{request_id}] Detected Gmail query in chat response: {gmail_query}"
         )
+        gmail_search_string = gmail_query
+        logging.critical(
+            f"[{request_id}] user-initiated search_emails using: {gmail_search_string}"
+        )
         emails, search_results_text = self.gmail_client.search_emails(
             gmail_query,
             original_user_query=original_query,
@@ -1200,6 +1208,9 @@ class GmailChatbotApp:
                     )
                     self.pending_email_context = None
                     acknowledgement = "👍 Starting the search now..."
+                    logging.critical(
+                        f"[{request_id}] user-initiated search_emails using: {gmail_search_string}"
+                    )
                     emails, search_results_text = (
                         self.gmail_client.search_emails(
                             search_query_override=gmail_search_string,
@@ -1594,6 +1605,9 @@ class GmailChatbotApp:
 
                         acknowledgement = "👍 Starting the search now..."
 
+                        logging.critical(
+                            f"[{request_id}] user-initiated search_emails using: {gmail_search_string}"
+                        )
                         emails, search_results_text = (
                             self.gmail_client.search_emails(
                                 search_query_override=gmail_search_string,
