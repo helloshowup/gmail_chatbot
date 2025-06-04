@@ -10,7 +10,9 @@ This project is a Gmail Chatbot application designed to interact with a user's G
     repository and run commands from here.
 -   **Main Application Script:** `chat_app_st.py` (Streamlit UI and application entry point).
 -   **Core Logic Modules:**
-    -   `email_main.py`: Houses the `GmailChatbotApp` class, which orchestrates the chatbot's core functionalities and agentic behavior.
+    -   `app/core.py`: Houses the `GmailChatbotApp` class, which orchestrates the chatbot's core functionalities and agentic behavior.
+    -   `gui` package: Provides a Tkinter-based GUI. `email_gui.py` remains as a thin wrapper for backward compatibility.
+    -   `cli.py`: Command-line entry point that launches the application with `python -m gmail_chatbot.cli`. `email_main.py` is kept as a wrapper for compatibility with existing scripts.
     -   `email_gmail_api.py`: Manages all interactions with the Gmail API, including authentication, token refresh, email searching, and retrieval. Includes robust SSL error handling.
     -   `email_vector_db.py`: Responsible for initializing and managing HuggingFace sentence embeddings for semantic search. Includes error handling for model loading issues (e.g., `OSError`).
     -   `email_memory_vector.py`: Integrates the vector database with the application's memory system, enabling semantic search over email content.
