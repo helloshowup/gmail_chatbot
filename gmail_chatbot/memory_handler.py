@@ -429,6 +429,27 @@ class MemoryActionsHandler:
                 )
         return "\n".join(response_parts)
 
+    def get_action_items_structured(
+        self, request_id: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """Return action items that require attention.
+
+        Parameters
+        ----------
+        request_id:
+            Optional identifier used for logging.
+
+        Returns
+        -------
+        List[Dict[str, Any]]
+            Action items as provided by the memory store.
+        """
+        if request_id:
+            logger.info(f"[{request_id}] Retrieving structured action items.")
+        else:
+            logger.info("Retrieving structured action items.")
+        return self.memory_store.get_action_items()
+
     def manage_preferences(self, message: str, request_id: str) -> str:
         """Handle queries about user preferences.
 

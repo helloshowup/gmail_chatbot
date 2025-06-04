@@ -1,5 +1,6 @@
 import pytest
 from unittest.mock import MagicMock, patch, ANY
+from gmail_chatbot.memory_handler import MemoryActionsHandler
 import sys
 import os
 
@@ -441,3 +442,26 @@ def test_handle_confirmation_ambiguous():
     assert "did you want me to proceed" in result.lower()
     assert app.pending_email_context["type"] == "gmail_query_confirmation"
     assert app.chat_history[-1]["content"] == result
+
+
+def test_get_action_items_structured():
+    """Ensure structured action items are returned as a list of dicts."""
+    memory_store = MagicMock()
+    sample_items = [
+        {"subject": "Task", "client": "ACME", "date": "2024-01-01"}
+    ]
+    memory_store.get_action_items.return_value = sample_items
+
+    handler = MemoryActionsHandler(
+        memory_store,
+        MagicMock(),
+        MagicMock(),
+        "sys",
+        MagicMock(),
+    )
+
+    result = handler.get_action_items_structured(request_id="req")
+
+    assert isinstance(result, list)
+    assert result == sample_items
+    memory_store.get_action_items.assert_called_once()
