@@ -78,7 +78,6 @@ EMBEDDING_MODEL_NAME = "test-embeddings"
 DEFAULT_CACHE_DIR = os.path.join(DATA_DIR, "vector_cache")
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logging.getLogger("faiss.loader").setLevel(logging.WARNING)
 logging.getLogger("torch").setLevel(logging.ERROR)

@@ -23,15 +23,6 @@ from gmail_chatbot.email_claude_api import ClaudeAPIClient
 from gmail_chatbot.api_logging import log_gmail_request, log_gmail_response
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler(LOGS_DIR / f"gmail_api_{datetime.now().strftime('%Y%m%d')}.log"),
-        logging.StreamHandler()
-    ]
-)
-
 logger = logging.getLogger(__name__)
 logger.debug("email_gmail_api module loaded")
 
@@ -77,7 +68,7 @@ class GmailAPIClient:
                 }
                 
         except google.auth.exceptions.RefreshError as e:
-            logging.error(f"Authentication token refresh failed: {e}")
+            logger.error(f"Authentication token refresh failed: {e}")
             return {
                 'success': False, 
                 'message': f"Authentication token expired or invalid: {e}",
@@ -85,7 +76,7 @@ class GmailAPIClient:
             }
             
         except google.auth.exceptions.GoogleAuthError as e:
-            logging.error(f"Google authentication error: {e}")
+            logger.error(f"Google authentication error: {e}")
             return {
                 'success': False,
                 'message': f"Google authentication error: {e}",
@@ -93,7 +84,7 @@ class GmailAPIClient:
             }
             
         except googleapiclient.errors.HttpError as e:
-            logging.error(f"Gmail API HTTP error: {e}")
+            logger.error(f"Gmail API HTTP error: {e}")
             return {
                 'success': False,
                 'message': f"Gmail API error: {e}",
@@ -102,7 +93,7 @@ class GmailAPIClient:
             }
             
         except ssl.SSLError as e_ssl:
-            logging.error(f"Gmail API SSL error during test_connection: {e_ssl}")
+            logger.error(f"Gmail API SSL error during test_connection: {e_ssl}")
             return {
                 'success': False,
                 'message': f"Gmail API SSL error: {str(e_ssl)}. Please check your internet connection, firewall, or proxy settings. The system's date/time might also be incorrect.",
@@ -110,7 +101,7 @@ class GmailAPIClient:
             }
             
         except Exception as e:
-            logging.error(f"Unexpected error testing Gmail API connection: {e}", exc_info=True)
+            logger.error(f"Unexpected error testing Gmail API connection: {e}", exc_info=True)
             return {
                 'success': False,
                 'message': f"Unexpected error: {e}",
@@ -132,7 +123,7 @@ class GmailAPIClient:
                 try:
                     creds = pickle.load(token)
                 except Exception as e:
-                    logging.error(f"Error loading token file: {e}")
+                    logger.error(f"Error loading token file: {e}")
         else: # Corresponds to 'if os.path.exists(token_path):'
             pass
 
@@ -142,10 +133,10 @@ class GmailAPIClient:
                 try:
                     creds.refresh(Request())
                 except ssl.SSLError as e_ssl:
-                    logging.error(f"SSL Error during credential refresh: {e_ssl}")
+                    logger.error(f"SSL Error during credential refresh: {e_ssl}")
                     raise ValueError(f"SSL Error refreshing credentials: {str(e_ssl)}. Please check your internet connection, firewall, or proxy settings.")
                 except google.auth.exceptions.RefreshError as e:
-                    logging.error(f"Error refreshing credentials: {e}. Attempting re-authentication.")
+                    logger.error(f"Error refreshing credentials: {e}. Attempting re-authentication.")
                     creds = None # Force re-authentication by nullifying creds
             
             # If no valid credentials, need to authenticate
@@ -155,7 +146,7 @@ class GmailAPIClient:
                         DATA_DIR / GMAIL_CLIENT_SECRET_FILE, GMAIL_SCOPES)
                     creds = flow.run_local_server(port=0)
                 except Exception as e:
-                    logging.error(f"Error during authentication flow: {e}")
+                    logger.error(f"Error during authentication flow: {e}")
                     raise ValueError(f"Authentication failed: {str(e)}")
             
             # Save the credentials for the next run
@@ -165,13 +156,13 @@ class GmailAPIClient:
         try:
             # Build the Gmail API service
             service = build('gmail', 'v1', credentials=creds)
-            logging.info("Successfully authenticated with Gmail API")
+            logger.info("Successfully authenticated with Gmail API")
             return service
         except ssl.SSLError as e_ssl:
-            logging.error(f"SSL Error building Gmail service: {e_ssl}")
+            logger.error(f"SSL Error building Gmail service: {e_ssl}")
             raise ValueError(f"SSL Error building Gmail service: {str(e_ssl)}. Please check your internet connection, firewall, or proxy settings. The system's date/time might also be incorrect.")
         except Exception as e:
-            logging.error(f"Error building Gmail service: {e}")
+            logger.error(f"Error building Gmail service: {e}")
             raise ValueError(f"Failed to build Gmail service: {str(e)}")
     
     def _extract_gmail_search_query(self, claude_response: str) -> str:
@@ -197,14 +188,14 @@ class GmailAPIClient:
             for match in backtick_matches:
                 # If the backtick content contains common Gmail search operators, use it
                 if re.search(r'(after:|before:|from:|to:|subject:|in:|is:|has:|newer:|older:)', match):
-                    logging.info(f"Extracted Gmail search query from backticks: {match}")
+                    logger.info(f"Extracted Gmail search query from backticks: {match}")
                     return match
         
         # Look for date-based queries which are common in email searches
         date_pattern = r'(after:\s*\d{4}/\d{1,2}/\d{1,2}\s*before:\s*\d{4}/\d{1,2}/\d{1,2})'
         date_matches = re.findall(date_pattern, claude_response)
         if date_matches:
-            logging.info(f"Extracted date-based Gmail search query: {date_matches[0]}")
+            logger.info(f"Extracted date-based Gmail search query: {date_matches[0]}")
             return date_matches[0]
         
         # Look for common Gmail search operators in the text
@@ -228,7 +219,7 @@ class GmailAPIClient:
             if matches:
                 # Join multiple search parameters if found
                 search_query = " ".join(matches)
-                logging.info(f"Extracted Gmail search query using patterns: {search_query}")
+                logger.info(f"Extracted Gmail search query using patterns: {search_query}")
                 return search_query
         
         # If we're looking for today's emails specifically
@@ -237,7 +228,7 @@ class GmailAPIClient:
             today = datetime.now().strftime("%Y/%m/%d")
             tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y/%m/%d")
             query = f"after:{today} before:{tomorrow}"
-            logging.info(f"Generated today's date query: {query}")
+            logger.info(f"Generated today's date query: {query}")
             return query
             
         # Fall back to a simple query based on the original question
@@ -247,7 +238,7 @@ class GmailAPIClient:
         today = datetime.now().strftime("%Y/%m/%d")
         tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y/%m/%d")  # Define tomorrow here too
         fallback_query = f"after:{three_days_ago} before:{tomorrow}"
-        logging.warning(f"Could not extract specific search query from Claude response. Using fallback: {fallback_query}")
+        logger.warning(f"Could not extract specific search query from Claude response. Using fallback: {fallback_query}")
         return fallback_query
         
     def search_emails(self, query: str, original_user_query: Optional[str] = None, system_message: Optional[str] = None, request_id: Optional[str] = None) -> Tuple[List[Dict[str, Any]], str]:
@@ -268,7 +259,7 @@ class GmailAPIClient:
             
             # Check if query contains an error message from Claude
             if query.startswith('ERROR:'):
-                logging.error(f"[{request_id if request_id else 'NO_ID'}] Received error query from Claude: {query}")
+                logger.error(f"[{request_id if request_id else 'NO_ID'}] Received error query from Claude: {query}")
                 return [], "I'm sorry, I encountered an error while trying to search your emails. Could you please rephrase your question?"
             
             # Extract the actual Gmail search query from Claude's response
@@ -278,20 +269,20 @@ class GmailAPIClient:
             request_log_path = log_gmail_request(extracted_query, original_user_query, request_id)
             
             # Log detailed information about this search operation
-            logging.info(f"[{request_id if request_id else 'NO_ID'}] Original Claude response: '{query[:100]}...'")
-            logging.info(f"[{request_id if request_id else 'NO_ID'}] Extracted Gmail search query: '{extracted_query}'")
-            logging.critical(f"search_emails using extracted query: {extracted_query}") # This will appear in both terminal and log file
+            logger.info(f"[{request_id if request_id else 'NO_ID'}] Original Claude response: '{query[:100]}...'")
+            logger.info(f"[{request_id if request_id else 'NO_ID'}] Extracted Gmail search query: '{extracted_query}'")
+            logger.critical(f"search_emails using extracted query: {extracted_query}") # This will appear in both terminal and log file
             
             # Call Gmail API to search for messages with the extracted query
             try:
                 results = self.service.users().messages().list(userId='me', q=extracted_query, maxResults=MAX_EMAILS_PER_SEARCH).execute()
                 messages = results.get('messages', [])
             except ssl.SSLError as e_ssl:
-                logging.error(f"[{request_id if request_id else 'NO_ID'}] SSL Error during email search (list operation): {e_ssl}")
+                logger.error(f"[{request_id if request_id else 'NO_ID'}] SSL Error during email search (list operation): {e_ssl}")
                 return [], f"SSL Error during email search: {str(e_ssl)}. Please check your internet connection, firewall, or proxy settings. The system's date/time might also be incorrect."
             
             if not messages:
-                logging.info("No emails found matching the query")
+                logger.info("No emails found matching the query")
                 # Log the empty response
                 log_gmail_response(
                     request_log_path=request_log_path,
@@ -300,14 +291,14 @@ class GmailAPIClient:
                 )
                 return [], "No emails found matching your query."
                 
-            logging.info(f"Found {len(messages)} emails matching the query")
+            logger.info(f"Found {len(messages)} emails matching the query")
             
             # Get full message details for each message
             email_data = []
             
             # Anti-hallucination safeguard: Ensure Gmail API actually returned real messages
             if not isinstance(messages, list) or len(messages) == 0 or not all(isinstance(m, dict) and 'id' in m for m in messages):
-                logging.warning(f"Invalid or empty message format returned by Gmail API: {messages}")
+                logger.warning(f"Invalid or empty message format returned by Gmail API: {messages}")
                 return [], "No valid emails found matching your query. The search returned an invalid format."
 
             for message in messages:
@@ -317,13 +308,13 @@ class GmailAPIClient:
                 try:
                     msg = self.service.users().messages().get(userId='me', id=msg_id).execute()
                 except ssl.SSLError as e_ssl:
-                    logging.error(f"[{request_id if request_id else 'NO_ID'}] SSL Error fetching details for email ID {msg_id}: {e_ssl}. Skipping this email.")
+                    logger.error(f"[{request_id if request_id else 'NO_ID'}] SSL Error fetching details for email ID {msg_id}: {e_ssl}. Skipping this email.")
                     continue
                 except HttpError as error_get:
-                    logging.error(f"[{request_id if request_id else 'NO_ID'}] Gmail API HTTP error for email ID {msg_id}: {error_get}. Skipping this email.")
+                    logger.error(f"[{request_id if request_id else 'NO_ID'}] Gmail API HTTP error for email ID {msg_id}: {error_get}. Skipping this email.")
                     continue
                 except Exception as e_get:
-                    logging.error(f"[{request_id if request_id else 'NO_ID'}] Unexpected error fetching details for email ID {msg_id}: {e_get}. Skipping this email.")
+                    logger.error(f"[{request_id if request_id else 'NO_ID'}] Unexpected error fetching details for email ID {msg_id}: {e_get}. Skipping this email.")
                     continue
                 
                 # Extract relevant message data
@@ -364,13 +355,13 @@ class GmailAPIClient:
                 return email_data, ""
         
         except ssl.SSLError as e_ssl: # Should be caught by the specific try-except for the list call, but as a fallback
-            logging.error(f"[{request_id if request_id else 'NO_ID'}] Uncaught SSL Error in search_emails: {e_ssl}")
+            logger.error(f"[{request_id if request_id else 'NO_ID'}] Uncaught SSL Error in search_emails: {e_ssl}")
             return [], f"An unexpected SSL error occurred: {str(e_ssl)}. Please check logs."
         except HttpError as error:
-            logging.error(f"[{request_id if request_id else 'NO_ID'}] Gmail API HTTP error in search_emails: {error}")
+            logger.error(f"[{request_id if request_id else 'NO_ID'}] Gmail API HTTP error in search_emails: {error}")
             return [], f"Error accessing your emails: {str(error)}"
         except Exception as e:
-            logging.error(f"[{request_id if request_id else 'NO_ID'}] Error searching emails: {e}")
+            logger.error(f"[{request_id if request_id else 'NO_ID'}] Error searching emails: {e}")
             return [], f"Error searching your emails: {str(e)}"
     
     def get_email_by_id(self, email_id: str, user_query: str = "") -> Tuple[Optional[Dict[str, Any]], str]:
@@ -396,7 +387,7 @@ class GmailAPIClient:
                     userId=self.user_id, id=email_id, format='full'
                 ).execute()
             except ssl.SSLError as e_ssl:
-                logging.error(f"SSL Error retrieving email ID {email_id}: {e_ssl}")
+                logger.error(f"SSL Error retrieving email ID {email_id}: {e_ssl}")
                 return None, f"SSL Error retrieving email {email_id}: {str(e_ssl)}. Please check your internet connection, firewall, or proxy settings. The system's date/time might also be incorrect."
             
             # Extract relevant message data
@@ -435,13 +426,13 @@ class GmailAPIClient:
             return email_info, response
             
         except ssl.SSLError as e_ssl: # Should be caught by the specific try-except above, but as a fallback
-            logging.error(f"Uncaught SSL Error in get_email_by_id for email ID {email_id}: {e_ssl}")
+            logger.error(f"Uncaught SSL Error in get_email_by_id for email ID {email_id}: {e_ssl}")
             return None, f"An unexpected SSL error occurred while retrieving email {email_id}: {str(e_ssl)}. Please check logs."
         except HttpError as error:
-            logging.error(f"Gmail API HTTP error for email ID {email_id}: {error}")
+            logger.error(f"Gmail API HTTP error for email ID {email_id}: {error}")
             return None, f"Error accessing email {email_id}: {str(error)}"
         except Exception as e:
-            logging.error(f"Error getting email ID {email_id}: {e}", exc_info=True)
+            logger.error(f"Error getting email ID {email_id}: {e}", exc_info=True)
             return None, f"Error retrieving email {email_id}: {str(e)}"
     
     def _get_email_body(self, message: Dict[str, Any], truncate: bool = True) -> Dict[str, Any]:
@@ -483,7 +474,7 @@ class GmailAPIClient:
         if result['truncated']:
             truncation_percent = int((len(full_body) - MAX_EMAIL_BODY_CHARS) / len(full_body) * 100)
             result['body'] += f"\n\n[...{truncation_percent}% of message truncated to conserve tokens. Full content available on request...]"
-            logging.info(f"Truncated email body from {result['full_length']} to {MAX_EMAIL_BODY_CHARS} chars ({truncation_percent}% reduction)")
+            logger.info(f"Truncated email body from {result['full_length']} to {MAX_EMAIL_BODY_CHARS} chars ({truncation_percent}% reduction)")
 
         return result
 
@@ -509,14 +500,14 @@ class GmailAPIClient:
                 userId=self.user_id,
                 body={'raw': raw_message}
             ).execute()
-            logging.info(f"Sent email to {to} with subject '{subject}'")
+            logger.info(f"Sent email to {to} with subject '{subject}'")
             return {"status": "success", "data": sent}
         except ssl.SSLError as e_ssl:
-            logging.error(f"SSL Error sending email: {e_ssl}")
+            logger.error(f"SSL Error sending email: {e_ssl}")
             return {"status": "failure", "error": f"SSL Error: {e_ssl}"}
         except HttpError as error:
-            logging.error(f"HTTP error sending email: {error}")
+            logger.error(f"HTTP error sending email: {error}")
             return {"status": "failure", "error": f"HTTP Error: {error}"}
         except Exception as e:
-            logging.error(f"Unexpected error sending email: {e}")
+            logger.error(f"Unexpected error sending email: {e}")
             return {"status": "failure", "error": str(e)}
