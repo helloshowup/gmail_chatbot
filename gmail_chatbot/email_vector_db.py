@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
-print("DEBUG: email_vector_db.py - TOP OF FILE EXECUTION", file=sys.stderr)
 try:
     _ = 1 # Dummy operation to ensure try block has content
 except Exception as e:
@@ -83,6 +82,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logging.getLogger("faiss.loader").setLevel(logging.WARNING)
 logging.getLogger("torch").setLevel(logging.ERROR)
+logger.debug("email_vector_db.py loaded")
 
 # Try to import required dependencies
 try:
@@ -103,10 +103,8 @@ try:
     logger.info(
         "FAISS GPU acceleration explicitly disabled. Running in CPU-only mode."
     )
-    print(
-        "DEBUG: email_vector_db.py - FAISS GPU_AVAILABLE explicitly set to False.",
-        file=sys.stderr,
-    )
+    logger.debug(
+        "email_vector_db.py - FAISS GPU_AVAILABLE explicitly set to False.")
 
     # Ensure 'langchain-huggingface' is installed in your environment
     from langchain_huggingface import HuggingFaceEmbeddings
@@ -727,17 +725,20 @@ This should be indexed and retrievable by semantic or keyword search.""",
         tags=["test", "email"]
     )
     
-    print(f"Email added: {result}")
+    logger.info("Email added: %s", result)
     
     # Test search functionality
     search_results = test_db.search("vector database", num_results=2)
     
-    print(f"Search results: {len(search_results)}")
+    logger.info("Search results: %d", len(search_results))
     for i, result in enumerate(search_results):
-        print(f"""Result {i+1}:
-  Content: {result['content'][:100]}...
-  Similarity: {result['similarity']:.4f}
-  Search type: {result['search_type']}""")
+        logger.info(
+            "Result %d: Content: %s... Similarity: %.4f Search type: %s",
+            i + 1,
+            result['content'][:100],
+            result['similarity'],
+            result['search_type'],
+        )
     
     # Test with filters
     filtered_results = test_db.search(
@@ -745,12 +746,11 @@ This should be indexed and retrievable by semantic or keyword search.""",
         filters={"sender": "sender@example.com"}
     )
     
-    print(f"Filtered results: {len(filtered_results)}")
+    logger.info("Filtered results: %d", len(filtered_results))
     
     # Print status
     status = test_db.get_status()
-    print(f"""Vector DB Status:
-{json.dumps(status, indent=2)}""")
+    logger.info("Vector DB Status:\n%s", json.dumps(status, indent=2))
 
 
 def reindex_all_emails():
@@ -814,9 +814,9 @@ if __name__ == "__main__":
         test_email_vector_db()
     else:
         # If no arguments provided, show status and instructions
-        print("\nEmail Vector Database Status:")
+        logger.info("\nEmail Vector Database Status:")
         for key, value in status.items():
-            print(f"  {key}: {value}")
-        print("\nTo rebuild the index: python -m gmail_chatbot.email_vector_db --reindex")
-        print("To run tests: python -m gmail_chatbot.email_vector_db --test")
+            logger.info("  %s: %s", key, value)
+        logger.info("\nTo rebuild the index: python -m gmail_chatbot.email_vector_db --reindex")
+        logger.info("To run tests: python -m gmail_chatbot.email_vector_db --test")
 

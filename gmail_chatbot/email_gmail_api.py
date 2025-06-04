@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-print("Loading updated email_gmail_api module with API logging - v" + str(hex(id(object))))
 
 import os
 import base64
@@ -32,6 +31,9 @@ logging.basicConfig(
         logging.StreamHandler()
     ]
 )
+
+logger = logging.getLogger(__name__)
+logger.debug("email_gmail_api module loaded")
 
 class GmailAPIClient:
     """Client for interacting with Gmail API with Claude assistance."""
