@@ -55,6 +55,7 @@ class EnhancedMemoryStore:
         self.email_memory_path = self.memory_path / "email_memory.json"
         self.interaction_memory_path = self.memory_path / "interaction_memory.json"
         self.preferences_path = self.memory_path / "preferences.json"
+        self.memory_entries_path = self.memory_path / "memory_entries.json"
         
         # Schema version for serialization
         self.schema_version = schema_version
@@ -64,12 +65,14 @@ class EnhancedMemoryStore:
         self.email_store = DiskStore(self.email_memory_path, schema_version=schema_version)
         self.interaction_store = DiskStore(self.interaction_memory_path, schema_version=schema_version)
         self.preferences_store = DiskStore(self.preferences_path, schema_version=schema_version)
+        self.memory_entries_store = DiskStore(self.memory_entries_path, schema_version=schema_version)
         
         # Initialize memory stores
         self.client_memory = self._load_client_memory()
         self.email_memory = self._load_email_memory()
         self.interaction_memory = self._load_interaction_memory()
         self.preferences = self._load_preferences()
+        self.memory_entries = self._load_memory_entries()
         
         # Initialize vector database tracking
         self.indexed_entries = {}
@@ -88,6 +91,31 @@ class EnhancedMemoryStore:
         except DiskStoreError as e:
             logging.error(f"Error loading preferences: {e}")
             return []
+
+    def _load_memory_entries(self) -> List[Dict[str, Any]]:
+        """Load general memory entries from file."""
+        try:
+            return self.memory_entries_store.load()
+        except DiskStoreError as e:
+            logging.error(f"Error loading memory entries: {e}")
+            return []
+
+    def _save_memory_entries(self) -> None:
+        """Persist memory entries to disk."""
+        try:
+            self.memory_entries_store.save(self.memory_entries)
+        except DiskStoreError as e:
+            logging.error(f"Error saving memory entries: {e}")
+
+    def add_memory_entry(self, entry: Dict[str, Any]) -> bool:
+        """Append a general memory entry to the store."""
+        try:
+            self.memory_entries_store.append(entry)
+            self.memory_entries = self.memory_entries_store.load()
+            return True
+        except DiskStoreError as e:
+            logger.error(f"Error adding memory entry: {e}")
+            return False
     
     def add_email_memory(self, entry: Union[Dict[str, Any], 'MemoryEntry']) -> None:
         """Add an email memory entry and embed it for vector search.
