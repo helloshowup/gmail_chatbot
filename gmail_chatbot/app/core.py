@@ -601,6 +601,10 @@ class GmailChatbotApp:
                 break
         return False
 
+    def get_notebook_overview(self, request_id: str) -> str:
+        """Return a concise overview of the notebook contents."""
+        return self.memory_actions_handler.get_notebook_overview(request_id)
+
     def _is_simple_inbox_query(self, message_lower: str) -> bool:
         """Checks if a query is a simple request for inbox contents, suitable for a menu."""
         generic_inbox_phrases = [
@@ -914,6 +918,17 @@ class GmailChatbotApp:
             elif gmail_text:
                 response = f"{response}\n\n{gmail_text}"
 
+
+        # Append a brief notebook overview when no notebook results were found
+        if not search_results:
+            try:
+                overview = self.get_notebook_overview(request_id)
+                if overview:
+                    response = f"{response}\n\n{overview}"
+            except Exception as e:  # pragma: no cover - defensive
+                logging.error(
+                    f"[{request_id}] Failed to append notebook overview: {e}"
+                )
 
         # Log the notebook search (hit or miss) via MemoryActionsHandler
         self.memory_actions_handler.record_interaction_in_memory(

@@ -43,6 +43,7 @@ if 'streamlit' not in sys.modules:
         number_input=lambda *a, **k: None,
         title=lambda *a, **k: None,
         checkbox=lambda *a, **k: False,
+        button=lambda *a, **k: None,
         file_uploader=lambda *a, **k: None,
         success=lambda *a, **k: None,
         warning=lambda *a, **k: None,
@@ -72,8 +73,8 @@ else:
         st_stub.sidebar = types.SimpleNamespace()
     sidebar = st_stub.sidebar
     for attr in ['header', 'toggle', 'subheader', 'number_input', 'title', 'checkbox',
-                 'file_uploader', 'success', 'warning', 'info', 'write', 'markdown',
-                 'caption', 'expander']:
+                 'button', 'file_uploader', 'success', 'warning', 'info', 'write',
+                 'markdown', 'caption', 'expander']:
         if not hasattr(sidebar, attr):
             setattr(sidebar, attr, (lambda *a, **k: None) if attr != 'expander' else (lambda *a, **k: contextlib.nullcontext()))
     for attr in ['toast', 'set_page_config', 'title', 'progress', 'info', 'error',
