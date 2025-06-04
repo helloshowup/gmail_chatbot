@@ -141,7 +141,7 @@ def classify_query_type_regex(query: str) -> Tuple[QueryType, float, Dict[str, f
             "mail from", "message about", "emails about",
             "containing", "with the subject", "that mentions",
             "got any emails", "did i receive", "new mail", "in my inbox", 
-            "emails today", "emails yesterday", "new messages", "check inbox",
+            "emails today", "todays email", "today's email", "emails yesterday", "new messages", "check inbox",
             "unread emails", "my recent emails", "anything new in", "check my inbox", "check my emails", "show my inbox"
         ],
         "triage": [
@@ -204,10 +204,12 @@ def classify_query_type_regex(query: str) -> Tuple[QueryType, float, Dict[str, f
     top_category = max(scores.items(), key=lambda x: x[1]) if scores else ("ambiguous", 0.0)
     category, confidence = top_category
 
-    # Override to email_search if its score is > 0.05 and it wasn't the top category
-    if scores.get("email_search", 0) > 0.05 and category != "email_search":
-        logging.info(f"[REGEX] Overriding to email_search. Original category: {category}, email_search score: {scores.get('email_search',0):.2f}")
-        category, confidence = "email_search", THRESHOLDS['LOOKUP_LENIENT']
+    # Boost or override to email_search for low scoring matches
+    if scores.get("email_search", 0) > 0.05:
+        if category != "email_search":
+            logging.info("[REGEX] Overriding to email_search...")
+        category = "email_search"
+        confidence = max(confidence, THRESHOLDS['LOOKUP_LENIENT'])
     
     # If general_chat has even a modest score, prioritize it
     if scores.get("general_chat", 0) > 0.1:
