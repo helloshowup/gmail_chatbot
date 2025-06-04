@@ -316,8 +316,10 @@ def test_email_search_claude_query():
     app.claude_client = MagicMock()
     app.claude_client.process_query.return_value = "from:boss subject:urgent"
 
-    # Call the internal handler directly to avoid full process_message complexity
-    response = GmailChatbotApp._handle_email_search_query(
+    # Call the handler function directly to avoid full process_message complexity
+    from gmail_chatbot.app.handlers import handle_email_search_query
+
+    response = handle_email_search_query(
         app,
         "Find urgent emails from my boss",
         "find urgent emails from my boss",
