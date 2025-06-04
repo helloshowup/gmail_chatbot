@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import logging
 import os
 from pathlib import Path
 from datetime import date
@@ -32,6 +33,20 @@ os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs(LOGS_DIR, exist_ok=True)
 os.makedirs(GLOBAL_LOGS_DIR, exist_ok=True)
 os.makedirs(API_LOGS_DIR, exist_ok=True)
+
+# Environment handling
+def load_env() -> None:
+    """Load environment variables from a .env file in the project root."""
+    try:
+        import dotenv
+    except ImportError:  # pragma: no cover - optional dependency
+        return
+
+    env_path = PROJECT_DIR / ".env"
+    if env_path.exists():
+        dotenv.load_dotenv(env_path)
+    else:
+        logging.warning(f"Environment file not found at {env_path}")
 
 # Claude API configuration
 CLAUDE_DEFAULT_MODEL = "claude-3-7-sonnet-20250219"

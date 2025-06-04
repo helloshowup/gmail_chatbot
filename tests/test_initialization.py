@@ -114,15 +114,14 @@ def dummy_email_main(monkeypatch):
 
     module.GmailChatbotApp = DummyGmailChatbotApp
     monkeypatch.setitem(sys.modules, "email_main", module)
+    monkeypatch.setitem(sys.modules, "gmail_chatbot.email_main", module)
     yield module
     sys.modules.pop("email_main", None)
 
 
 def _load_chat_app():
-    if 'dotenv' not in sys.modules:
-        dotmod = types.ModuleType('dotenv')
-        dotmod.load_dotenv = lambda *a, **k: None
-        sys.modules['dotenv'] = dotmod
+    import gmail_chatbot.email_config as email_config
+    email_config.load_env = lambda *a, **k: None
     if "chat_app_st" in sys.modules:
         del sys.modules["chat_app_st"]
     return importlib.import_module("chat_app_st")

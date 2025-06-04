@@ -45,10 +45,6 @@ except Exception:
 import threading
 from datetime import datetime, timedelta, date
 from enum import Enum
-try:
-    import dotenv
-except ImportError:  # pragma: no cover - optional dependency
-    dotenv = None
 from collections import defaultdict
 from gmail_chatbot.query_classifier import classify_query_type, get_classification_feedback, postprocess_claude_response # Added postprocess_claude_response as it's used in this file
 
@@ -105,7 +101,11 @@ atexit.register(wait_for_threads)
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 from collections.abc import MutableMapping
-from gmail_chatbot.email_config import DEFAULT_SYSTEM_MESSAGE, CLAUDE_API_KEY_ENV
+from gmail_chatbot.email_config import (
+    DEFAULT_SYSTEM_MESSAGE,
+    CLAUDE_API_KEY_ENV,
+    load_env,
+)
 from gmail_chatbot.memory_models import MemoryKind
 from gmail_chatbot.email_claude_api import ClaudeAPIClient
 from gmail_chatbot.email_gmail_api import GmailAPIClient
@@ -187,13 +187,8 @@ class GmailChatbotApp:
         self.claude_client: Optional[ClaudeAPIClient] = None # Initialize here, set later
         self.initialization_diagnostics: List[str] = [] # Store detailed init steps/errors
 
-        # Load environment variables from hard-coded .env file path if dotenv is available
-        dotenv_path = Path(__file__).resolve().parent / ".env"
-        if dotenv and dotenv_path.exists():
-            dotenv.load_dotenv(dotenv_path)
-        else:
-            logging.warning(f"Environment file not found or dotenv not installed at {dotenv_path}")
-            print(f"Warning: Environment file not found or dotenv not installed at {dotenv_path}")
+        load_env()
+        env_path = Path(__file__).resolve().parents[2] / ".env"
 
         # Context tracking for pending queries
         self.pending_email_context = None  # Store pending query context (original message + search string) for confirmation
@@ -202,9 +197,11 @@ class GmailChatbotApp:
         if not os.environ.get(CLAUDE_API_KEY_ENV):
             logging.error(f"Missing {CLAUDE_API_KEY_ENV} environment variable")
             print(f"Error: {CLAUDE_API_KEY_ENV} environment variable is required.")
-            error_message = f"Error: {CLAUDE_API_KEY_ENV} environment variable is required. " \
-                          f"Please make sure your .env file at {dotenv_path} contains the Anthropic API key. " \
-                          f"Expected format: {CLAUDE_API_KEY_ENV}=your_api_key"
+            error_message = (
+                f"Error: {CLAUDE_API_KEY_ENV} environment variable is required. "
+                f"Please make sure your .env file at {env_path} contains the Anthropic API key. "
+                f"Expected format: {CLAUDE_API_KEY_ENV}=your_api_key"
+            )
             print(error_message)
             raise ValueError(error_message)
         else:
@@ -974,7 +971,7 @@ class GmailChatbotApp:
         )
         return response
 
-    def process_message(self, message: str) -> str:
+    def process_message(self, message: str, request_id: str | None = None) -> str:
         """
         Process user message and generate a response using an enhanced classification system.
 
@@ -989,7 +986,8 @@ class GmailChatbotApp:
         Returns:
             A string containing the assistant's response.
         """
-        request_id = str(uuid.uuid4())
+        if request_id is None:
+            request_id = str(uuid.uuid4())
         logging.info(
             f"[{request_id}] Processing message (first 50 chars): '{message[:50]}...' "
         )
