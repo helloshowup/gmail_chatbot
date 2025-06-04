@@ -1,58 +1,51 @@
 #!/usr/bin/env python3
 
-import sys
-from pathlib import Path
-
 # -*- coding: utf-8 -*-
 
-# Fix for Streamlit × PyTorch file-watcher clash
-import os
-
-os.environ["STREAMLIT_SERVER_FILE_WATCHER_TYPE"] = "none"
-
-import faulthandler
-
-# Avoid enabling faulthandler during tests as it interferes with pytest's
-# output capture. It can be enabled when running as a script if needed.
-if not os.environ.get("PYTEST_RUNNING"):
-    faulthandler.enable()
-
-import io
 import argparse
+import atexit
+import faulthandler
+import io
 import logging
+import os
+import re
+import ssl  # Added for SSL error handling
+import sys
+import threading
+import time
+import uuid
+from collections import defaultdict
+from datetime import date, datetime, timedelta
+from enum import Enum
+from pathlib import Path
 from typing import (
-    List,
-    Dict,
     Any,
+    Callable,
+    Dict,
+    List,
+    Literal,
+    Mapping,
+    MutableMapping,
     Optional,
     Tuple,
     Union,
-    Callable,
-    Mapping,
-    MutableMapping,
-    Literal,
 )
-import ssl  # Added for SSL error handling
-import re
-from pathlib import Path
-import atexit
-import time
-import uuid
+
+os.environ["STREAMLIT_SERVER_FILE_WATCHER_TYPE"] = "none"
+
+if not os.environ.get("PYTEST_RUNNING"):
+    faulthandler.enable()
 
 try:
     import streamlit as st
 except Exception:
     st = None
 
-import threading
-from datetime import datetime, timedelta, date
-from enum import Enum
-from collections import defaultdict
 from gmail_chatbot.query_classifier import (
     classify_query_type,
     get_classification_feedback,
     postprocess_claude_response,
-)  # Added postprocess_claude_response as it's used in this file
+)
 
 # Configure stdout/stderr for UTF-8 to properly handle emojis in console output
 # Store original stdout/stderr to avoid issues during shutdown
@@ -104,8 +97,6 @@ atexit.register(restore_streams)
 atexit.register(wait_for_threads)
 
 # Now import modules that depend on environment variables
-from typing import List, Dict, Any, Optional
-from pathlib import Path
 from collections.abc import MutableMapping
 from gmail_chatbot.email_config import (
     DEFAULT_SYSTEM_MESSAGE,
@@ -126,13 +117,6 @@ from ..prompt_templates import NOTEBOOK_NO_RESULTS_TEMPLATES
 from gmail_chatbot.ml_classifier.ml_query_classifier import (
     MLQueryClassifier,
     ClassifierError,
-)
-
-# Import query classifier
-from gmail_chatbot.query_classifier import (
-    classify_query_type,
-    postprocess_claude_response,
-    get_classification_feedback,
 )
 
 # Import preference detector
