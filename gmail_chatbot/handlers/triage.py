@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from collections import defaultdict
-from typing import Dict, TYPE_CHECKING
+from typing import Dict, List, TYPE_CHECKING, Any
 
 from gmail_chatbot.query_classifier import postprocess_claude_response
 
@@ -43,8 +43,30 @@ def handle_triage_query(
     action_items = app.memory_actions_handler.get_action_items_structured(
         request_id=request_id
     )
+    urgent_results: List[Dict[str, Any]] = []
+    if app.memory_actions_handler.is_vector_search_available(
+        request_id=request_id
+    ):
+        urgent_query = "urgent OR ASAP"
+        urgent_results = app.memory_actions_handler.find_related_emails(
+            urgent_query, limit=5, request_id=f"{request_id}_urgent"
+        )
+        for item in urgent_results:
+            text = (
+                f"{item.get('subject', '')} {item.get('summary', '')}".lower()
+            )
+            score = 0
+            if "urgent" in text:
+                score += 2
+            if "asap" in text or "as soon as possible" in text:
+                score += 1
+            item["_urgency"] = score
+        urgent_results.sort(
+            key=lambda x: (x.get("_urgency", 0), x.get("date", "")),
+            reverse=True,
+        )
 
-    if action_items:
+    if action_items or urgent_results:
         grouped = defaultdict(list)
         for item in action_items:
             grouped[item.get("client", "Other Tasks")].append(item)
@@ -59,6 +81,23 @@ def handle_triage_query(
             if len(items) > 4:
                 response_parts.append(f"  ...and {len(items) - 4} more.")
             response_parts.append("")
+
+        if urgent_results:
+            grouped_urgent = defaultdict(list)
+            for item in urgent_results:
+                grouped_urgent[item.get("client", "Other Emails")].append(item)
+
+            response_parts.append("**Urgent Emails Detected:**")
+            for client_name, items in grouped_urgent.items():
+                response_parts.append(
+                    f"**{client_name}** ({len(items)} item(s))"
+                )
+                for item in items[:4]:
+                    bullet = f"- {item.get('subject', 'No Subject')} (Date: {item.get('date', 'N/A')}) [URGENT]"
+                    response_parts.append(bullet)
+                if len(items) > 4:
+                    response_parts.append(f"  ...and {len(items) - 4} more.")
+                response_parts.append("")
 
         delegation_candidates = (
             app.memory_actions_handler.get_delegation_candidates(
