@@ -14,18 +14,30 @@ from typing import Any, TypeVar, Generic
 try:  # pragma: no cover - optional dependency
     import portalocker  # type: ignore
 except Exception:  # pragma: no cover - simplified fallback for test env
+    import threading
+
+    _LOCKS: dict[str, threading.Lock] = {}
+
     class _DummyLock:
-        def __init__(self, *_, **__):
-            pass
+        """Simplistic lock using a shared threading.Lock for tests."""
+
+        def __init__(self, path: str, *_, **__):
+            self._lock = _LOCKS.setdefault(path, threading.Lock())
 
         def acquire(self):
+            self._lock.acquire()
             return True
 
         def release(self):
+            try:
+                self._lock.release()
+            except RuntimeError:
+                pass
             return True
 
     class _DummyPortalocker:
-        Lock = _DummyLock
+        def Lock(self, path, timeout=None):  # type: ignore[override]
+            return _DummyLock(path)
 
         class exceptions:
             class LockException(Exception):

@@ -1,6 +1,7 @@
 import sys
 import types
 import os
+import contextlib
 
 # Mark that tests are running so application modules avoid altering sys.stdout/stderr
 os.environ.setdefault("PYTEST_RUNNING", "1")
@@ -28,7 +29,19 @@ if 'google' not in sys.modules:
         exceptions=types.SimpleNamespace(RefreshError=Exception),
         transport=types.SimpleNamespace(requests=types.SimpleNamespace(Request=MagicMock()))
     )
-    google.oauth2 = types.SimpleNamespace(credentials=types.SimpleNamespace(Credentials=MagicMock()))
+    class DummyCredentials:
+        def __init__(self, *a, **k):
+            self.valid = True
+            self.expired = False
+
+        def refresh(self, *a, **k):
+            pass
+
+        @classmethod
+        def from_authorized_user_file(cls, *a, **k):
+            return cls()
+
+    google.oauth2 = types.SimpleNamespace(credentials=types.SimpleNamespace(Credentials=DummyCredentials))
     sys.modules['google'] = google
     sys.modules['google.auth'] = google.auth
     sys.modules['google.auth.exceptions'] = google.auth.exceptions
@@ -82,5 +95,32 @@ try:
         evdb.DEFAULT_CACHE_DIR = Path('/tmp')
     if not hasattr(evdb, 'VECTOR_LIBS_AVAILABLE'):
         evdb.VECTOR_LIBS_AVAILABLE = False
+except Exception:
+    pass
+
+# Provide a basic streamlit stub with attribute-style session_state
+if 'streamlit' not in sys.modules:
+    st_stub = types.ModuleType('streamlit')
+    class SessionState(dict):
+        def __getattr__(self, item):
+            return self.get(item)
+
+        def __setattr__(self, key, value):
+            self[key] = value
+
+    st_stub.session_state = SessionState()
+    st_stub.spinner = contextlib.nullcontext
+    st_stub.toast = lambda *a, **k: None
+    st_stub.set_page_config = lambda *a, **k: None
+    st_stub.title = lambda *a, **k: None
+    st_stub.chat_message = contextlib.nullcontext
+    st_stub.chat_input = lambda *a, **k: None
+    st_stub.sidebar = types.SimpleNamespace()
+    sys.modules['streamlit'] = st_stub
+
+# Ensure Anthropic API key placeholder exists for app initialization
+try:
+    from gmail_chatbot.email_config import CLAUDE_API_KEY_ENV
+    os.environ.setdefault(CLAUDE_API_KEY_ENV, "test-key")
 except Exception:
     pass

@@ -368,12 +368,24 @@ class TestLastGmailErrorFlag(unittest.TestCase):
         import sys, types
         if 'streamlit' not in sys.modules:
             st_stub = types.ModuleType('streamlit')
-            st_stub.session_state = {}
+            class SessionState(dict):
+                def __getattr__(self, item):
+                    return self.get(item)
+
+                def __setattr__(self, key, value):
+                    self[key] = value
+
+            st_stub.session_state = SessionState()
             sys.modules['streamlit'] = st_stub
         else:
             st_stub = sys.modules['streamlit']
-            st_stub.session_state = {}
+            if not isinstance(st_stub.session_state, dict):
+                st_stub.session_state = st_stub.session_state.__class__()
+            else:
+                st_stub.session_state = type('SessionState', (dict,), {})()
         self.st = st_stub
+        import gmail_chatbot.app.core as core
+        core.st = st_stub
 
     def test_flag_set_on_failure(self):
         from gmail_chatbot.email_main import GmailChatbotApp

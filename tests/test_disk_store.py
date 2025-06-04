@@ -26,7 +26,7 @@ class TestDiskStore(unittest.TestCase):
         """Set up temporary directory for test files."""
         self.temp_dir = tempfile.TemporaryDirectory()
         self.test_file = Path(self.temp_dir.name) / "test_store.json"
-        self.test_file_list = Path(self.temp_dir.name) / "test_store_list.json"
+        self.test_file_list = Path(self.temp_dir.name) / "interaction_store.json"
     
     def tearDown(self):
         """Clean up temporary files."""
