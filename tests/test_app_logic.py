@@ -381,3 +381,61 @@ def test_email_search_confirmation_yes():
     assert app.memory_actions_handler.record_interaction_in_memory.called
     assert "starting the search" in response.lower()
     assert app.pending_email_context is None
+
+@patch.object(GmailChatbotApp, "__init__", lambda self: None)
+def test_handle_pending_email_menu_valid_choice():
+    """Ensure valid numeric choice triggers menu handler and updates history."""
+    app = GmailChatbotApp()
+    app.pending_email_context = {
+        "type": "email_menu",
+        "options": {"1": {"type": "search_emails", "query": "is:unread"}},
+    }
+    app.chat_history = []
+    with patch.object(app, "_handle_email_menu_choice", return_value="handled") as mock_choice:
+        response = app.handle_pending_email_menu("1", "req")
+    mock_choice.assert_called_once_with("1", "req")
+    assert response == "handled"
+    assert app.chat_history[-1]["content"] == "handled"
+
+@patch.object(GmailChatbotApp, "__init__", lambda self: None)
+def test_handle_pending_email_menu_invalid_choice():
+    """Invalid numeric input should return None and not call handler."""
+    app = GmailChatbotApp()
+    app.pending_email_context = {
+        "type": "email_menu",
+        "options": {"1": {"type": "search_emails", "query": "is:unread"}},
+    }
+    app.chat_history = []
+    with patch.object(app, "_handle_email_menu_choice") as mock_choice:
+        result = app.handle_pending_email_menu("3", "req")
+    mock_choice.assert_not_called()
+    assert result is None
+    assert app.chat_history == []
+
+@patch.object(GmailChatbotApp, "__init__", lambda self: None)
+def test_handle_confirmation_cancel():
+    """User cancellation should clear context and reset counter."""
+    app = GmailChatbotApp()
+    app.pending_email_context = {"gmail_query": "x", "type": "gmail_query_confirmation"}
+    app.counter = {"autonomous_task_counter": 2}
+    app.chat_history = []
+    response = app.handle_confirmation("no", "no", "req")
+    assert "cancelled" in response.lower()
+    assert app.pending_email_context is None
+    assert app.counter["autonomous_task_counter"] == 0
+    assert app.chat_history[-1]["content"] == response
+
+@patch.object(GmailChatbotApp, "__init__", lambda self: None)
+def test_handle_confirmation_ambiguous():
+    """Ambiguous reply should re-prompt and keep pending context."""
+    app = GmailChatbotApp()
+    app.pending_email_context = {
+        "gmail_query": "is:unread",
+        "original_message": "Check mail",
+        "type": "gmail_query_confirmation",
+    }
+    app.chat_history = []
+    result = app.handle_confirmation("maybe", "maybe", "req")
+    assert "did you want me to proceed" in result.lower()
+    assert app.pending_email_context["type"] == "gmail_query_confirmation"
+    assert app.chat_history[-1]["content"] == result
