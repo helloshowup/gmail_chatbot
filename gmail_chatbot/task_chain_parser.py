@@ -26,7 +26,10 @@ def _infer_action_type(description: str) -> str:
 
 
 def parse_task_chain(text: str) -> List[Dict[str, Any]]:
-    """Convert TASK_CHAIN text into a list of plan step dictionaries."""
+    """Convert TASK_CHAIN text into a list of plan step dictionaries.
+
+    Segments that do not map to a recognized action type are ignored.
+    """
     if "TASK_CHAIN:" in text:
         text = text.split("TASK_CHAIN:", 1)[1]
 
@@ -43,6 +46,9 @@ def parse_task_chain(text: str) -> List[Dict[str, Any]]:
         if not desc:
             continue
         action_type = _infer_action_type(desc)
+        if action_type == "placeholder_action":
+            # treat bullet-list details as notes, not steps
+            continue
         steps.append(
             {
                 "step_id": f"step_{index}",
