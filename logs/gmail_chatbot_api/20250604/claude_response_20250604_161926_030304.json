@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T16:19:26.030304",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_161922_740186.json"
+  },
+  "response": {
+    "content": "I'll search your inbox for emails you received today. One moment please.\n\n`after:2025/06/03 before:2025/06/05 to:bryce.hepburn@gmail.com`\n\nLet me gather the results from this search and present them to you. I'll check for all emails that arrived in your inbox today (June 4, 2025).",
+    "tokens": {
+      "input_tokens": 1394,
+      "output_tokens": 87
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_161922_740186.json"
+  },
+  "error": null
+}

@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T16:19:15.917240",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_161913_043429.json"
+  },
+  "response": {
+    "content": "I understand you want me to avoid automated searches or responses. \n\nTo check what emails you received today (June 4, 2025), I would need to manually search your inbox. I don't have any pre-stored notes in my notebook about today's specific emails.\n\nWould you like me to perform a direct search of your inbox to find emails you received today? If so, I'll need your permission to proceed with that search.",
+    "tokens": {
+      "input_tokens": 1294,
+      "output_tokens": 94
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_161913_043429.json"
+  },
+  "error": null
+}

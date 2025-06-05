@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-06-04T16:18:57.881876",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_161856_298170.json"
+  },
+  "response": {
+    "content": "`from:bryce.hepburn after:2025/06/03 before:2025/06/05`\n\nBased on your request to find emails you received today, this Gmail search query will retrieve all emails sent to you on June 4, 2025. I checked my notebook and did not find any specific notes about emails you received today, so I've constructed this direct search of your inbox. Please let me know if you need me to clarify or expand on this search in any way.",
+    "tokens": {
+      "input_tokens": 1553,
+      "output_tokens": 110,
+      "request_id": "e689da44-451b-4f75-9078-4ec85acac285",
+      "is_error": false
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_161856_298170.json"
+  },
+  "error": null
+}

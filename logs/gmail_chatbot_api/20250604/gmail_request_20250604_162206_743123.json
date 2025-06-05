@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-06-04T16:22:06.737619",
+  "interaction_type": "gmail_request",
+  "query": "I need to respond to mariska. can you do a deep research on her in my inbox, review it, and then draft a reply from me that i can send her. i would like to use her for research on the afrikaans book that i am writing. same rate. its just that im havcing trouble delegating work since it has to be done with nme. which is why i am give mariska my personal projects stuff. ",
+  "request": {
+    "gmail_query": "after:2025/06/01 before:2025/06/05",
+    "original_user_query": "I need to respond to mariska. can you do a deep research on her in my inbox, review it, and then draft a reply from me that i can send her. i would like to use her for research on the afrikaans book that i am writing. same rate. its just that im havcing trouble delegating work since it has to be done with nme. which is why i am give mariska my personal projects stuff. ",
+    "request_id": "fb9e0dd0-7f7f-4e3a-abaf-640c0d166f1b"
+  },
+  "response": null,
+  "error": null
+}

@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-04T16:19:34.378998",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_161931_062192.json"
+  },
+  "response": {
+    "content": "TASK_CHAIN: I will review the provided email data and summarize the key information that is relevant to the user's request.\n\nHere's what I've gathered from the email data:\n\n\ud83d\udcd3 There are 10 emails total in the provided data set.\n\nKey details:\n- Bryce Hepburn is the primary user/recipient of these emails.\n- The emails cover a range of topics, including:\n  - Google Cloud platform updates and recommendations for Bryce\n  - A Google Docs comment from Fiona Byrne about a document Bryce is working on\n  -...",
+    "tokens": {
+      "input_tokens": 12236,
+      "output_tokens": 231
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_161931_062192.json"
+  },
+  "error": null
+}

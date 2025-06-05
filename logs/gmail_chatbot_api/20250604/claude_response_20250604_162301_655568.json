@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-06-04T16:23:01.655568",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_162259_235038.json"
+  },
+  "response": {
+    "content": "Understood, let me check my inbox notes for any information about \"mariska\".\n\n\ud83d\udcd3 Here's what I've seen mentioned before in your inbox notes:\n\nThere are no emails or contacts related to anyone named \"mariska\" that I can find in my records. I'd be happy to search your actual inbox directly if you'd like me to double-check, but I don't have any prior information about a \"mariska\" in my notebook.\n\nDoes this help provide the information you were looking for? Please let me know if you have any other questions!",
+    "tokens": {
+      "input_tokens": 1556,
+      "output_tokens": 121,
+      "request_id": "7fbca84b-7252-489f-a180-817bf9455e42",
+      "is_error": true
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250604\\claude_request_20250604_162259_235038.json"
+  },
+  "error": null
+}
