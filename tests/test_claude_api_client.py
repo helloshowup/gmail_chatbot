@@ -75,3 +75,22 @@ def test_process_email_content_model_not_found(monkeypatch):
     client = ClaudeAPIClient(model="bad", prep_model="prep-model")
     result = client.process_email_content({"id": "1"}, "sum", "sys")
     assert "invalid or inaccessible" in result.lower()
+
+
+def test_summarize_triage_uses_triage_model(monkeypatch):
+    os.environ[CLAUDE_API_KEY_ENV] = "test-key"
+    mock_response = MagicMock()
+    mock_response.content = [types.SimpleNamespace(text="summary")]
+    mock_response.usage = types.SimpleNamespace(input_tokens=1, output_tokens=1)
+    create_mock = MagicMock(return_value=mock_response)
+    mock_client = MagicMock()
+    mock_client.messages.create = create_mock
+    monkeypatch.setattr(
+        "anthropic.Anthropic", lambda api_key: mock_client, raising=False
+    )
+
+    client = ClaudeAPIClient(triage_model="triage-model")
+    client.summarize_triage([], [], "req")
+
+    create_mock.assert_called_once()
+    assert create_mock.call_args.kwargs["model"] == client.triage_model

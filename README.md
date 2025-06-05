@@ -14,6 +14,7 @@ A Claude-powered chatbot that interacts with your Gmail account. This tool allow
 - Claude API integration for intelligent processing
 - Vector-based email memory with optional GPU-accelerated search
 - Machine learning classifier for understanding query intent
+- Cheap triage flow summarizes urgent action items using a low-cost model
 - Modular codebase organized under the `gmail_chatbot` package
 
 ## Prerequisites
@@ -34,9 +35,11 @@ A Claude-powered chatbot that interacts with your Gmail account. This tool allow
    ```env
    ANTHROPIC_API_KEY=your_key_here
    CLAUDE_PREP_MODEL=claude-3-haiku-20240307
+   CLAUDE_TRIAGE_MODEL=claude-3-haiku-20240307
    ```
    The application automatically loads this `.env` file at startup via `gmail_chatbot.email_config.load_env()`.
    `CLAUDE_PREP_MODEL` selects the Claude model used to prep email history.
+   `CLAUDE_TRIAGE_MODEL` selects the inexpensive model for triage summaries.
    Configure all required environment variables here once.
 
 ### 2. Google Cloud Setup

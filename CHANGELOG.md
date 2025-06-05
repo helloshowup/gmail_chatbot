@@ -18,6 +18,8 @@
   `logs/gmail_chatbot/` for troubleshooting
 - `CLAUDE_PREP_MODEL` environment variable to configure a cheaper model for
   preparatory steps.
+- `CLAUDE_TRIAGE_MODEL` environment variable for inexpensive triage summaries.
+- `ClaudeAPIClient.summarize_triage` uses this model for quick inbox triage.
 - `ClaudeAPIClient` methods accept an optional `model` argument and expose a
   `prep_model` attribute for inexpensive preprocessing.
 - Internal summarization and query-parsing calls route to the prep model while
