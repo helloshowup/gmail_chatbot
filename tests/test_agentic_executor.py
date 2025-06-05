@@ -108,7 +108,14 @@ class TestAgenticExecutorFlow(unittest.TestCase):
         st_stub.session_state.bot = bot
 
     def tearDown(self):
-        st_stub.session_state.__dict__.clear()
+        class SessionState(dict):
+            def __getattr__(self, item):
+                return self.get(item)
+
+            def __setattr__(self, key, value):
+                self[key] = value
+
+        st_stub.session_state = SessionState()
 
     def test_search_extract_summarize_and_log(self):
         state = {}
