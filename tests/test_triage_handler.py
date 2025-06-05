@@ -46,3 +46,19 @@ def test_handle_triage_claude_failure_falls_back():
     assert "Urgent Emails Detected" in response
     assert "ASAP Meeting" in response
     assert "Urgent: Sign" in response
+
+
+def test_handle_triage_with_claude_summary():
+    """Verify summarize_triage is invoked with action items and urgent emails."""
+    summary = "Mock triage summary"
+    app = _setup_app(summary)
+    response = handle_triage_query(app, "triage", "id123", {"triage": 0.9})
+
+    assert response == summary
+    expected_actions = app.memory_actions_handler.get_action_items_structured.return_value
+    expected_urgent = app.memory_actions_handler.find_related_emails.return_value
+    app.claude_client.summarize_triage.assert_called_once_with(
+        expected_actions,
+        expected_urgent,
+        request_id="id123",
+    )
