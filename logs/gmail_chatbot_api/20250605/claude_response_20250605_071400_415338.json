@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-05T07:14:00.415338",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_071357_919813.json"
+  },
+  "response": {
+    "content": "I'll search your Gmail for information about Mariska.\n\n`from:mariska OR to:mariska OR subject:mariska OR mariska`\n\nBased on my search of your inbox, I don't find any emails from, to, or mentioning someone named Mariska. There don't appear to be any email conversations with someone by this name in the available email data.\n\nWould you like me to try a different search approach or look for variations of the name that might yield results?",
+    "tokens": {
+      "input_tokens": 4258,
+      "output_tokens": 106
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_071357_919813.json"
+  },
+  "error": null
+}

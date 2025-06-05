@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-05T07:13:31.353388",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_071327_339195.json"
+  },
+  "response": {
+    "content": "TASK_CHAIN: I will review the email data and provide a summary in my notebook. Then I will update the notebook based on the user's request.\n\nReview of email data:\n\ud83d\udcd3 The email data contains 8 messages from various senders to Bryce Hepburn, covering a range of topics:\n- Morning email briefing from Cora with updates on email activity (1 message)\n- Messages from Upwork about a Weight Loss Course Buildout project (2 messages)\n- Conversation about a book Samir Selmanovi\u0107 is writing (2 messages) \n- Not...",
+    "tokens": {
+      "input_tokens": 9558,
+      "output_tokens": 359
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_071327_339195.json"
+  },
+  "error": null
+}

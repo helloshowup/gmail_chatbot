@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-05T07:12:51.839267",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_071247_071831.json"
+  },
+  "response": {
+    "content": "TASK_CHAIN: To analyze the email data and update the notebook, I will:\n1. Scan the emails for any notable information or requests that should be captured in the notebook.\n2. Identify any client-related emails or updates that need to be tracked.\n3. Summarize the key contents and actionable items from the emails.\n\nScanning the email data, here are the key points I've gathered:\n\n\ud83d\udcd3 Morning Brief email from Cora with daily email stats and a new AI assistant feature:\n- 80% of emails summarized, 0 emai...",
+    "tokens": {
+      "input_tokens": 9562,
+      "output_tokens": 401
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_071247_071831.json"
+  },
+  "error": null
+}

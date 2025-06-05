@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-05T07:21:29.237741",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_072124_457497.json"
+  },
+  "response": {
+    "content": "TASK_CHAIN: I will analyze the provided email data to respond to the user's request. First, I will review the email snippets and summarize the key information. Then, I will check if there are any additional relevant emails in my notebook before searching the inbox directly if needed.\n\nReviewing the email data:\n\ud83d\udcd3 The emails are from Chelsea A. to Bryce Hepburn, regarding a \"Weight Loss Course Buildout\" project on Upwork.\n- The first email, sent on June 5th, mentions that Felissa was able to login...",
+    "tokens": {
+      "input_tokens": 3050,
+      "output_tokens": 359
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_072124_457497.json"
+  },
+  "error": null
+}

@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-06-05T07:21:22.570773",
+  "interaction_type": "gmail_request",
+  "query": "from:chelsea after:2025/06/04 before:2025/06/06\n\nit is sent TO chelsea from Bryce",
+  "request": {
+    "gmail_query": "from:chelsea after:2025/06/04 before:2025/06/06",
+    "original_user_query": "from:chelsea after:2025/06/04 before:2025/06/06\n\nit is sent TO chelsea from Bryce",
+    "request_id": "b4fff768-ee05-4063-a369-2d207fa8bd20"
+  },
+  "response": null,
+  "error": null
+}

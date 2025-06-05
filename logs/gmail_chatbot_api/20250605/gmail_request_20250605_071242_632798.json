@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-06-05T07:12:42.632798",
+  "interaction_type": "gmail_request",
+  "query": "do research and update the notebook./ ",
+  "request": {
+    "gmail_query": "after:2025/06/02 before:2025/06/06",
+    "original_user_query": "do research and update the notebook./ ",
+    "request_id": "a3d64ff0-33a2-4b7c-9728-6410c4c75e5f"
+  },
+  "response": null,
+  "error": null
+}

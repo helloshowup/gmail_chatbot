@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-05T07:13:52.934178",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_071350_138882.json"
+  },
+  "response": {
+    "content": "\ud83d\udcd3 I don't have notes about Mariska in my notebook yet. Would you like me to search your Gmail for information about Mariska?\n\nI can search your inbox for any emails mentioning or from Mariska to provide you with information about them. Just let me know if you'd like me to proceed with this search.",
+    "tokens": {
+      "input_tokens": 4105,
+      "output_tokens": 75
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_071350_138882.json"
+  },
+  "error": null
+}

@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-06-05T07:14:00.424841",
+  "interaction_type": "gmail_request",
+  "query": "proceed",
+  "request": {
+    "gmail_query": "after:2025/06/02 before:2025/06/06",
+    "original_user_query": "proceed",
+    "request_id": "c18968fc-c918-4713-b299-3cad0718b3b3"
+  },
+  "response": null,
+  "error": null
+}

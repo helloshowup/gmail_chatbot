@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-06-05T07:21:18.030726",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_072116_311163.json"
+  },
+  "response": {
+    "content": "`from:chelsea after:2025/06/04 before:2025/06/06`\n\nThe provided user query indicates that the email is sent TO chelsea from Bryce, and the date range of interest is June 4-6, 2025. I have translated this into the appropriate Gmail search syntax.",
+    "tokens": {
+      "input_tokens": 1574,
+      "output_tokens": 71,
+      "request_id": "f87445d0-7a6e-4222-9e3b-d0ca82365064",
+      "is_error": false
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_072116_311163.json"
+  },
+  "error": null
+}

@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-05T07:14:11.703298",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_071404_836767.json"
+  },
+  "response": {
+    "content": "TASK_CHAIN: To analyze the provided email data, I will:\n1. Review the email metadata and content to identify key details, topics, and action items.\n2. Summarize the information in a clear, concise format, grouping by relevant categories.\n3. Highlight any important next steps or areas requiring further attention.\n\nHere is a summary of the key information from the email data:\n\n\ud83d\udcd3 Morning Brief Email (from Cora Briefs):\n- This is a daily email summarizing email activity, with 80% of emails summarize...",
+    "tokens": {
+      "input_tokens": 9554,
+      "output_tokens": 627
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_071404_836767.json"
+  },
+  "error": null
+}

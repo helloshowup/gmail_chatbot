@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-05T07:11:18.452036",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_071112_588171.json"
+  },
+  "response": {
+    "content": "TASK_CHAIN: To respond to the user's request about Bryce, I will:\n1. Search my notebook for any relevant notes about Bryce.\n2. If needed, I will check the email data for any additional information about Bryce.\n3. I will summarize the key details about Bryce that I find.\n\n\ud83d\udcd3 From reviewing the email data, here's what I've gathered about Bryce:\n\n- Bryce is the recipient of several emails, including:\n  - A \"Morning Brief\" email from Cora Briefs about email activity (email 1)\n  - An Upwork message ab...",
+    "tokens": {
+      "input_tokens": 9558,
+      "output_tokens": 340
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_071112_588171.json"
+  },
+  "error": null
+}

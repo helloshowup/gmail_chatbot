@@ -1,0 +1,52 @@
+{
+  "timestamp": "2025-06-05T07:21:24.452496",
+  "interaction_type": "gmail_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\gmail_request_20250605_072122_570773.json"
+  },
+  "response": {
+    "email_count": 2,
+    "emails": [
+      {
+        "id": "1973e5a84b050f12",
+        "threadId": "1973c87ba068b022",
+        "labelIds": [
+          "Label_40",
+          "IMPORTANT",
+          "CATEGORY_PERSONAL",
+          "INBOX"
+        ],
+        "snippet": "Reply to new messages Upwork You have unread messages for Weight Loss Course Buildout CA Chelsea A. 6:28 AM CAT, 5 Jun 2025 Also URGENT. Felissa was able to login but is requiring approval to access",
+        "subject": "You have unread messages about the job Weight Loss Course Buildout",
+        "from": "\"Chelsea A. via Upwork\" <room_10265045109435532182816177569242@upwork.com>",
+        "to": "hello@showup.courses",
+        "date": "Thu, 05 Jun 2025 04:30:08 +0000",
+        "truncated": true,
+        "full_length": 2268,
+        "body_preview": "\r\n\r\nYou have unread messages for Weight Loss Course Buildout: https://www.upwork.com/ab/messages/rooms/room_57a1a977d4a2596de3f9698676e4aa4a?companyRe..."
+      },
+      {
+        "id": "1973c87ba068b022",
+        "threadId": "1973c87ba068b022",
+        "labelIds": [
+          "Label_40",
+          "IMPORTANT",
+          "CATEGORY_PERSONAL",
+          "INBOX"
+        ],
+        "snippet": "Reply to new messages Upwork You have unread messages for Weight Loss Course Buildout CA Chelsea A. 9:57 PM CAT, 4 Jun 2025 would 12:30 PST on 6/11 work? otherwise, we could do 9 AM that morning Reply",
+        "subject": "You have unread messages about the job Weight Loss Course Buildout",
+        "from": "\"Chelsea A. via Upwork\" <room_10265045109435532182816177569242@upwork.com>",
+        "to": "hello@showup.courses",
+        "date": "Wed, 04 Jun 2025 20:00:11 +0000",
+        "truncated": true,
+        "full_length": 1817,
+        "body_preview": "\r\n\r\nYou have unread messages for Weight Loss Course Buildout: https://www.upwork.com/ab/messages/rooms/room_57a1a977d4a2596de3f9698676e4aa4a?companyRe..."
+      }
+    ],
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\gmail_request_20250605_072122_570773.json",
+    "request_id": null
+  },
+  "error": null
+}

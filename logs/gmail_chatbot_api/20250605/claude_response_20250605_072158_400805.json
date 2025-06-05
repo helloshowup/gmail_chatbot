@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-06-05T07:21:58.400805",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_072157_303884.json"
+  },
+  "response": {
+    "content": "Sure, I can definitely search the sent emails as well. Just let me know what you're looking for and I'll put together a query to search both the inbox and sent folders.",
+    "tokens": {
+      "input_tokens": 1555,
+      "output_tokens": 40,
+      "request_id": "80f6d54b-70ff-43c9-b0e9-fd1eebb8ae38",
+      "is_error": false
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_072157_303884.json"
+  },
+  "error": null
+}
