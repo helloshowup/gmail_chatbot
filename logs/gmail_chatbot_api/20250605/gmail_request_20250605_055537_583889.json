@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-06-05T05:55:37.583889",
+  "interaction_type": "gmail_request",
+  "query": "tell me about bryce",
+  "request": {
+    "gmail_query": "after:2025/06/02 before:2025/06/06",
+    "original_user_query": "tell me about bryce",
+    "request_id": "b9ae24f4-c413-486a-a6ba-7df1b25411fe"
+  },
+  "response": null,
+  "error": null
+}

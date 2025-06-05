@@ -1,0 +1,211 @@
+{
+  "timestamp": "2025-06-05T05:55:14.597174",
+  "interaction_type": "gmail_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\gmail_request_20250605_055508_856218.json"
+  },
+  "response": {
+    "email_count": 10,
+    "emails": [
+      {
+        "id": "1973d2b876104557",
+        "threadId": "1973618f0284ab80",
+        "labelIds": [
+          "UNREAD",
+          "Label_39",
+          "IMPORTANT",
+          "Label_31",
+          "CATEGORY_PERSONAL",
+          "INBOX"
+        ],
+        "snippet": "I can&#39;t wait to read it Samir. Congratulations! On Wed, Jun 4, 2025 at 3:54 PM &lt;ericstevensconsulting@gmail.com&gt; wrote: Very exciting news, Samir. Congratulations. I can&#39;t wait to read \u2026",
+        "subject": "Re: I have some beautiful news to share!",
+        "from": "Madelyn Mills <madelynmills@gmail.com>",
+        "to": "ericstevensconsulting@gmail.com",
+        "date": "Wed, 4 Jun 2025 15:58:43 -0700",
+        "truncated": true,
+        "full_length": 13192,
+        "body_preview": "I can't wait to read it Samir. Congratulations!\r\n\r\nOn Wed, Jun 4, 2025 at 3:54\u202fPM <ericstevensconsulting@gmail.com> wrote:\r\n\r\n> Very exciting news, Sa..."
+      },
+      {
+        "id": "1973d275786f0bca",
+        "threadId": "1973618f0284ab80",
+        "labelIds": [
+          "UNREAD",
+          "Label_39",
+          "IMPORTANT",
+          "Label_31",
+          "CATEGORY_PERSONAL",
+          "INBOX"
+        ],
+        "snippet": "Very exciting news, Samir. Congratulations. I can&#39;t wait to read \u2026 and be enlightened by \u2026 How to Be Out of Control. Great title. I love the process you are in to engage your community as you write",
+        "subject": "RE: I have some beautiful news to share!",
+        "from": "<ericstevensconsulting@gmail.com>",
+        "to": "\"'Samir Selmanovi\u0107'\" <samirselmanovicnyc@gmail.com>, \"'patrick carolan'\" <carolanp65@gmail.com>",
+        "date": "Wed, 4 Jun 2025 16:54:31 -0600",
+        "truncated": true,
+        "full_length": 12815,
+        "body_preview": "Very exciting news, Samir.  Congratulations.  I can\u2019t wait to read \u2026 and be enlightened by \u2026 How to Be Out of Control.\r\n\r\n \r\n\r\nGreat title.\r\n\r\n \r\n\r\nI ..."
+      },
+      {
+        "id": "1973cbf96869a9c0",
+        "threadId": "1973cbf96869a9c0",
+        "labelIds": [
+          "UNREAD",
+          "IMPORTANT",
+          "CATEGORY_PERSONAL",
+          "INBOX"
+        ],
+        "snippet": "Hi Bryce, You&#39;re getting this email because you&#39;re interested in Cora\u200b\u200b, the most human way to handle your email with AI. Today, we&#39;re introducing you to Assistant, our newest feature to",
+        "subject": "Cora | Launching today: your personal AI email assistant",
+        "from": "Cora <hello@cora.computer>",
+        "to": "Bryce <hello@showup.courses>",
+        "date": "Wed, 04 Jun 2025 21:01:17 +0000 (UTC)",
+        "truncated": true,
+        "full_length": 2845,
+        "body_preview": "Hi Bryce,\r\n\r\nYou\u2019re getting this email because you\u2019re interested in Cora (\r\nhttps://click.convertkit-mail2.com/n4upqmnp66uvhxkzmxls6h6pxmgggtl/qvh8h7h..."
+      },
+      {
+        "id": "1973c95938be5751",
+        "threadId": "1973c95938be5751",
+        "labelIds": [
+          "Label_39",
+          "Label_33",
+          "CATEGORY_UPDATES",
+          "Label_26",
+          "INBOX"
+        ],
+        "snippet": "Plus: Bill McKibben on FEMA&#39;s lack of preparedness; and how \u201cMountainhead\u201d crushes the tech bro. View in browser | Update your preferences The New Yorker Daily Newsletter Header Wednesday, June 4,",
+        "subject": "Amelia Earhart\u2019s Reckless Final Flights",
+        "from": "The New Yorker Daily <newyorker@newsletter.newyorker.com>",
+        "to": "hello@showup.courses",
+        "date": "Wed, 4 Jun 2025 16:15:24 -0400 (EDT)",
+        "truncated": false,
+        "full_length": 200,
+        "body_preview": "Plus: Bill McKibben on FEMA&#39;s lack of preparedness; and how \u201cMountainhead\u201d crushes the tech bro. View in browser | Update your preferences The New..."
+      },
+      {
+        "id": "1973c8abcd3eaa5f",
+        "threadId": "1973c8abcd3eaa5f",
+        "labelIds": [
+          "UNREAD",
+          "Label_39",
+          "IMPORTANT",
+          "Label_31",
+          "CATEGORY_UPDATES",
+          "INBOX"
+        ],
+        "snippet": "FlutterFlow Logo Important Updates to Your FlutterFlow Free Plan To our Builders, We&#39;re making some updates to FlutterFlow&#39;s Free plan which take effect on September 4, 2025. This update is",
+        "subject": "Important Updates to Your FlutterFlow Free Plan",
+        "from": "FlutterFlow <no-reply@flutterflow.io>",
+        "to": "Unknown Recipient",
+        "date": "Wed, 04 Jun 2025 20:03:25 +0000",
+        "truncated": true,
+        "full_length": 3341,
+        "body_preview": "        Important Updates to Your FlutterFlow Free Plan\r\n<https://flutterflow.io>  Important Updates to Your FlutterFlow Free Plan  \r\n                ..."
+      },
+      {
+        "id": "1973c87ba068b022",
+        "threadId": "1973c87ba068b022",
+        "labelIds": [
+          "Label_40",
+          "IMPORTANT",
+          "CATEGORY_PERSONAL",
+          "INBOX"
+        ],
+        "snippet": "Reply to new messages Upwork You have unread messages for Weight Loss Course Buildout CA Chelsea A. 9:57 PM CAT, 4 Jun 2025 would 12:30 PST on 6/11 work? otherwise, we could do 9 AM that morning Reply",
+        "subject": "You have unread messages about the job Weight Loss Course Buildout",
+        "from": "\"Chelsea A. via Upwork\" <room_10265045109435532182816177569242@upwork.com>",
+        "to": "hello@showup.courses",
+        "date": "Wed, 04 Jun 2025 20:00:11 +0000",
+        "truncated": true,
+        "full_length": 1817,
+        "body_preview": "\r\n\r\nYou have unread messages for Weight Loss Course Buildout: https://www.upwork.com/ab/messages/rooms/room_57a1a977d4a2596de3f9698676e4aa4a?companyRe..."
+      },
+      {
+        "id": "1973c48f3e6b912a",
+        "threadId": "1973c2eefb67fbed",
+        "labelIds": [
+          "UNREAD",
+          "Label_39",
+          "IMPORTANT",
+          "Label_31",
+          "CATEGORY_PERSONAL",
+          "INBOX"
+        ],
+        "snippet": "Resolved - 2 components affected - This incident has been resolved. \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c",
+        "subject": "Anthropic Incident - Errors on tool use calls on Claude.ai and the Anthropic Console - 4 June 2025",
+        "from": "noreply@statuspage.io",
+        "to": "hello@showup.courses",
+        "date": "Wed, 04 Jun 2025 18:51:42 +0000",
+        "truncated": false,
+        "full_length": 461,
+        "body_preview": "Errors on tool use calls on Claude.ai and the Anthropic Console\r\n\r\nIncident resolved\r\nThis incident has been resolved.\r\n\r\nTime posted\r\nJun  4, 11:51 P..."
+      },
+      {
+        "id": "1973c34cf1ce965a",
+        "threadId": "1973b2118b2f6508",
+        "labelIds": [
+          "Label_39",
+          "Label_41",
+          "Label_36",
+          "CATEGORY_PERSONAL",
+          "Label_34",
+          "INBOX"
+        ],
+        "snippet": "Diana Ramos replied to a comment in the following document Lesson 2 Step 13_Business Requirements in Design 1 comment next session Fiona Byrne \u2022 15:23, 4 Jun (SAST) Is next &quot;session&quot; correct",
+        "subject": "Lesson 2 Step 13_... - Is next \"session\" correct here?",
+        "from": "\"Diana Ramos (Google Docs)\" <comments-noreply@docs.google.com>",
+        "to": "hello@showup.courses",
+        "date": "Wed, 04 Jun 2025 11:29:42 -0700",
+        "truncated": false,
+        "full_length": 1405,
+        "body_preview": "Diana Ramos replied to a comment in the following document\r\nLesson 2 Step 13_Business Requirements in Design  \r\n(https://docs.google.com/document/d/1S..."
+      },
+      {
+        "id": "1973c2eefb67fbed",
+        "threadId": "1973c2eefb67fbed",
+        "labelIds": [
+          "UNREAD",
+          "Label_39",
+          "IMPORTANT",
+          "Label_31",
+          "CATEGORY_UPDATES",
+          "INBOX"
+        ],
+        "snippet": "Identified - 2 components affected - We have identified an issue resulting in... \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c",
+        "subject": "Anthropic Incident - Errors on tool use calls on Claude.ai and the Anthropic Console - 4 June 2025",
+        "from": "noreply@statuspage.io",
+        "to": "hello@showup.courses",
+        "date": "Wed, 04 Jun 2025 18:23:17 +0000",
+        "truncated": false,
+        "full_length": 636,
+        "body_preview": "Errors on tool use calls on Claude.ai and the Anthropic Console\r\n\r\nNew incident: Identified\r\nWe have identified an issue resulting in elevated errors ..."
+      },
+      {
+        "id": "1973c0169fb5f93e",
+        "threadId": "1973c0169fb5f93e",
+        "labelIds": [
+          "UNREAD",
+          "Label_39",
+          "IMPORTANT",
+          "Label_33",
+          "CATEGORY_UPDATES",
+          "INBOX"
+        ],
+        "snippet": "Psychiatrist Awais Aftab on why the best mental health technology works with human complexity, not against it. \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c \u200c",
+        "subject": "How AI Can Help Fix Our Brains",
+        "from": "Every <hello@every.to>",
+        "to": "\"'Bryce Hepburn'\" <hello@showup.courses>",
+        "date": "Wed, 04 Jun 2025 17:33:32 +0000",
+        "truncated": true,
+        "full_length": 49284,
+        "body_preview": "<!DOCTYPE html>\r\n<!-- Set the language of your main document. This helps screenreaders use the proper language profile, pronunciation, and accent. -->..."
+      }
+    ],
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\gmail_request_20250605_055508_856218.json",
+    "request_id": null
+  },
+  "error": null
+}

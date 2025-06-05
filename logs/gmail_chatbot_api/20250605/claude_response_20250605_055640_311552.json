@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-06-05T05:56:40.311552",
+  "interaction_type": "claude_response",
+  "query": null,
+  "request": {
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_055637_846834.json"
+  },
+  "response": {
+    "content": "TASK_CHAIN: To look at work emails Bryce received this week, I will:\n\n1. Search your inbox for emails received this week:\n`after:2025/05/29 before:2025/06/05`\n\n2. Scan the results and update my notebook with any important details, like:\n- New clients or projects\n- Urgent tasks or deadlines\n- Patterns in the types of emails you're receiving\n\n3. Provide a summary of the key updates from this week's emails.",
+    "tokens": {
+      "input_tokens": 1564,
+      "output_tokens": 117,
+      "request_id": "e4394b5d-f9bc-4cdf-99cb-eb4d1b706e34",
+      "is_error": false
+    },
+    "related_request": "C:\\Users\\User\\Documents\\showup-v4\\showup-tools\\gmail_chatbot\\logs\\gmail_chatbot_api\\20250605\\claude_request_20250605_055637_846834.json"
+  },
+  "error": null
+}
