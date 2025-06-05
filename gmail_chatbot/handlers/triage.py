@@ -1,4 +1,8 @@
-"""Triage-related query handling for Gmail Chatbot."""
+"""Triage-related query handling for Gmail Chatbot.
+
+This module summarizes urgent emails and action items using Claude when
+possible.
+"""
 
 from __future__ import annotations
 
@@ -19,6 +23,9 @@ def handle_triage_query(
     scores: Dict[str, float],
 ) -> str:
     """Handle queries classified as ``triage`` or triage-leaning ``ambiguous``.
+
+    When action items or urgent emails are detected, the results are summarized
+    using Claude before falling back to manual formatting if needed.
 
     Parameters
     ----------
@@ -67,6 +74,19 @@ def handle_triage_query(
         )
 
     if action_items or urgent_results:
+        summary = ""
+        try:
+            summary = app.claude_client.summarize_triage(
+                action_items,
+                urgent_results,
+                request_id=request_id,
+            )
+        except Exception as e:  # pragma: no cover - log and fall back
+            logging.error(f"[{request_id}] Claude triage summary failed: {e}")
+
+        if summary and not summary.lower().startswith("error"):
+            return summary
+
         grouped = defaultdict(list)
         for item in action_items:
             grouped[item.get("client", "Other Tasks")].append(item)

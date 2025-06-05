@@ -20,6 +20,8 @@ from gmail_chatbot.email_config import (
     CLAUDE_DEFAULT_MODEL,
     CLAUDE_MAX_TOKENS,
     CLAUDE_PREP_MODEL,
+    CLAUDE_TRIAGE_MODEL,
+    DEFAULT_SYSTEM_MESSAGE,
 )
 from gmail_chatbot.api_logging import log_claude_request, log_claude_response
 from .prompt_templates import (
@@ -44,13 +46,17 @@ class ClaudeAPIClient:
     """Client for interacting with Claude API to process email queries and responses."""
 
     def __init__(
-        self, model: Optional[str] = None, prep_model: Optional[str] = None
+        self,
+        model: Optional[str] = None,
+        prep_model: Optional[str] = None,
+        triage_model: Optional[str] = None,
     ) -> None:
         """Initialize the Claude API client.
 
         Args:
             model: The Claude model to use (default from config)
             prep_model: Model used for prompt preparation (default from config)
+            triage_model: Model used for inexpensive triage summaries
         """
         try:
             # Get the project root directory for better error messages
@@ -71,10 +77,12 @@ class ClaudeAPIClient:
                 self.api_key = "MISSING_API_KEY"
                 self.model = model or CLAUDE_DEFAULT_MODEL
                 self.prep_model = prep_model or CLAUDE_PREP_MODEL
+                self.triage_model = triage_model or CLAUDE_TRIAGE_MODEL
                 self.client = None  # Will be caught in API methods
             else:
                 self.model = model or CLAUDE_DEFAULT_MODEL
                 self.prep_model = prep_model or CLAUDE_PREP_MODEL
+                self.triage_model = triage_model or CLAUDE_TRIAGE_MODEL
                 self.client = anthropic.Anthropic(api_key=self.api_key)
                 logging.info(
                     f"Initialized Claude API client with model {self.model}"
@@ -86,6 +94,7 @@ class ClaudeAPIClient:
             self.api_key = None
             self.model = model or CLAUDE_DEFAULT_MODEL
             self.prep_model = prep_model or CLAUDE_PREP_MODEL
+            self.triage_model = triage_model or CLAUDE_TRIAGE_MODEL
             self.client = None
 
     def process_query(
@@ -568,3 +577,76 @@ Do these results seem relevant to the query? If yes, summarize key info. If no, 
         except Exception as e:
             logging.error(f"Error chatting with Claude API: {e}")
             return f"Error processing your message: {str(e)}"
+
+    def summarize_triage(
+        self,
+        action_items: List[Dict[str, Any]],
+        urgent: List[Dict[str, Any]],
+        request_id: str,
+    ) -> str:
+        """Summarize triage information using a lightweight model."""
+        try:
+            if self.client is None:
+                error_msg = "Claude API client not available - missing API key"
+                logging.error(f"[{request_id}] {error_msg}")
+                return f"ERROR: {error_msg}"
+
+            prompt_parts = [
+                "Provide a concise triage summary for the following items." \
+                " Prioritize any urgent emails."
+            ]
+            if action_items:
+                prompt_parts.append("\nAction items:")
+                for item in action_items[:10]:
+                    subj = item.get("subject", "No Subject")
+                    date = item.get("date", "N/A")
+                    prompt_parts.append(f"- {subj} (Date: {date})")
+            if urgent:
+                prompt_parts.append("\nUrgent emails:")
+                for item in urgent[:10]:
+                    subj = item.get("subject", "No Subject")
+                    date = item.get("date", "N/A")
+                    prompt_parts.append(f"- {subj} (Date: {date})")
+            prompt_parts.append(
+                "\nSummarize these items and suggest next steps in a few sentences."
+            )
+            prompt = "\n".join(prompt_parts)
+
+            request_log_path = log_claude_request(
+                model=self.triage_model,
+                system_message=DEFAULT_SYSTEM_MESSAGE,
+                user_message=prompt,
+                original_query="triage",
+                request_id=request_id,
+            )
+
+            response = self.client.messages.create(
+                model=self.triage_model,
+                max_tokens=CLAUDE_MAX_TOKENS,
+                system=DEFAULT_SYSTEM_MESSAGE,
+                messages=[{"role": "user", "content": prompt}],
+            )
+
+            summary = response.content[0].text.strip()
+
+            token_usage = {
+                "input_tokens": response.usage.input_tokens,
+                "output_tokens": response.usage.output_tokens,
+            }
+            log_claude_response(
+                request_log_path=request_log_path,
+                response_content=summary,
+                tokens_used=token_usage,
+            )
+
+            return summary
+
+        except getattr(anthropic, "errors", anthropic).NotFoundError as api_err:
+            logging.error(f"[{request_id}] Claude API model not found: {api_err}")
+            return "ERROR: The specified Claude model is invalid or inaccessible."
+        except getattr(anthropic, "APIError", Exception) as api_err:
+            logging.error(f"[{request_id}] Claude API error: {api_err}")
+            return "ERROR: The specified Claude model is invalid or inaccessible."
+        except Exception as e:
+            logging.error(f"[{request_id}] Error summarizing triage: {e}")
+            return f"Error summarizing triage: {str(e)}"
