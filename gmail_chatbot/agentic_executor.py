@@ -177,6 +177,16 @@ def _execute_placeholder_summarize(parameters: Dict[str, Any], agentic_state: Di
     return {"status": "success", "data": f"Simulated summary of {len(input_docs)} documents.", "message": "Placeholder summary complete."}
 
 
+def _execute_placeholder_action(parameters: Dict[str, Any], agentic_state: Dict[str, Any]) -> Dict[str, Any]:
+    """Log placeholder action and return skipped status."""
+    logger.info("Placeholder action encountered. Parameters=%s", parameters)
+    return {
+        "status": "skipped",
+        "message": "Placeholder action skipped.",
+        "updated_agentic_state": agentic_state,
+    }
+
+
 # --- Main Executor Function ---
 # Maps action_type to its handler function
 ACTION_HANDLERS = {
@@ -187,6 +197,7 @@ ACTION_HANDLERS = {
     "send_email": _execute_send_email,
     "placeholder_search_tool": _execute_placeholder_search, # Kept for existing test plan
     "placeholder_summarize_tool": _execute_placeholder_summarize, # Kept for existing test plan
+    "placeholder_action": _execute_placeholder_action,
     # Add more real action handlers here
 }
 
@@ -261,6 +272,8 @@ def execute_step(step_details: Dict[str, Any], agentic_state: Dict[str, Any]) ->
             status,
             state_summary,
         )
+        if status == "skipped":
+            logger.info("Step %s skipped: %s", step_id, message)
         
         print(f"DEBUG EXECUTOR: Step '{step_id} - {step_description}' result: {status}. Message: {message}")
         return {
