@@ -1245,7 +1245,7 @@ class GmailChatbotApp:
                         "error_messages": [],
                     }
                     try:  # Delayed import to avoid circular dependency
-                        from chat_app_st import run_agentic_plan  # type: ignore
+                        from gmail_chatbot.agentic_runner import run_agentic_plan
 
                         run_agentic_plan()
                     except Exception as e:  # pragma: no cover - defensive
@@ -2057,7 +2057,7 @@ class GmailChatbotApp:
                             f"[{request_id}] Executing parsed plan automatically"
                         )
                         try:  # Delayed import to avoid circular dependency
-                            from chat_app_st import run_agentic_plan  # type: ignore
+                            from gmail_chatbot.agentic_runner import run_agentic_plan
 
                             run_agentic_plan()
                         except Exception as e:  # pragma: no cover - defensive

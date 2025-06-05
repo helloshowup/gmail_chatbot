@@ -181,7 +181,10 @@ def test_task_chain_flow(monkeypatch):
             st_stub.session_state.agentic_state = state
         st_stub.session_state.agentic_plan = None
 
-    monkeypatch.setattr(chat_app_st, 'run_agentic_plan', simple_run_agentic_plan)
+    monkeypatch.setattr(
+        'gmail_chatbot.agentic_runner.run_agentic_plan',
+        simple_run_agentic_plan,
+    )
 
     # User confirms the task chain
     response = app.handle_confirmation('yes', 'yes', 'req123')
